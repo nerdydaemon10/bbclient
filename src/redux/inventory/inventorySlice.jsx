@@ -18,7 +18,7 @@ const initialState = {
     loading: false,
     modal: false,
     error: null,
-  };
+};
 
 
 const inventorySlice = createSlice({

@@ -3,7 +3,7 @@ import { callApi } from "../../utils/helpers/api/callApi";
 
 const loginUser = createAsyncThunk("user/login", async (credentials) => {
     try {
-        const response = await callApi('post', '/login', credentials)
+        const response = await callApi('post', '/auth', credentials)
         return response.data
     } catch (error) {
         console.log("Error Logging in", error)
