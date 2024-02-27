@@ -5,7 +5,7 @@ const AppDashboardSidebarItems = [
     {
         id: 1,
         route: "/home/",
-        label: "Point-Of-Sale",
+        label: "POS System",
         icon: <BiCalculator size={20} />
     },
     {

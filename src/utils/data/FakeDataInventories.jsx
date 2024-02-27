@@ -2,7 +2,7 @@ const FakeDataInventories = [
     {
       id: 1,
       name: "Black Coffee",
-      category: "Beverages",
+      category: 1,
       quantity: 57,
       srp: 10.00,
       price: 50.00,
@@ -13,7 +13,7 @@ const FakeDataInventories = [
     {
       id: 2,
       name: "Black Coffee",
-      category: "Beverages",
+      category: 2,
       quantity: 57,
       srp: 10.00,
       price: 50.00,
@@ -24,7 +24,7 @@ const FakeDataInventories = [
     {
       id: 3,
       name: "Black Coffee",
-      category: "Beverages",
+      category: 3,
       quantity: 57,
       srp: 10.00,
       price: 50.00,

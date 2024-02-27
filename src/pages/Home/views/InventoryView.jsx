@@ -67,10 +67,9 @@ function InventoryTableBody() {
                   <td>{item.updatedAt}</td>
                   <td className="table-actions">
                     <button href="#" className="btn btn-dark btn-sm mr-2">
-                        Edit
+                      Edit
                     </button>
                     <button href="#" className="btn btn-secondary btn-sm">
-                      
                       Delete
                     </button>
                   </td>
