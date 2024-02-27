@@ -3,6 +3,9 @@ import { BiPlus } from "react-icons/bi";
 import { BiChevronLeft } from "react-icons/bi";
 import { BiChevronRight } from "react-icons/bi";
 import FakeDataInventories from "../../../utils/data/FakeDataInventories.jsx";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { fetchProducts } from "../../../redux/products/productSlice.jsx";
 
 function InventoryView() {
   return (
@@ -25,6 +28,12 @@ function InventoryTable() {
 }
 
 function InventoryTableBody() {
+  const dispatch = useDispatch()
+
+
+  useEffect(() => {
+    dispatch(fetchProducts())
+  }, [])
   return (
     <>
       <div className="table-wrapper">
