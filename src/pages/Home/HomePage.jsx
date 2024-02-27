@@ -8,10 +8,10 @@ function HomePage() {
   return (
     <>
       <AppDashboardLayout>
-      <Routes>
-        <Route exact path="/" element={<PointOfSaleView />} />
-        <Route path="/inventory" element={<InventoryView />} />
-      </Routes>
+        <Routes>
+          <Route exact path="/" element={<PointOfSaleView />} />
+          <Route path="/inventory" element={<InventoryView />} />
+        </Routes>
       </AppDashboardLayout>
     </>
   )
