@@ -3,7 +3,6 @@ import axios from 'axios';
 // Set up Axios defaults
 axios.defaults.baseURL = 'http://127.0.0.1:8000/api/v1/';
 
-
 export const callApi = async (method, url, data) => {
 
     //store token in localstorage
