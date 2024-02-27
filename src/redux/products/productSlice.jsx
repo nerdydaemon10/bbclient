@@ -12,7 +12,7 @@ export const fetchProducts = createAsyncThunk("products/getProducts", async () =
     }
 })
 
-export const addProducts = createAsyncThunk("products/getProducts", async (data) =>{
+export const addProducts = createAsyncThunk("products/addProducts", async (data) =>{
     try {
         const response = await callApi('post', '/products', data)
         console.log(response.data)
