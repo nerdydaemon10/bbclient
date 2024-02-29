@@ -2,10 +2,10 @@ import "../../../layouts/AppDashboardLayout.css"
 import { BiPlus } from "react-icons/bi";
 import { BiChevronLeft } from "react-icons/bi";
 import { BiChevronRight } from "react-icons/bi";
-import FakeDataInventories from "../../../utils/data/FakeDataInventories.jsx";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../../redux/products/productSlice.jsx";
+import DateHelper from "../../../utils/helpers/DateHelper.jsx";
 
 function InventoryView() {
   return (
@@ -29,11 +29,15 @@ function InventoryTable() {
 
 function InventoryTableBody() {
   const dispatch = useDispatch()
+  const products = useSelector((state) => state.products.products)
+  const status = useSelector((state) => state.products.status)
 
+  console.log(status)
 
   useEffect(() => {
     dispatch(fetchProducts())
   }, [])
+
   return (
     <>
       <div className="table-wrapper">
@@ -53,18 +57,18 @@ function InventoryTableBody() {
           </thead>
           <tbody>
             {
-              FakeDataInventories.map((item) =>
+              products.map((item) =>
                 <tr key={item.id}>
                   <td>{item.name}</td>
                   <td>
-                    <span className="badge bg-light">{item.category}</span>
+                    <span className="badge bg-light">{item.category_id}</span>
                   </td>
                   <td>{item.quantity} stocks</td>
                   <td>P {item.srp}</td>
                   <td>P {item.price}</td>
                   <td>P {item.memberPrice}</td>
-                  <td>{item.createdAt}</td>
-                  <td>{item.updatedAt}</td>
+                  <td>{DateHelper.toStandardDate(item.created_at)}</td>
+                  <td>{DateHelper.toStandardDate(item.updated_at)}</td>
                   <td className="table-actions">
                     <button href="#" className="btn btn-dark btn-sm mr-2">
                       Edit

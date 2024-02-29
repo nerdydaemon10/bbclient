@@ -2,7 +2,7 @@ import axios from "axios";
 import { callApi } from "../../utils/helpers/api/callApi";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-export const fetchProducts = createAsyncThunk("products/getProducts", async () =>{
+export const fetchProducts = createAsyncThunk("products/getProducts", async () => {
     try {
         const response = await callApi('get', '/products')
         console.log(response.data)
@@ -34,35 +34,35 @@ const initialState = {
 const productSlice = createSlice({
     name: 'products',
     initialState,
-    reducers:{ },
+    reducers: {},
 
     extraReducers: (builder) => {
     builder
         .addCase(fetchProducts.pending, (state) => {
             state.loading = true
-            state.status = "pending"
+            state.status = "loading"
         }) 
         .addCase(fetchProducts.fulfilled, (state, action) => {
-            state.status = "success";
+            state.status = "idle";
             state.products = action.payload;
             state.loading = false
         })
         .addCase(fetchProducts.rejected, (state, action) => {
-            state.status = "failed";
+            state.status = "idle";
             state.error = action.error.message;
         })
     builder
         .addCase(addProducts.pending, (state) => {
             state.loading = true
-            state.status = "pending"
+            state.status = "loading"
         }) 
         .addCase(addProducts.fulfilled, (state, action) => {
-            state.status = "success";
+            state.status = "idle";
             state.products = action.payload;
             state.loading = false
         })
         .addCase(addProducts.rejected, (state, action) => {
-            state.status = "failed";
+            state.status = "loading";
             state.error = action.error.message;
         })
     }

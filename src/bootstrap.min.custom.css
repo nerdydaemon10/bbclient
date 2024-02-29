@@ -40,3 +40,16 @@ padding: 8px 12px;
 .table .table-actions > *:last-child {
     margin-right: 0;
 }
+
+/* --BTN-BLOCK-- */
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+.invalid-feedback {
+    background-color: #FEF6F5;
+    border-radius: var(--bs-border-radius);
+    font-size: 13px;
+    font-weight: 500;
+}

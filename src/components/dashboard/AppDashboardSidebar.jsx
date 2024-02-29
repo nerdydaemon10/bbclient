@@ -1,11 +1,11 @@
 import { useState } from "react";
-import AppDashboardSidebarItems from "../../utils/data/AppDashboardSidebarItems.jsx";
+import AppDashboardSidebarItems from "../../utils/configs/AppDashboardSidebarItems.jsx";
 import StringHelper from "../../utils/helpers/StringHelper.jsx";
 import { Link } from "react-router-dom";
 
 function AppDashboardSidebar() {
   const [sidebarItem, setSidebarItem] = useState(1)
-
+  
   const handleSidebarItemClick = (id) => {
     setSidebarItem(id)
   }
