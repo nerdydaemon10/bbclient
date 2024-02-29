@@ -13,6 +13,8 @@ function LoginPage() {
   const { status, error } = useSelector((state) => state.auth)
   const [credentials, setCredentials] = useState({ username: "", password: "" })
 
+  console.log(error)
+
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value})
   }
@@ -21,8 +23,6 @@ function LoginPage() {
     e.preventDefault()
     dispatch(login(credentials))
   }
-
-  console.log(status)
 
   return (
     <AppCenteredLayout>
