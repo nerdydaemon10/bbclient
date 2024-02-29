@@ -5,6 +5,7 @@ import UiStatus from "../../utils/classes/UiStatus.jsx"
 export const login = createAsyncThunk("auth/login", async (credentials, thunkAPI) => {
   try {
     const response = await AuthService.login(credentials)
+    console.log(response)
     return response
   } catch(error) {
     return thunkAPI.rejectWithValue(error.response.data)
