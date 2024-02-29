@@ -1,27 +1,33 @@
 import "boxicons"
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 
 import AppCenteredLayout from "../../layouts/AppCenteredLayout.jsx"
 import UsernameTextField from "../../components/inputs/UsernameTextField.jsx"
 import PasswordTextField from "../../components/inputs/PasswordTextField.jsx"
 import AppSubmitButton from "../../components/buttons/AppSubmitButton.jsx"
 import { useDispatch, useSelector } from "react-redux"
-import { login } from "../../redux/auth/authSlice.jsx"
+import { login, loggedIn } from "../../redux/auth/authSlice.jsx"
 import StringHelper from "../../utils/helpers/StringHelper.jsx";
 
 function LoginPage() {
   const dispatch = useDispatch()
-  const { status, error } = useSelector((state) => state.auth)
+
+  const { status, error, loggedIn } = useSelector((state) => state.auth)
   const [credentials, setCredentials] = useState({ username: "", password: "" })
 
   const handleChange = (e) => {
-    console.log(credentials)
     setCredentials({ ...credentials, [e.target.name]: e.target.value})
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(login(credentials))
+  }
+
+  if (loggedIn) {
+    console.log("ahello")
+    window.location.href = "/home"
   }
 
   return (

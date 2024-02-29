@@ -11,8 +11,18 @@ export const login = createAsyncThunk("auth/login", async (credentials, thunkAPI
   }
 })
 
+export const loggedIn = () => {
+  const accessToken = localStorage.getItem("accessToken")
+  
+  if (accessToken == undefined || accessToken == null) {
+    return false
+  }
+
+  return true
+}
+
 const initialState = {
-  employee: null,
+  user: null,
   status: UiStatus.IDLE,
   error: null
 }
@@ -22,23 +32,26 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      state.employee = null
+      state.user = null
     }
 	},
   extraReducers: (builder) => {
 		builder
     .addCase(login.pending, (state) => { 
-      state.status = UiStatus.LOADING
       state.error = null
+      state.status = UiStatus.LOADING
     })
     .addCase(login.fulfilled, (state, action) => {
-      state.status = UiStatus.IDLE
-      state.employee = action.payload
       state.error = null
+      state.status = UiStatus.IDLE
+
+      localStorage.setItem("user", action.payload.user)
+      localStorage.setItem("accessToken", action.payload.token)
     })
-    .addCase(login.rejected, (state, action) => { 
+    .addCase(login.rejected, (state, action) => {
       state.status = UiStatus.IDLE
       state.error = action.payload
+      console.log()
     })
   }
 })
