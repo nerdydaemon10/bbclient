@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import AuthService from "../../services/AuthService.js"
+import UiStatus from "../../utils/classes/UiStatus.jsx"
 
 export const login = createAsyncThunk("auth/login", async (credentials, thunkAPI) => {
   try {
@@ -12,7 +13,7 @@ export const login = createAsyncThunk("auth/login", async (credentials, thunkAPI
 
 const initialState = {
   employee: null,
-  status: "idle",
+  status: UiStatus.IDLE,
   error: null
 }
 
@@ -27,14 +28,14 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
 		builder
     .addCase(login.pending, (state) => { 
-      state.status = "loading"
+      state.status = UiStatus.LOADING
     })
     .addCase(login.fulfilled, (state, action) => {
-      state.status = "idle"
+      state.status = UiStatus.IDLE
       state.employee = action.payload
     })
     .addCase(login.rejected, (state, action) => { 
-      state.status = "idle"
+      state.status = UiStatus.IDLE
       state.error = action.payload
     })
   }
