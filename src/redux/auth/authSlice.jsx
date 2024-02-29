@@ -5,7 +5,6 @@ import UiStatus from "../../utils/classes/UiStatus.jsx"
 export const login = createAsyncThunk("auth/login", async (credentials, thunkAPI) => {
   try {
     const response = await AuthService.login(credentials)
-    console.log(response)
     return response
   } catch(error) {
     return thunkAPI.rejectWithValue(error.response.data)
@@ -30,10 +29,12 @@ const authSlice = createSlice({
 		builder
     .addCase(login.pending, (state) => { 
       state.status = UiStatus.LOADING
+      state.error = null
     })
     .addCase(login.fulfilled, (state, action) => {
       state.status = UiStatus.IDLE
       state.employee = action.payload
+      state.error = null
     })
     .addCase(login.rejected, (state, action) => { 
       state.status = UiStatus.IDLE
