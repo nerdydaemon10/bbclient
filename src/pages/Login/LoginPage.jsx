@@ -1,12 +1,12 @@
 import "boxicons"
 import { useState } from "react";
 
-
 import AppCenteredLayout from "../../layouts/AppCenteredLayout.jsx"
 import UsernameTextField from "../../components/inputs/UsernameTextField.jsx"
 import PasswordTextField from "../../components/inputs/PasswordTextField.jsx"
-import AppSubmitButton from "../../components/buttons/AppSubmitButton.jsx";
-import { useDispatch, useSelector } from "react-redux";
+import AppSubmitButton from "../../components/buttons/AppSubmitButton.jsx"
+import { useDispatch, useSelector } from "react-redux"
+import { login } from "../../redux/auth/authSlice.jsx"
 
 function LoginPage() {
   const dispatch = useDispatch()
@@ -22,9 +22,11 @@ function LoginPage() {
     dispatch(login(credentials))
   }
 
+  console.log(status)
+
   return (
     <AppCenteredLayout>
-      <form className="w-25 app-sy-16">
+      <form className="w-25 app-sy-16" onSubmit={handleSubmit}>
         <div>
           <h1 className="app-text-title">Login an account</h1>
           <p className="app-text-title-caption">BARISTA BRO - The Coffee People</p>
@@ -46,7 +48,10 @@ function LoginPage() {
             errorMessage={""}
             onChange={handleChange}
           />
-          <AppSubmitButton text="Login" state="idle" />
+          <AppSubmitButton 
+            text="Login" 
+            state={status}
+          />
         </div>
         <div className="text-center">
           <p className="app-text-footer">&copy; Diamond Tech I.T. Solutions</p>
