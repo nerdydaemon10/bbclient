@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { callApi } from "../../utils/helpers/api/callApi";
 
-const loginUser = createAsyncThunk("user/login", async (credentials) => {
+const loginUser = createAsyncThunk("user/auth", async (credentials) => {
     try {
         const response = await callApi('post', '/auth', credentials)
         return response.data
