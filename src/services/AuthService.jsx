@@ -12,7 +12,6 @@ AuthService.login = async function(credentials) {
 
     const response = await axios.post(`${BASE_URL}/auth`, data, { 
         withCredentials: true,
-        withXSRFToken: true,
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
