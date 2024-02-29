@@ -14,7 +14,6 @@ StringHelper.extractMessageFromError = function(error) {
     if (error == null || error == undefined) {
         return ""
     }
-
     if (error.message == null || error.message == undefined) {
         return ""
     }
