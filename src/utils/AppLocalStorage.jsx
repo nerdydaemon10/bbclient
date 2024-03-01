@@ -7,7 +7,7 @@ AppLocalStorage.read = function(key) {
 AppLocalStorage.readUser = function() {
     const userJson = AppLocalStorage.read("user")
     const userObject = JSON.parse(userJson)
-    
+
     return userObject
 }
 AppLocalStorage.readAccessToken = function() {

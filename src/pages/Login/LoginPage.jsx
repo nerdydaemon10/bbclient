@@ -8,14 +8,12 @@ import PasswordTextField from "../../components/inputs/PasswordTextField.jsx"
 import AppSubmitButton from "../../components/buttons/AppSubmitButton.jsx"
 import { useDispatch, useSelector } from "react-redux"
 import { login } from "../../redux/auth/authSlice.jsx"
-import StringHelper from "../../utils/helpers/StringHelper.jsx";
-import AppLocalStorage from "../../utils/AppLocalStorage.jsx";
+import StringHelper from "../../utils/helpers/StringHelper.jsx"
 
 function LoginPage() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  
   const { status, error, user } = useSelector((state) => state.auth)
   const [credentials, setCredentials] = useState({ username: "nerdydaemon10", password: "helloworld10" })
 

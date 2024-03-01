@@ -25,6 +25,9 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.user = null
+      state.accessToken = null
+      
+      AppLocalStorage.clear()
     }
 	},
   extraReducers: (builder) => {
@@ -35,7 +38,7 @@ const authSlice = createSlice({
     })
     .addCase(login.fulfilled, (state, action) => {
       const { user, token } = action.payload
-      
+
       state.user = user
       state.error = null
       state.accessToken = token
