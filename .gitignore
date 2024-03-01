@@ -32,4 +32,4 @@ index.html
 .eslintrc.cjs
 /src/assets
 /src/bootstrap.min.css
-/src/main.jsx
+#/src/main.jsx

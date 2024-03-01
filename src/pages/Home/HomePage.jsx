@@ -3,6 +3,7 @@ import AppDashboardLayout from "../../layouts/AppDashboardLayout.jsx"
 import PointOfSaleView from "./views/PointOfSaleView.jsx"
 import InventoryView from "./views/InventoryView.jsx"
 import "../../layouts/AppDashboardLayout.css"
+import AppLocalStorage from "../../utils/AppLocalStorage.jsx"
 
 function HomePage() {
   return (

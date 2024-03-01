@@ -1,25 +1,23 @@
 import { useSelector } from 'react-redux'
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 
 import './App.css'
 import HomePage from './pages/Home/HomePage.jsx'
 import LoginPage from './pages/Login/LoginPage.jsx'
-import { loggedIn } from './redux/auth/authSlice.jsx'
+import AppLocalStorage from './utils/AppLocalStorage.jsx'
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<LoginPage />}></Route>
-      <Route element={<ProtectedRoute />}>
-        <Route exact path="/home/*" element={<HomePage />} />
-      </Route>
+      <Route path="/home/*" element={<AuthenticateRoute />} />
     </Routes>
   )
 }
 
-function ProtectedRoute() {
-  console.log(loggedIn())
-  return loggedIn() ? <Outlet /> : <Navigate to="/" />
+function AuthenticateRoute() {
+  const accessToken = AppLocalStorage.readAccessToken()
+  return (accessToken ? <HomePage /> : <Navigate to="/" replace={true} />)
 }
 
 export default App

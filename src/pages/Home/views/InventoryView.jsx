@@ -1,16 +1,17 @@
+import { useEffect } from "react"
+import { BiPlus } from "react-icons/bi"
+import { useDispatch, useSelector } from "react-redux"
+import { BiChevronLeft } from "react-icons/bi"
+import { BiChevronRight } from "react-icons/bi"
+import { fetchProducts } from "../../../redux/products/productSlice.jsx"
+import DateHelper from "../../../utils/helpers/DateHelper.jsx"
+
 import "../../../layouts/AppDashboardLayout.css"
-import { BiPlus } from "react-icons/bi";
-import { BiChevronLeft } from "react-icons/bi";
-import { BiChevronRight } from "react-icons/bi";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../../../redux/products/productSlice.jsx";
-import DateHelper from "../../../utils/helpers/DateHelper.jsx";
 
 function InventoryView() {
   return (
     <>
-      <h1 className="app-text-title">Inventory</h1>
+      <h1 className="app-text-title">user.full_name</h1>
       <p className="app-text-title-caption">Here's a list of your products for this month!</p>  
       <InventoryTable />
     </>
@@ -31,8 +32,6 @@ function InventoryTableBody() {
   const dispatch = useDispatch()
   const products = useSelector((state) => state.products.products)
   const status = useSelector((state) => state.products.status)
-
-  console.log(status)
 
   useEffect(() => {
     dispatch(fetchProducts())

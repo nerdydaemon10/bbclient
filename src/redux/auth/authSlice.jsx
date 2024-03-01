@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import AuthService from "../../services/AuthService.jsx"
 import UiStatus from "../../utils/classes/UiStatus.jsx"
+import AppLocalStorage from "../../utils/AppLocalStorage.jsx"
 
 export const login = createAsyncThunk("auth/login", async (credentials, thunkAPI) => {
   try {
@@ -11,18 +12,9 @@ export const login = createAsyncThunk("auth/login", async (credentials, thunkAPI
   }
 })
 
-export const loggedIn = () => {
-  const accessToken = localStorage.getItem("accessToken")
-  
-  if (accessToken == undefined || accessToken == null) {
-    return false
-  }
-
-  return true
-}
-
 const initialState = {
-  user: null,
+  user: AppLocalStorage.readUser(),
+  accessToken: AppLocalStorage.readAccessToken(),
   status: UiStatus.IDLE,
   error: null
 }
@@ -42,16 +34,22 @@ const authSlice = createSlice({
       state.status = UiStatus.LOADING
     })
     .addCase(login.fulfilled, (state, action) => {
+      const { user, token } = action.payload
+      
+      state.user = user
       state.error = null
+      state.accessToken = token
       state.status = UiStatus.IDLE
 
-      localStorage.setItem("user", action.payload.user)
-      localStorage.setItem("accessToken", action.payload.token)
+      AppLocalStorage.saveUser(user)
+      AppLocalStorage.saveAccessToken(token)
+
+      console.log(AppLocalStorage.readUser())
+      console.log(AppLocalStorage.readAccessToken())
     })
     .addCase(login.rejected, (state, action) => {
       state.status = UiStatus.IDLE
       state.error = action.payload
-      console.log()
     })
   }
 })
