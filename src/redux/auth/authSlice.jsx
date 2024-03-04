@@ -6,7 +6,7 @@ import AppLocalStorage from "../../utils/AppLocalStorage.jsx";
 export const login = createAsyncThunk("auth/login", async (credentials, thunkAPI) => {
   try {
     const response = await AuthService.login(credentials)
-    console.log("test")
+
     return response
   } catch(error) {
     return thunkAPI.rejectWithValue(error.response.data)
@@ -38,18 +38,15 @@ const authSlice = createSlice({
       state.status = UiStatus.LOADING
     })
     .addCase(login.fulfilled, (state, action) => {
-      const { user, token } = action.payload
-
+      const [ accessToken, user ] = action.payload
+      
       state.user = user
       state.error = null
-      state.accessToken = token
+      state.accessToken = accessToken
       state.status = UiStatus.IDLE
 
       AppLocalStorage.saveUser(user)
-      AppLocalStorage.saveAccessToken(token)
-
-      console.log(AppLocalStorage.readUser())
-      console.log(AppLocalStorage.readAccessToken())
+      AppLocalStorage.saveAccessToken(accessToken)
     })
     .addCase(login.rejected, (state, action) => {
       state.status = UiStatus.IDLE

@@ -15,8 +15,6 @@ function LoginPage() {
   const navigate = useNavigate();
 
   const { status, error, accessToken } = useSelector((state) => state.auth);
-
-  
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -26,21 +24,16 @@ function LoginPage() {
     if(accessToken !== null) {
       navigate('/home/')
     }
-  }, [user, navigate])
+  }, [navigate, accessToken])
 
   const handleChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  };
+    setCredentials({ ...credentials, [e.target.name]: e.target.value })
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    try {
-      dispatch(login(credentials));
-      navigate("/home/");
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
-  };
+    e.preventDefault()
+    dispatch(login(credentials))
+  }
 
   return (
     <AppCenteredLayout>
