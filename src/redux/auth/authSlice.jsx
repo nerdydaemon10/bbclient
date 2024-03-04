@@ -1,11 +1,12 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import AuthService from "../../services/AuthService.jsx"
-import UiStatus from "../../utils/classes/UiStatus.jsx"
-import AppLocalStorage from "../../utils/AppLocalStorage.jsx"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import AuthService from "../../services/AuthService.jsx";
+import UiStatus from "../../utils/classes/UiStatus.jsx";
+import AppLocalStorage from "../../utils/AppLocalStorage.jsx";
 
 export const login = createAsyncThunk("auth/login", async (credentials, thunkAPI) => {
   try {
     const response = await AuthService.login(credentials)
+    console.log("test")
     return response
   } catch(error) {
     return thunkAPI.rejectWithValue(error.response.data)
@@ -16,20 +17,20 @@ const initialState = {
   user: AppLocalStorage.readUser(),
   accessToken: AppLocalStorage.readAccessToken(),
   status: UiStatus.IDLE,
-  error: null
-}
+  error: null,
+};
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
     logout: (state) => {
-      state.user = null
-      state.accessToken = null
+      state.user = null;
+      state.accessToken = null;
 
-      AppLocalStorage.clear()
-    }
-	},
+      AppLocalStorage.clear();
+    },
+  },
   extraReducers: (builder) => {
 		builder
     .addCase(login.pending, (state) => { 
@@ -37,15 +38,18 @@ const authSlice = createSlice({
       state.status = UiStatus.LOADING
     })
     .addCase(login.fulfilled, (state, action) => {
-      const [accessToken, user] = action.payload
+      const { user, token } = action.payload
 
-      state.user = action.payload
+      state.user = user
       state.error = null
-      state.accessToken = accessToken
+      state.accessToken = token
       state.status = UiStatus.IDLE
 
       AppLocalStorage.saveUser(user)
-      AppLocalStorage.saveAccessToken(accessToken)
+      AppLocalStorage.saveAccessToken(token)
+
+      console.log(AppLocalStorage.readUser())
+      console.log(AppLocalStorage.readAccessToken())
     })
     .addCase(login.rejected, (state, action) => {
       state.status = UiStatus.IDLE
@@ -54,5 +58,5 @@ const authSlice = createSlice({
   }
 })
 
-export const { logout } = authSlice.actions
-export default authSlice.reducer
+export const { logout } = authSlice.actions;
+export default authSlice.reducer;
