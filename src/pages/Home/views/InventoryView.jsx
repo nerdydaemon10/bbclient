@@ -3,7 +3,6 @@ import { BiPlus } from "react-icons/bi"
 import { useDispatch, useSelector } from "react-redux"
 import { BiChevronLeft } from "react-icons/bi"
 import { BiChevronRight } from "react-icons/bi"
-//import { fetchProducts } from "../../../redux/products/productSlice.jsx"
 import DateHelper from "../../../utils/helpers/DateHelper.jsx"
 
 import FakeDataInventories from "../../../utils/data/FakeDataInventories.jsx"

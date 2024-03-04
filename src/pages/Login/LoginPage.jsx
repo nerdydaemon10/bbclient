@@ -17,12 +17,14 @@ function LoginPage() {
   const { status, error, user } = useSelector((state) => state.auth)
   const [credentials, setCredentials] = useState({ username: "nerdydaemon10", password: "helloworld10" })
 
+  console.log(status)
+
   useEffect(() => {
     if (user !== null) {
       navigate("/home/")
     }
   }, [user, navigate])
-  
+
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value})
   }
