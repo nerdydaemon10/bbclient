@@ -10,6 +10,9 @@ import './assets/css/bootstrap.min.css'
 import './assets/css/bootstrap.min.custom.css'
 
 import App from './App.jsx'
+import inits from './utils/inits.jsx'
+
+inits()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

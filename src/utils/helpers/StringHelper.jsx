@@ -1,4 +1,4 @@
-import prototypes from "../prototypes.js"
+import prototypes from "../prototypes.jsx"
 
 prototypes.init()
 
@@ -10,13 +10,14 @@ StringHelper.isDashboardSidebarItemActive = function(bool) {
 StringHelper.isFormControlInvalid = function(errorMessage) {
     return errorMessage.isNotEmpty() ? "is-invalid" : ""
 }
-StringHelper.extractMessageFromError = function(error) {
+StringHelper.extractErrorsFromError = function(name, error) {
     if (error == null || error == undefined) {
         return ""
     }
-    if (error.message == null || error.message == undefined) {
+
+    if (error.errors == null || error.errors == undefined) {
         return ""
     }
-
-    return error.message
+    
+    return error.errors[name] 
 }

@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux"
 import { Navigate, Route, Router, Routes, useNavigate } from "react-router-dom"
 
-import InventoryView from "./views/InventoryView.jsx"
+import InventoryView from "./views/inventory/InventoryView.jsx"
 import PointOfSaleView from "./views/PointOfSaleView.jsx"
 import AppDashboardLayout from "../../layouts/AppDashboardLayout.jsx"
 import { logout } from "../../redux/auth/authSlice.jsx"

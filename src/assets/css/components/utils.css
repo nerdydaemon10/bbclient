@@ -1,0 +1,53 @@
+/* --start sx */
+.app-sx-6 > * {
+    margin-right: 6px;
+}
+.app-sx-6 > *:last-child {
+    margin-right: 0;
+}
+.app-sx-8 > * {
+    margin-right: 8px;
+}
+.app-sx-8 > *:last-child {
+    margin-right: 0;
+}
+.app-sx-12 > * {
+    margin-right: 12px;
+}
+.app-sx-12 > *:last-child {
+    margin-right: 0;
+}
+.app-sx-16 > * {
+    margin-right: 16px;
+}
+.app-sx-16 > *:last-child {
+    margin-right: 0;
+}
+/* --end sx */
+
+/* --start sy */
+.app-sy-6 > * {
+    margin-bottom: 6px;
+}
+.app-sy-6 > *:last-child {
+    margin-bottom: 0;
+}
+.app-sy-8 > * {
+    margin-bottom: 8px;
+}
+.app-sy-8 > *:last-child {
+    margin-bottom: 0;
+}
+.app-sy-12 > * {
+    margin-bottom: 12px;
+}
+.app-sy-12 > *:last-child {
+    margin-bottom: 0;
+}
+.app-sy-16 > * {
+    margin-bottom: 16px;
+}
+.app-sy-16 > *:last-child {
+    margin-bottom: 0;
+}
+/* --end sy */

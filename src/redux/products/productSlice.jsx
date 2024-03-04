@@ -5,7 +5,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export const fetchProducts = createAsyncThunk("products/getProducts", async () => {
     try {
         const response = await callApi('get', '/products')
-        return response.data;
+        return response.data
     } catch (error) {
         console.log("Error fetching products", error);
     }

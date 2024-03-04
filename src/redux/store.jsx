@@ -1,9 +1,11 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-//import productsSlice from "./products/productSlice.jsx";
-import authSlice from "./auth/authSlice.jsx";
+import { combineReducers, configureStore } from "@reduxjs/toolkit"
+
+import authSlice from "./auth/authSlice.jsx"
+import inventorySlice from "./inventory/inventorySlice.jsx"
 
 const reducer = combineReducers({
-  auth: authSlice
+  auth: authSlice,
+  inventory: inventorySlice
   //products: productsSlice
 })
 

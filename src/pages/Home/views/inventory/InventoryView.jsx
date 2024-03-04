@@ -1,17 +1,25 @@
-import { useEffect } from "react"
 import { BiPlus } from "react-icons/bi"
-import { useDispatch, useSelector } from "react-redux"
 import { BiChevronLeft } from "react-icons/bi"
 import { BiChevronRight } from "react-icons/bi"
-import DateHelper from "../../../utils/helpers/DateHelper.jsx"
+import DateHelper from "../../../../utils/helpers/DateHelper.jsx"
 
-import FakeDataInventories from "../../../utils/data/FakeDataInventories.jsx"
+import FakeDataInventories from "../../../../utils/data/FakeDataInventories.jsx"
+import { useDispatch, useSelector } from "react-redux"
+import { fetchProducts } from "../../../../redux/inventory/inventorySlice.jsx"
+import { useEffect } from "react"
 
 function InventoryView() {
+  const dispatch = useDispatch()
+  const { products, state, error } = useSelector((state) => state.inventory)
+
+  useEffect(() => {
+    dispatch(fetchProducts())
+  }, [dispatch])
+
   return (
     <>
       <h1 className="app-text-title">Inventory</h1>
-      <p className="app-text-title-caption">Here's a list of your products for this month!</p>  
+      <p className="app-text-title-caption">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>  
       <InventoryTable />
     </>
   )
@@ -28,13 +36,14 @@ function InventoryTable() {
 }
 
 function InventoryTableBody() {
-  //const dispatch = useDispatch()
+  const dispatch = useDispatch()
+
   //const products = useSelector((state) => state.products.products)
   //const status = useSelector((state) => state.products.status)
 
-  /*useEffect(() => {
+  useEffect(() => {
     dispatch(fetchProducts())
-  }, [])*/
+  }, [dispatch])
 
   return (
     <>
@@ -45,7 +54,7 @@ function InventoryTableBody() {
               <th>Name</th>
               <th>Category</th>
               <th>Quantity</th>
-              <th>Srp</th>
+              <th>SRP</th>
               <th>Price</th>
               <th>Member Price</th>
               <th>Created At</th>
@@ -87,7 +96,7 @@ function InventoryTableBody() {
 
 function InventoryTableHeader() {
   return (
-    <div className="d-flex align-center justify-content-between mb-2">
+    <div className="d-flex align-center justify-content-between">
       <div className="d-flex app-sx-8">
         <input type="text" className="form-control" placeholder="Filter Inventory..."/>
         <select className="form-select">

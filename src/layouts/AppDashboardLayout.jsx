@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { SlOptionsVertical } from "react-icons/sl"
 
@@ -18,7 +18,7 @@ function AppDashboardLayout({children}) {
         currentId={currentId}
         onClick={handleSidebarItemClick} 
       />
-      <div className="col app-dashboard-main">
+      <div className="app-dashboard-main">
         <AppDashboardNavbar />
         <div className="app-dashboard-main-content">{children}</div>
       </div>

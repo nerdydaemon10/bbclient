@@ -17,14 +17,12 @@ function LoginPage() {
   const { status, error, user } = useSelector((state) => state.auth)
   const [credentials, setCredentials] = useState({ username: "nerdydaemon10", password: "helloworld10" })
 
-  console.log(status)
-
   useEffect(() => {
     if (user !== null) {
       navigate("/home/")
     }
   }, [user, navigate])
-
+  
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value})
   }
@@ -38,16 +36,16 @@ function LoginPage() {
     <AppCenteredLayout>
       <form className="w-25 app-sy-16" onSubmit={handleSubmit}>
         <div>
-          <h1 className="app-text-title">Login to your account</h1>
-          <p className="app-text-title-caption">Lorem ipsum dolor</p>
+          <h1 className="app-text-title">Login</h1>
+          <p className="app-text-title-caption">Barista Bro - The Coffee People</p>
         </div>
-        <div className="app-sy-8">
+        <div className="app-sy-12">
           <UsernameTextField 
             name="username" 
             label="Username"
             placeholder="Username..."
             value={credentials.username}
-            errorMessage={StringHelper.extractMessageFromError(error)}
+            errorMessage={StringHelper.extractErrorsFromError("username", error)}
             onChange={handleChange}
           />
           <PasswordTextField
@@ -55,7 +53,7 @@ function LoginPage() {
             label="Password"
             placeholder="Password..."
             value={credentials.password}
-            errorMessage={StringHelper.extractMessageFromError(error)}
+            errorMessage={StringHelper.extractErrorsFromError("password", error)}
             onChange={handleChange}
           />
           <AppSubmitButton 
