@@ -1,14 +1,11 @@
 import { useDispatch } from "react-redux"
 import { Navigate, Route, Router, Routes, useNavigate } from "react-router-dom"
 
-import "../../layouts/AppDashboardLayout.css"
 import InventoryView from "./views/InventoryView.jsx"
 import PointOfSaleView from "./views/PointOfSaleView.jsx"
-import AppLocalStorage from "../../utils/AppLocalStorage.jsx"
 import AppDashboardLayout from "../../layouts/AppDashboardLayout.jsx"
 import { logout } from "../../redux/auth/authSlice.jsx"
 import { useEffect } from "react"
-
 
 function HomePage() {
   return (

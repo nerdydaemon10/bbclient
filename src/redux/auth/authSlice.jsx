@@ -6,6 +6,7 @@ import AppLocalStorage from "../../utils/AppLocalStorage.jsx"
 export const login = createAsyncThunk("auth/login", async (credentials, thunkAPI) => {
   try {
     const response = await AuthService.login(credentials)
+    console.log("test")
     return response
   } catch(error) {
     return thunkAPI.rejectWithValue(error.response.data)

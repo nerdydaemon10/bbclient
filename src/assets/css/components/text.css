@@ -1,0 +1,27 @@
+.app-text-title {
+    color: var(--app-main-color);
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1;
+}
+.app-text-title-caption {
+    color: #71717A;
+    font-size: 15px;
+    font-weight: 400;
+}
+.app-text-paragraph {
+    color: var(--app-main-color);
+    font-weight: 500;
+}
+.app-text-label {
+    color: var(--app-main-color);
+    font-size: 14px;
+    font-weight: 500;
+}
+.app-text-footer {
+    color: #71717A;
+    font-size: 14px;
+}
+.app-text-nowrap {
+    white-space: nowrap;
+}

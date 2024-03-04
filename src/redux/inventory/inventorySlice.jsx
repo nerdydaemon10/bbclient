@@ -1,3 +1,4 @@
+/*
 import axios from "axios";
 import { callApi } from "../../utils/helpers/api/callApi";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
@@ -53,3 +54,4 @@ const { addProducts } = inventorySlice.actions
 export const selectAllProducts = (state) => state.products.products;
 
 export default inventorySlice.reducer;
+*/
