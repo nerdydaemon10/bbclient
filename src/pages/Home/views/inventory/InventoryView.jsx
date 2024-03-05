@@ -12,9 +12,9 @@ function InventoryView() {
   const dispatch = useDispatch()
   const { products, status, error } = useSelector((state) => state.inventory)
 
-  /*useEffect(() => {
+  useEffect(() => {
     dispatch(fetchProducts())
-  }, [dispatch])*/
+  }, [dispatch])
   
   return (
     <div>
@@ -29,7 +29,7 @@ function InventoryView() {
 function CreateModal() {
   return (
   <div className="app-modal">
-    
+
   </div>
   )
 }
