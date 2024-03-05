@@ -14,7 +14,7 @@ export const fetchProducts = createAsyncThunk("inventory/fetch-products", async 
 
 const initialState = {
     products: [],
-    status: UiStatus.EMPTY,
+    status: UiStatus.LOADING,
     error: null
 }
 
@@ -32,7 +32,7 @@ const inventorySlice = createSlice({
         state.status = UiStatus.LOADING
     }) 
     .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.status = [].length > 0 ? UiStatus.IDLE : UiStatus.EMPTY
+        state.status = action.payload > 0 ? UiStatus.IDLE : UiStatus.EMPTY
         state.products = action.payload
     })
     .addCase(fetchProducts.rejected, (state, action) => {
