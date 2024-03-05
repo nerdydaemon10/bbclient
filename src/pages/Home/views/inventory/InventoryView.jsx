@@ -28,8 +28,18 @@ function InventoryView() {
 
 function CreateModal() {
   return (
-  <div className="app-modal">
-
+  <div className="app-modal-container">
+    <form className="app-modal">
+      <div className="app-modal-header">
+        <h1 className="app-modal-title">Create Product</h1>
+      </div>
+      <div className="app-modal-body">
+        <h1 className="app-modal-title">Create Food</h1>
+      </div>
+      <div className="app-modal-footer">
+        <h1 className="app-modal-title">Create Food</h1>
+      </div>
+    </form>
   </div>
   )
 }
