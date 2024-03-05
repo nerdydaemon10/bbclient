@@ -6,7 +6,7 @@ import UiStatus from "../../utils/classes/UiStatus.jsx"
 export const fetchProducts = createAsyncThunk("inventory/fetch-products", async (thunkAPI) => {
     try {
         const response = await ProductService.findAll()
-        return response
+        return response.data
     } catch (error) {
         return thunkAPI.rejectWithValue(error.response.data)
     }
@@ -14,13 +14,12 @@ export const fetchProducts = createAsyncThunk("inventory/fetch-products", async 
 
 const initialState = {
     products: [],
-    status: UiStatus.LOADING,
+    status: UiStatus.EMPTY,
     error: null
-};
-
+}
 
 const inventorySlice = createSlice({
-  name: 'inventory',
+  name: "inventory",
   initialState,
   reducers:{
     addProducts: (state, action) => {
@@ -33,11 +32,11 @@ const inventorySlice = createSlice({
         state.status = UiStatus.LOADING
     }) 
     .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.status = UiStatus.IDLE
+        state.status = [].length > 0 ? UiStatus.IDLE : UiStatus.EMPTY
         state.products = action.payload
     })
     .addCase(fetchProducts.rejected, (state, action) => {
-        state.status = UiStatus.IDLE
+        state.status = UiStatus.ERROR
         state.error = action.payload
     })
   }

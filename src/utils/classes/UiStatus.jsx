@@ -1,5 +1,7 @@
 export default class UiStatus {
-    static IDLE = "idle"
-    static LOADING = "loading"
-    static SUCCESS = "success"
+    static IDLE = "IDLE"
+    static LOADING = "LOADING"
+    static SUCCESS = "SUCCESS"
+    static ERROR = "ERROR"
+    static EMPTY = "EMPTY"
 }

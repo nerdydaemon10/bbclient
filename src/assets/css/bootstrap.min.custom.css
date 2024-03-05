@@ -28,6 +28,10 @@
     vertical-align: middle;
     padding: 8px 12px;
 }
+.table .table-cell-status {
+    color: #71717A;
+    text-align: center;
+}
 .table .table-actions > * {
     margin-right: var(--app-spacing);
 }
