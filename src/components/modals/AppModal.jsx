@@ -4,7 +4,7 @@ import AppSubmitButton from "../buttons/AppBaseButton.jsx"
 
 function AppModal({title, status, isShown, onClose, onConfirm, children}) {
   const isLoading = status == UiStatus.LOADING ? "is-loading" : ""
-
+  
   document.body.style.overflow = isShown ? "hidden" : "unset"
 
   return (

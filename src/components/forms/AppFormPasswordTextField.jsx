@@ -5,9 +5,8 @@ import prototypes from "../../utils/prototypes.jsx"
 prototypes.init()
 
 function AppFormPasswordTextField({name, label, placeholder, value, error, onChange}) {
-  const isInvalid = error.isNotEmpty() ? "is-invalid" : ""
+  const isInvalid = error.length > 0 ? "is-invalid" : ""
 
-  
   return (
     <div className="-sy-4">
       <label className="app-text-label">{label}</label>

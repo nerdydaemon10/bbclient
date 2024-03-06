@@ -52,8 +52,8 @@ function PointOfSaleView() {
                   <td>P {item.srp}</td>
                   <td>P {item.price}</td>
                   <td>P {item.memberPrice}</td>
-                  <td>{DateHelper.toStandardDate(item.created_at)}</td>
-                  <td>{DateHelper.toStandardDate(item.updated_at)}</td>
+                  <td>{DateHelper.display(item.created_at)}</td>
+                  <td>{DateHelper.display(item.updated_at)}</td>
                   <td className="table-actions">
                     <button href="#" className="btn btn-dark btn-sm mr-2">
                       Place Order

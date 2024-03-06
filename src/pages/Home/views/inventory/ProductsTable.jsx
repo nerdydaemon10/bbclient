@@ -80,15 +80,15 @@ function MainSection({status, products}) {
         {
           status == UiStatus.LOADING ? (
             <tr>
-              <td className="-table-cell-status" colSpan={headersSize}>Fetching Products...</td>
+              <td className="-tbl-cell-status" colSpan={headersSize}>Fetching Products...</td>
             </tr>
           ) : status == UiStatus.ERROR ? (
             <tr>
-              <td className="-table-cell-status" colSpan={headersSize}>Something went wrong.</td>
+              <td className="-tbl-cell-status" colSpan={headersSize}>Something went wrong.</td>
             </tr>
           ) : status == UiStatus.EMPTY ? (
             <tr>
-              <td className="table-cell-status" colSpan={headersSize}>
+              <td className="-tbl-cell-status" colSpan={headersSize}>
                 Press &apos;+&apos; button to add product in inventory.
               </td>
             </tr>
@@ -97,12 +97,12 @@ function MainSection({status, products}) {
               <tr key={index}>
                 <td>{product.name}</td>
                 <td>{product.description}</td>
-                <td>{product.categoryId}</td>
+                <td><span className="badge bg-light">{product.category}</span></td>
                 <td>{product.quantity}</td>
                 <td>{product.srp}</td>
-                <td>{product.memberPrice}</td>
-                <td>{product.createdAt}</td>
-                <td>{product.updatedAt}</td>
+                <td>{product.member_price}</td>
+                <td>{product.created_at}</td>
+                <td>{product.updated_at}</td>
                 <td className="-sx-8">
                   <button href="#" className="btn btn-dark btn-sm mr-2">
                     Edit

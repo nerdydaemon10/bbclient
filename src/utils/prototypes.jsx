@@ -5,7 +5,7 @@ prototypes.init = function() {
         return !this.trim()
     }
     String.prototype.isNotEmpty = function() {
-        return this.trim().length > 0
+        return this.replace(" ", "").length > 0
     }
     
     /**

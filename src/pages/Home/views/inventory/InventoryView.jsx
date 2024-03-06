@@ -1,5 +1,6 @@
 import "boxicons"
 import { useEffect, useState } from "react"
+import toast, { Toaster } from 'react-hot-toast'
 import { useDispatch, useSelector } from "react-redux"
 
 import ProductsTable from "./ProductsTable.jsx"
@@ -8,7 +9,8 @@ import ProductCategories from "../../../../utils/data/ProductCategories.jsx"
 import AppFormTextField from "../../../../components/forms/AppFormTextField.jsx"
 import AppFormSelect from "../../../../components/forms/AppFormSelect.jsx"
 import { createProduct, fetchProducts } from "../../../../redux/inventory/inventorySlice.jsx"
-
+import { findErrorByName } from "../../../../utils/helpers/FormHelper.jsx"
+import UiStatus from "../../../../utils/classes/UiStatus.jsx"
 
 function InventoryView() {
   // local-state
@@ -16,20 +18,31 @@ function InventoryView() {
   const [product, setProduct] = useState({
     name: "",
     description: "",
-    categoryId: ProductCategories[1].id,
+    category_id: ProductCategories[1].id,
     quantity: "",
     srp: "",
-    memberPrice: ""
+    member_price: ""
   })
-
+  
   // redux-state
-  const { fetch, create } = useSelector((state) => state.inventory)
+  const { create } = useSelector((state) => state.inventory)
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(fetchProducts())
   }, [dispatch])
 
+  useEffect(() => {
+    if (create.status == UiStatus.SUCCESS) {
+      setIsCreateModalShown(false)
+      notify()
+    }
+  }, [create.status])
+
+  const notify = () => {
+    toast.success("Product was successfully added.")
+  }
+  
   const handleProductChange = (e) => {
     setProduct({ ...product, [e.target.name]: e.target.value})
   }
@@ -46,7 +59,7 @@ function InventoryView() {
     e.preventDefault()
     dispatch(createProduct(product))
   }
-  
+
   return (
     <>
       <h3 className="mb-0">Inventory</h3>
@@ -60,14 +73,14 @@ function InventoryView() {
         onClose={handleCreateModalCloseClick}
         onConfirm={handleCreateModalConfirmClick}
       >
-        <div className="row mb-1">
+        <div className="row mb-2">
           <div className="col-6">
             <AppFormTextField 
               name="name"
               label="Name"
               placeholder="e.g., Coffee Power"
               value={product.name}
-              error=""
+              error={findErrorByName(create.error, "name")}
               onChange={handleProductChange}
             />
           </div>
@@ -77,19 +90,19 @@ function InventoryView() {
               label="Description"
               placeholder="e.g., 100 grams, with free spoon"
               value={product.description}
-              error=""
+              error={findErrorByName(create.error, "description")}
               onChange={handleProductChange}
             />
           </div>
         </div>
-        <div className="row mb-1">
+        <div className="row mb-2">
           <div className="col-6">
             <AppFormSelect 
-              name="categoryId"
+              name="category_id"
               label="Category"
               options={ProductCategories}
-              value={product.categoryId}
-              error=""
+              value={product.category_id}
+              error={findErrorByName(create.error, "category_id")}
               onChange={handleProductChange}
             />
           </div>
@@ -99,34 +112,35 @@ function InventoryView() {
                 label="Quantity"
                 placeholder="e.g., 75"
                 value={product.quantity}
-                error=""
+                error={findErrorByName(create.error, "quantity")}
                 onChange={handleProductChange}
               />
           </div>
         </div>
-        <div className="row mb-1">
+        <div className="row mb-2">
           <div className="col-6">
             <AppFormTextField 
               name="srp"
               label="SRP"
               placeholder="e.g., 80.00"
               value={product.srp}
-              error=""
+              error={findErrorByName(create.error, "srp")}
               onChange={handleProductChange}
             />
           </div>
           <div className="col-6">
             <AppFormTextField 
-              name="memberPrice"
+              name="member_price"
               label="Member Price"
               placeholder="e.g., 90.00"
-              value={product.memberPrice}
-              error=""
+              value={product.member_price}
+              error={findErrorByName(create.error, "member_price")}
               onChange={handleProductChange}
             />
           </div>
         </div>
       </AppModal>
+      <Toaster />
     </>
   )
 }
