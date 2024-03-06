@@ -1,156 +1,132 @@
-import { BiPlus } from "react-icons/bi"
-import { BiChevronLeft } from "react-icons/bi"
-import { BiChevronRight } from "react-icons/bi"
-import DateHelper from "../../../../utils/helpers/DateHelper.jsx"
-
+import "boxicons"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchProducts } from "../../../../redux/inventory/inventorySlice.jsx"
-import { useEffect } from "react"
-import UiStatus from "../../../../utils/classes/UiStatus.jsx"
+
+import ProductsTable from "./ProductsTable.jsx"
+import AppModal from "../../../../components/modals/AppModal.jsx"
+import ProductCategories from "../../../../utils/data/ProductCategories.jsx"
+import AppFormTextField from "../../../../components/forms/AppFormTextField.jsx"
+import AppFormSelect from "../../../../components/forms/AppFormSelect.jsx"
+import { createProduct, fetchProducts } from "../../../../redux/inventory/inventorySlice.jsx"
+
 
 function InventoryView() {
+  // local-state
+  const [isCreateModalShown, setIsCreateModalShown] = useState(false)
+  const [product, setProduct] = useState({
+    name: "",
+    description: "",
+    categoryId: ProductCategories[1].id,
+    quantity: "",
+    srp: "",
+    memberPrice: ""
+  })
+
+  // redux-state
+  const { fetch, create } = useSelector((state) => state.inventory)
   const dispatch = useDispatch()
-  const { products, status, error } = useSelector((state) => state.inventory)
 
   useEffect(() => {
     dispatch(fetchProducts())
   }, [dispatch])
+
+  const handleProductChange = (e) => {
+    setProduct({ ...product, [e.target.name]: e.target.value})
+  }
+
+  const handleCreateModalShownClick = () => {
+    setIsCreateModalShown(!isCreateModalShown)
+  }
+
+  const handleCreateModalCloseClick = () => {
+    setIsCreateModalShown(!isCreateModalShown)
+  }
+
+  const handleCreateModalConfirmClick = (e) => {
+    e.preventDefault()
+    dispatch(createProduct(product))
+  }
   
   return (
-    <div>
-      <h1 className="app-text-title">Inventory</h1>
-      <p className="app-text-title-caption">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-      <ProductsTable status={status} products={products} />
-      <CreateModal />
-    </div>
-  )
-}
-
-function CreateModal() {
-  return (
-  <div className="app-modal-container">
-    <form className="app-modal">
-      <div className="app-modal-header">
-        <h1 className="app-modal-title">Create Product</h1>
-      </div>
-      <div className="app-modal-body">
-        <h1 className="app-modal-title">Create Food</h1>
-      </div>
-      <div className="app-modal-footer">
-        <h1 className="app-modal-title">Create Food</h1>
-      </div>
-    </form>
-  </div>
-  )
-}
-function ProductsTable(props) {
-  const { status, products } = props
-  const headers = [
-    "Name", "Category", "Quantity",
-    "SRP", "Member Price", "Created At", 
-    "Updated At", "#"
-  ]
-  const headersSize = headers.length
-
-  return (
-    <div className="app-sy-8">
-      <ProductsTableHeader status={status} />
-      <div className="table-wrapper">
-        <table className="table">
-          <thead>
-            <tr>{ headers.map((item, index) => <th key={index}>{item}</th>) }</tr>
-          </thead>
-          <tbody>
-          {
-            status == UiStatus.LOADING ? (
-              <tr>
-                <td className="table-cell-status" colSpan={headersSize}>Fetching Products...</td>
-              </tr>
-            ) : status == UiStatus.ERROR ? (
-              <tr>
-                <td className="table-cell-status" colSpan={headersSize}>Something went wrong.</td>
-              </tr>
-            ) : status == UiStatus.EMPTY ? (
-              <tr>
-                <td className="table-cell-status" colSpan={headersSize}>
-                  Press &apos;+&apos; button to add product in inventory.
-                </td>
-              </tr>
-            ) : products.map((product, index) => 
-              (
-                <tr key={index}>
-                  <td>{product.name}</td>
-                  <td>{product.categoryId}</td>
-                  <td>{product.quantity}</td>
-                  <td>{product.srp}</td>
-                  <td>{product.memberPrice}</td>
-                  <td>{product.createdAt}</td>
-                  <td>{product.updatedAt}</td>
-                  <td className="app-sx-8">
-                    <button href="#" className="btn btn-dark btn-sm mr-2">
-                      Edit
-                    </button>
-                    <button href="#" className="btn btn-secondary btn-sm">
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              )
-            )
-          }
-          </tbody>
-        </table>
-      </div>
-      <ProductsTableFooter />
-    </div>
-  )
-}
-function ProductsTableHeader(props) {
-  const disabled = props.status != UiStatus.IDLE
-  const buttonDisabled = (props.status != UiStatus.IDLE) && (props.status != UiStatus.EMPTY)
-
-  return (
-    <div className="d-flex align-center justify-content-between">
-      <div className="d-flex app-sx-8">
-        <input type="text" className="form-control" placeholder="Filter Products..." disabled={disabled} />
-        <select className="form-select" disabled={disabled}>
-          <option>-- All-Categories --</option>
-        </select>
-      </div>
-      <button className="btn btn-secondary d-flex align-center" disabled={buttonDisabled}>
-        <BiPlus size={20} />
-        Create
-      </button>
-    </div>
-  )
-}
-function ProductsTableFooter(props) {
-  const { status } = props
-  const disabled = status != UiStatus.IDLE
-
-  return (
-    <div className="d-flex align-items-center justify-content-between">
-      <div className="d-flex align-items-center app-sx-8">
-        <label className="app-text-label app-text-nowrap">Rows per page</label>
-        <select className="form-select" disabled={disabled}>
-          <option>50</option>
-        </select>
-      </div>
-      <div className="d-flex align-items-center app-sx-8">
-        <label className="app-text-label app-text-nowrap">Page 1 of 10</label>
-        <div className="btn-group">
-          <button className="btn btn-secondary">
-            <BiChevronLeft />
-          </button>
-          <button className="btn btn-secondary">1</button>
-          <button className="btn btn-secondary">2</button>
-          <button className="btn btn-secondary">3</button>
-          <button className="btn btn-secondary">
-            <BiChevronRight />
-          </button>
+    <>
+      <h3 className="mb-0">Inventory</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+      <ProductsTable onCreateModalShownClick={handleCreateModalShownClick} />
+      <AppModal 
+        title="Create Product"
+        caption="Add new product to the inventory"
+        isShown={isCreateModalShown} 
+        onClose={handleCreateModalCloseClick}
+        onConfirm={handleCreateModalConfirmClick}
+      >
+        <div className="row mb-1">
+          <div className="col-6">
+            <AppFormTextField 
+              name="name"
+              label="Name"
+              placeholder="e.g., Coffee Power"
+              value={product.name}
+              error=""
+              onChange={handleProductChange}
+            />
+          </div>
+          <div className="col-6">
+            <AppFormTextField 
+              name="description"
+              label="Description"
+              placeholder="e.g., 100 grams, with free spoon"
+              value={product.description}
+              error=""
+              onChange={handleProductChange}
+            />
+          </div>
         </div>
-      </div>
-    </div>
+        <div className="row mb-1">
+          <div className="col-6">
+            <AppFormSelect 
+              name="categoryId"
+              label="Category"
+              options={ProductCategories}
+              value={product.categoryId}
+              error=""
+              onChange={handleProductChange}
+            />
+          </div>
+          <div className="col-6">
+            <AppFormTextField 
+                name="quantity"
+                label="Quantity"
+                placeholder="e.g., 75"
+                value={product.quantity}
+                error=""
+                onChange={handleProductChange}
+              />
+          </div>
+        </div>
+        <div className="row mb-1">
+          <div className="col-6">
+            <AppFormTextField 
+              name="srp"
+              label="SRP"
+              placeholder="e.g., 80.00"
+              value={product.srp}
+              error=""
+              onChange={handleProductChange}
+            />
+          </div>
+          <div className="col-6">
+            <AppFormTextField 
+              name="memberPrice"
+              label="Member Price"
+              placeholder="e.g., 90.00"
+              value={product.memberPrice}
+              error=""
+              onChange={handleProductChange}
+            />
+          </div>
+        </div>
+      </AppModal>
+    </>
   )
 }
 

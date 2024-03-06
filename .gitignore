@@ -30,5 +30,17 @@ package-lock.json
 package.json
 index.html
 .eslintrc.cjs
-#/src/bootstrap.min.css
-#/src/main.jsx
+
+# custom-hides
+
+/src/bootstrap.min.css
+/src/main.jsx
+/src/contexts
+/src/components
+#/src/services
+#/src/utils
+/src/assets
+/src/layouts
+/src/App.jsx
+#/src/redux
+#.env

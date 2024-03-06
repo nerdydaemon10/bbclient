@@ -1,20 +1,23 @@
-.app-button { 
+.-btn-stateful {
     position: relative;
-  }
-  .app-button
-  .app-button-icon {
+}
+
+.-btn-stateful
+.-btn-stateful-icon {
     filter: opacity(0);
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     line-height: 1;
-  }
-  .app-button.is-loading
-  .app-button-icon {
+}
+
+.-btn-stateful.is-loading
+.-btn-stateful-icon {
     filter: opacity(1);
-  }
-  .app-button.is-loading
-  .app-button-text {
+}
+
+.-btn-stateful.is-loading
+.-btn-stateful-text {
     filter: opacity(0);
-  }
+}

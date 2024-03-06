@@ -5,8 +5,6 @@ import HomePage from './pages/Home/HomePage.jsx'
 import LoginPage from './pages/Login/LoginPage.jsx'
 import AppLocalStorage from './utils/AppLocalStorage.jsx'
 
-import "./Test.css"
-
 function App() {
   return (
     <Routes>

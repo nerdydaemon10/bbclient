@@ -1,6 +1,6 @@
-import axios from "axios";
-import { callApi } from "../../utils/helpers/api/callApi";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios"
+import { callApi } from "../../utils/helpers/api/callApi"
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 
 export const fetchProducts = createAsyncThunk("products/getProducts", async () => {
     try {

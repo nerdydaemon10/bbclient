@@ -7,10 +7,11 @@ import { BiPlus } from "react-icons/bi"
 
 function PointOfSaleView() {
   const { user } = useSelector((state) => state.auth)
+  
   return (
     <>
-      <h1 className="app-text-title">POS System</h1>
-      <p className="app-text-title-caption">Goodmorning Keanno, Welcome Back!</p>
+      <h3 className="mb-0">POS System</h3>
+      <p>Goodmorning Keanno, Welcome Back!</p>
       <div className="row ">
         <div className="col-8">
           <div className="mb-3">
