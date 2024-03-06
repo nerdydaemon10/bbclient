@@ -11,7 +11,7 @@ const initialState = {
     error: null
   },
   create: {
-    status: UiStatus.LOADING,
+    status: UiStatus.IDLE,
     error: null
   }
 }
@@ -32,8 +32,10 @@ const createProduct = createAsyncThunk(
   async (product, thunkAPI) => {
     try {
         const response = await ProductService.create(product)
+        console.log(response)
         return response.data
     } catch (error) {
+        console.log(error)
         return thunkAPI.rejectWithValue(error.response.data)
     }
 })

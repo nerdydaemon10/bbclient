@@ -36,7 +36,7 @@ index.html
 /src/bootstrap.min.css
 /src/main.jsx
 /src/contexts
-/src/components
+#/src/components
 #/src/services
 #/src/utils
 /src/assets

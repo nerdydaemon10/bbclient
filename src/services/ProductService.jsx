@@ -4,9 +4,11 @@ import ProductRoutes from "../utils/routes/ProductRoutes.jsx"
 export default class ProductService {}
 
 ProductService.create = async function(product) {
-    const response = await axios.post(ProductRoutes.CREATE, product)
-    console.log(response)
-    return null
+  const payload = {
+    category_id: 1
+  }
+  const response = await axios.post(ProductRoutes.CREATE, payload)
+  return response
 }
 
 ProductService.findAll = async function() {

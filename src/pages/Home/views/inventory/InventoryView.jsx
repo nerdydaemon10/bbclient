@@ -55,6 +55,7 @@ function InventoryView() {
       <AppModal 
         title="Create Product"
         caption="Add new product to the inventory"
+        status={create.status}
         isShown={isCreateModalShown} 
         onClose={handleCreateModalCloseClick}
         onConfirm={handleCreateModalConfirmClick}
