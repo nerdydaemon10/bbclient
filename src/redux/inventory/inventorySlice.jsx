@@ -16,7 +16,16 @@ const initialState = {
   create: {
     status: UiStatus.IDLE,
     error: null
-  }
+  },
+  product: {
+    name: "",
+    description: "",
+    category_id: ProductCategories[0].id,
+    quantity: "",
+    srp: "",
+    member_price: ""
+  },
+  isCreateModalOpen: false
 }
 
 // async functions
@@ -45,6 +54,14 @@ const createProduct = createAsyncThunk(
 const inventorySlice = createSlice({
   name: "inventory",
   initialState,
+  reducers: {
+    toggleCreateModal: (state, action) => {
+      state.isCreateModalOpen = action.payload
+    },
+    changeProduct: (state, action) => {
+      state.product = action.payload
+    }
+  },
   extraReducers: (builder) => {
     builder
       // fetch
@@ -57,7 +74,7 @@ const inventorySlice = createSlice({
           return {
             ...item,
             name: StringHelper.truncate(item.name),
-            category: ProductCategories.find((category) => category.id == item.id).name,
+            category: "Test",
             description: StringHelper.truncate(item.name),
             created_at: DateHelper.display(item.created_at),
             updated_at: DateHelper.display(item.updated_at)
@@ -82,5 +99,6 @@ const inventorySlice = createSlice({
   }
 })
 
+export const { toggleCreateModal, changeProduct } = inventorySlice.actions
 export { fetchProducts, createProduct }
 export default inventorySlice.reducer

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import UiHelper from "../../../../utils/helpers/UiHelper.jsx"
 import UiStatus from "../../../../utils/classes/UiStatus.jsx"
 import ProductCategories from "../../../../utils/data/ProductCategories.jsx"
-import { fetchProducts } from "../../../../redux/inventory/inventorySlice.jsx"
+import { fetchProducts, toggleCreateModal } from "../../../../redux/inventory/inventorySlice.jsx"
 
 const headers = [
   "Name", "Description", "Category", "Quantity",
@@ -15,7 +15,10 @@ const headers = [
 ]
 const headersSize = headers.length
 
-function ProductsTable({onCreateModalShownClick}) {
+function ProductsTable({
+  onUpdateClick, 
+  onRemoveClick
+}) {
   const dispatch = useDispatch()
   const { fetch } = useSelector((state) => state.inventory)
 
@@ -25,20 +28,24 @@ function ProductsTable({onCreateModalShownClick}) {
 
   return (
     <div className="-sy-8">
-      <FilterSection 
-        status={fetch.status} 
-        onCreateModalShownClick={onCreateModalShownClick} 
-      />
+      <FilterSection status={fetch.status} />
       <MainSection 
-        status={fetch.status} 
-        products={fetch.products} 
+        status={fetch.status} products={fetch.products} 
+        onUpdateClick={onUpdateClick} 
+        onRemoveClick={onRemoveClick} 
       />
       <PaginationSection status={fetch.status} />
     </div>
   )
 }
 
-function FilterSection({status, onCreateModalShownClick}) {
+function FilterSection({status}) {
+  const dispatch = useDispatch()
+
+  const handleClick = () => {
+    dispatch(toggleCreateModal(true)) 
+  }
+  
   return (
     <div className="-sy-8">
       <div className="d-flex align-center justify-content-between">
@@ -60,7 +67,7 @@ function FilterSection({status, onCreateModalShownClick}) {
         <button 
           className="btn btn-secondary d-flex align-center -sx-4" 
           disabled={UiHelper.setDisabledByStatusCases(status, [UiStatus.LOADING])}
-          onClick={onCreateModalShownClick}
+          onClick={handleClick}
         >
           <box-icon name='plus' size="14px"></box-icon>
           <span>Create</span>
@@ -69,9 +76,10 @@ function FilterSection({status, onCreateModalShownClick}) {
     </div>
   )
 }
-function MainSection({status, products}) {
+
+function MainSection({status, products, onUpdateClick, onRemoveClick}) {
   return (
-    <div className="table-wrapper">
+    <div className="app-table-wrapper">
       <table className="table">
         <thead>
           <tr>{headers.map((item, index) => <th key={index}>{item}</th>)}</tr>
@@ -80,15 +88,15 @@ function MainSection({status, products}) {
         {
           status == UiStatus.LOADING ? (
             <tr>
-              <td className="-tbl-cell-status" colSpan={headersSize}>Fetching Products...</td>
+              <td className="app-table-cell-status" colSpan={headersSize}>Fetching Products...</td>
             </tr>
           ) : status == UiStatus.ERROR ? (
             <tr>
-              <td className="-tbl-cell-status" colSpan={headersSize}>Something went wrong.</td>
+              <td className="app-table-cell-status" colSpan={headersSize}>Something went wrong.</td>
             </tr>
           ) : status == UiStatus.EMPTY ? (
             <tr>
-              <td className="-tbl-cell-status" colSpan={headersSize}>
+              <td className="app-table-cell-status" colSpan={headersSize}>
                 Press &apos;+&apos; button to add product in inventory.
               </td>
             </tr>
@@ -104,11 +112,11 @@ function MainSection({status, products}) {
                 <td>{product.created_at}</td>
                 <td>{product.updated_at}</td>
                 <td className="-sx-8">
-                  <button href="#" className="btn btn-dark btn-sm mr-2">
-                    Edit
+                  <button href="#" className="btn btn-dark btn-sm mr-2" onClick={onUpdateClick}>
+                    Update
                   </button>
-                  <button href="#" className="btn btn-secondary btn-sm">
-                    Delete
+                  <button href="#" className="btn btn-secondary btn-sm" onClick={onRemoveClick}>
+                    Remove
                   </button>
                 </td>
               </tr>

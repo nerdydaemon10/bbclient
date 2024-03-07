@@ -16,7 +16,7 @@
     z-index: 999;
 }
 
-.app-modal-container.is-shown {
+.app-modal-container.is-open {
     filter: opacity(1);
     pointer-events: all;
     cursor: auto;

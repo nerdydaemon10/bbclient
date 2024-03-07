@@ -1,18 +1,14 @@
 import UiStatus from "../../utils/classes/UiStatus.jsx"
 import UiHelper from "../../utils/helpers/UiHelper.jsx"
-import AppSubmitButton from "../buttons/AppBaseButton.jsx"
 
-function AppModal({title, status, isShown, onClose, onConfirm, children}) {
+function AppFormModal({title, status, isShown, onClose, onConfirm, children}) {
   const isLoading = status == UiStatus.LOADING ? "is-loading" : ""
-  
+
   document.body.style.overflow = isShown ? "hidden" : "unset"
 
   return (
     <div className={`app-modal-container ${UiHelper.isShown(isShown)}`}>
-      <form
-        className="app-modal"
-        onSubmit={onConfirm}
-      >
+      <form className="app-modal" onSubmit={onConfirm}>
         <div className="app-modal-header">
           <h5 className="mb-0">{title}</h5>
         </div>
@@ -33,4 +29,4 @@ function AppModal({title, status, isShown, onClose, onConfirm, children}) {
   )
 }
   
-export default AppModal
+export default AppFormModal

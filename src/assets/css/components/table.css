@@ -1,3 +1,9 @@
-.-tbl-cell-status {
+.app-table-wrapper {
+    border-radius: var(--bs-border-radius);
+    border: 1px solid var(--app-border-color);
+    overflow: hidden;
+}
+.app-table-cell-status {
+    color: #71717A !important;
     text-align: center;
 }
