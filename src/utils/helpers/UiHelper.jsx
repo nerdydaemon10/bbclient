@@ -5,6 +5,9 @@ export default class UiHelper {}
 UiHelper.isShown = function(condition) {
   return condition ? "is-shown" : ""
 }
+UiHelper.isOpen = function(condition) {
+  return condition ? "is-open" : ""
+}
 UiHelper.isInvalid = function(condition) {
   return condition ? "is-invalid" : ""
 }

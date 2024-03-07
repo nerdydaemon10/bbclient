@@ -8,9 +8,19 @@ ProductService.create = async function(product) {
   return response.data
 }
 
+ProductService.remove = async function(id) {
+  const response = await axios.delete(ProductRoutes.REMOVE.replace("{{id}}", id))
+  return response.data
+}
+
+ProductService.update = async function(product) {
+  const response = await axios.put(ProductRoutes.UPDATE.replace("{{id}}", product))
+  return response.data
+}
+
 ProductService.findAll = async function() {
     const response = await axios.get(ProductRoutes.FIND_ALL)
     const products = response.data
-    
+
     return products
 }

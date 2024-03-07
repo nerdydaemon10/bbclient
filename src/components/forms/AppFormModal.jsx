@@ -1,17 +1,16 @@
 import UiStatus from "../../utils/classes/UiStatus.jsx"
 import UiHelper from "../../utils/helpers/UiHelper.jsx"
 
-function AppFormModal({title, status, open, onClose, onConfirm, children}) {
-  const isOpen = open ? "is-open" : ""
+function AppFormModal({title, status, isOpen, onClose, onConfirm, children}) {
   const isLoading = status == UiStatus.LOADING ? "is-loading" : ""
-  
-  document.body.style.overflow = open ? "hidden" : "unset"
+
+  document.body.style.overflow = isOpen ? "hidden" : "unset"
 
   return (
-    <div className={`app-modal-container ${isOpen}`}>
+    <div className={`app-modal-container ${UiHelper.isOpen(isOpen)}`}>
       <form className="app-modal" onSubmit={onConfirm}>
         <div className="app-modal-header">
-          <h5 className="mb-0">{title}</h5>
+          <h6 className="mb-0">{title}</h6>
         </div>
         <div className="app-modal-body">
           {children}

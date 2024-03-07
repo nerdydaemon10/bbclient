@@ -4,14 +4,14 @@ import AppFormSelect from "../../../../components/forms/AppFormSelect.jsx"
 import AppFormTextField from "../../../../components/forms/AppFormTextField.jsx"
 import ProductCategories from "../../../../utils/data/ProductCategories.jsx"
 import { findErrorByName } from "../../../../utils/helpers/FormHelper.jsx"
-import { changeProduct, createProduct, toggleCreateModal } from "../../../../redux/inventory/inventorySlice.jsx"
+import { changeParam, createProduct, toggleCreateModal } from "../../../../redux/inventory/inventorySlice.jsx"
 
 function CreateModal() {
-  const { create, product, isCreateModalOpen } = useSelector((state) => state.inventory)
+  const { create, param, isCreateModalOpen } = useSelector((state) => state.inventory)
   const dispatch = useDispatch()
 
   const handleChange = (e) => {
-    dispatch(changeProduct({ ...product, [e.target.name]: e.target.value}))
+    dispatch(changeParam({ ...param, [e.target.name]: e.target.value}))
   }
 
   const handleClose = () => {
@@ -19,15 +19,15 @@ function CreateModal() {
   }
 
   const handleConfirm = (e) => {
-    e.preventDeafult()
-    dispatch(createProduct(product))
+    e.preventDefault()
+    dispatch(createProduct(param))
   }
   
   return (
     <AppFormModal 
       title="Create Product"
       status={create.status}
-      open={isCreateModalOpen} 
+      isOpen={isCreateModalOpen} 
       onClose={handleClose}
       onConfirm={handleConfirm}
     >
@@ -37,7 +37,7 @@ function CreateModal() {
             name="name"
             label="Name"
             placeholder="e.g., Coffee Power"
-            value={product.name}
+            value={param.name}
             error={findErrorByName(create.error, "name")}
             onChange={handleChange}
           />
@@ -47,7 +47,7 @@ function CreateModal() {
             name="description"
             label="Description"
             placeholder="e.g., 100 grams, with free spoon"
-            value={product.description}
+            value={param.description}
             error={findErrorByName(create.error, "description")}
             onChange={handleChange}
           />
@@ -59,7 +59,7 @@ function CreateModal() {
             name="category_id"
             label="Category"
             options={ProductCategories}
-            value={product.category_id}
+            value={param.category_id}
             error={findErrorByName(create.error, "category_id")}
             onChange={handleChange}
           />
@@ -69,7 +69,7 @@ function CreateModal() {
               name="quantity"
               label="Quantity"
               placeholder="e.g., 75"
-              value={product.quantity}
+              value={param.quantity}
               error={findErrorByName(create.error, "quantity")}
               onChange={handleChange}
             />
@@ -81,7 +81,7 @@ function CreateModal() {
             name="srp"
             label="SRP"
             placeholder="e.g., 80.00"
-            value={product.srp}
+            value={param.srp}
             error={findErrorByName(create.error, "srp")}
             onChange={handleChange}
           />
@@ -91,7 +91,7 @@ function CreateModal() {
             name="member_price"
             label="Member Price"
             placeholder="e.g., 90.00"
-            value={product.member_price}
+            value={param.member_price}
             error={findErrorByName(create.error, "member_price")}
             onChange={handleChange}
           />

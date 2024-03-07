@@ -1,4 +1,4 @@
-.app-modal-container {
+.app-dialog-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -16,48 +16,50 @@
     z-index: 999;
 }
 
-.app-modal-container.is-open {
+.app-dialog-container.is-open {
     filter: opacity(1);
     pointer-events: all;
     cursor: auto;
 }
 
-.app-modal {
+.app-dialog {
     border-radius: var(--app-border-radius);
     background: #fff;
     width: 540px;
 }
 
-.app-modal-header {
-    padding: var(--app-padding);
+.app-dialog-header {
+    padding: var(--app-padding) var(--app-padding) 0 var(--app-padding);
 }
 
-.app-modal-title {
+.app-dialog-title {
     font-size: 20px;
     font-weight: 600;
     line-height: 1;
     margin: 0;
 }
 
-.app-modal-body {
-    padding: 0 var(--app-padding);
+.app-dialog-body {
+    padding: var(--app-padding);
+    color: #71717A;
+    font-size: 14px;
+    font-weight: 500;
 }
 
-.app-modal-footer {
+.app-dialog-body b {
+    color: var(--app-main-color);
+}
+
+.app-dialog-footer {
     display: flex;
     justify-content: end;
-    padding: var(--app-padding);
+    padding: 0 var(--app-padding) var(--app-padding) var(--app-padding);
 }
 
-.app-modal-footer > * {
+.app-dialog-footer > * {
     margin-right: var(--app-spacing);
 }
 
-.app-modal-footer > *:last-child {
+.app-dialog-footer > *:last-child {
     margin-right: 0;
-}
-
-/* --- APP-MODAL-DIALOG-TEXT --- */
-.app-modal-dialog-text {
-    
 }

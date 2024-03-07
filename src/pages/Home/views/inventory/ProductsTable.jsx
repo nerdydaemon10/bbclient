@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import UiHelper from "../../../../utils/helpers/UiHelper.jsx"
 import UiStatus from "../../../../utils/classes/UiStatus.jsx"
 import ProductCategories from "../../../../utils/data/ProductCategories.jsx"
-import { fetchProducts, toggleCreateModal } from "../../../../redux/inventory/inventorySlice.jsx"
+import { fetchProducts, toggleCreateModal, toggleRemoveModal, toggleUpdateModal } from "../../../../redux/inventory/inventorySlice.jsx"
 
 const headers = [
   "Name", "Description", "Category", "Quantity",
@@ -15,10 +15,7 @@ const headers = [
 ]
 const headersSize = headers.length
 
-function ProductsTable({
-  onUpdateClick, 
-  onRemoveClick
-}) {
+function ProductsTable() {
   const dispatch = useDispatch()
   const { fetch } = useSelector((state) => state.inventory)
 
@@ -29,11 +26,7 @@ function ProductsTable({
   return (
     <div className="-sy-8">
       <FilterSection status={fetch.status} />
-      <MainSection 
-        status={fetch.status} products={fetch.products} 
-        onUpdateClick={onUpdateClick} 
-        onRemoveClick={onRemoveClick} 
-      />
+      <MainSection status={fetch.status} products={fetch.products} />
       <PaginationSection status={fetch.status} />
     </div>
   )
@@ -41,11 +34,11 @@ function ProductsTable({
 
 function FilterSection({status}) {
   const dispatch = useDispatch()
-
+  
   const handleClick = () => {
     dispatch(toggleCreateModal(true)) 
   }
-  
+
   return (
     <div className="-sy-8">
       <div className="d-flex align-center justify-content-between">
@@ -77,7 +70,17 @@ function FilterSection({status}) {
   )
 }
 
-function MainSection({status, products, onUpdateClick, onRemoveClick}) {
+function MainSection({status, products}) {
+  const dispatch = useDispatch()
+
+  const handleUpdateClick = (product) => {
+    dispatch(toggleUpdateModal({product: product, isOpen: true}))
+  }
+  
+  const handleRemoveClick = (product) => {
+    dispatch(toggleRemoveModal({product: product, isOpen: true}))
+  }
+
   return (
     <div className="app-table-wrapper">
       <table className="table">
@@ -112,10 +115,18 @@ function MainSection({status, products, onUpdateClick, onRemoveClick}) {
                 <td>{product.created_at}</td>
                 <td>{product.updated_at}</td>
                 <td className="-sx-8">
-                  <button href="#" className="btn btn-dark btn-sm mr-2" onClick={onUpdateClick}>
+                  <button
+                    type="button"
+                    className="btn btn-dark btn-sm mr-2" 
+                    onClick={() => handleUpdateClick(product)}
+                  >
                     Update
                   </button>
-                  <button href="#" className="btn btn-secondary btn-sm" onClick={onRemoveClick}>
+                  <button 
+                    className="btn btn-secondary btn-sm" 
+                    type="button" 
+                    onClick={() => handleRemoveClick(product)}
+                  >
                     Remove
                   </button>
                 </td>
