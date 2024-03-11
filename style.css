@@ -1,0 +1,64 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: 75px 1fr;
+    grid-template-areas: 
+        "sidebar navbar"
+        "sidebar main";
+    height: 100vh;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    background-color: #000;
+}
+
+.navbar {
+    grid-area: navbar;
+    background-color: #555;
+}
+
+.main {
+    display: grid;
+    grid-area: main;
+    background-color: #f0f0f0;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: max-content 50px 1fr;
+    grid-template-areas: 
+        "title title"
+        "filters controls"
+        "products orders";
+    overflow: hidden;
+}
+
+.title {
+    grid-area: title;
+}
+
+
+.filters {
+    grid-area: filters;
+    background-color: violet;
+}
+
+.controls {
+    grid-area: controls;
+    background-color: lightblue;
+}
+
+.products {
+    grid-area: products;
+    background-color: blue;
+    overflow: auto;
+}
+
+.orders {
+    grid-area: orders;
+    background-color: red;
+}

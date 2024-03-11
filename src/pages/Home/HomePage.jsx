@@ -1,22 +1,24 @@
 import { useDispatch } from "react-redux"
-import { Navigate, Route, Router, Routes, useNavigate } from "react-router-dom"
+import { Toaster } from "react-hot-toast"
+import { Route, Routes, useNavigate } from "react-router-dom"
 
 import InventoryView from "./views/inventory/InventoryView.jsx"
-import PointOfSaleView from "./views/PointOfSaleView.jsx"
 import AppDashboardLayout from "../../layouts/AppDashboardLayout.jsx"
 import { logout } from "../../redux/auth/authSlice.jsx"
 import { useEffect } from "react"
+import POSView from "./views/pos/POSView.jsx"
 
 function HomePage() {
   return (
     <>
       <AppDashboardLayout>
         <Routes>
-          <Route exact path="/" element={<PointOfSaleView />} />
+          <Route exact path="/" element={<POSView />} />
           <Route path="/inventory" element={<InventoryView />} />
           <Route path="/sign-out" element={<SignOut />} />
         </Routes>
       </AppDashboardLayout>
+      <Toaster />
     </>
   )
 }

@@ -9,12 +9,12 @@ ProductService.create = async function(product) {
 }
 
 ProductService.remove = async function(id) {
-  const response = await axios.delete(ProductRoutes.REMOVE.replace("{{id}}", id))
+  const response = await axios.delete(`${ProductRoutes.REMOVE}/${id}`)
   return response.data
 }
 
 ProductService.update = async function(product) {
-  const response = await axios.put(ProductRoutes.UPDATE.replace("{{id}}", product))
+  const response = await axios.put(`${ProductRoutes.UPDATE}/${product.id}`, product)
   return response.data
 }
 

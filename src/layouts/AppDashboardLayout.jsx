@@ -1,32 +1,34 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { SlOptionsVertical } from "react-icons/sl"
 
+import "./AppDashboardLayout.css"
 import DashboardHelper from "../utils/helpers/DashboardHelper.jsx"
 import AppDashboardSidebarItems from "../utils/configs/AppDashboardSidebarItems.jsx"
 
 function AppDashboardLayout({children}) {
-  const [currentId, setCurrentId] = useState(2)
+  const location = useLocation()
+  const [currentRoute, setCurrentRoute] = useState(location.pathname)
 
   const handleSidebarItemClick = (id) => {
-    setCurrentId(id)
+    setCurrentRoute(id)
   }
-
+  
   return (
     <div className="app-dashboard">
       <AppDashboardSidebar 
-        currentId={currentId}
+        currentRoute={currentRoute}
         onClick={handleSidebarItemClick} 
       />
+      <AppDashboardNavbar />
       <div className="app-dashboard-main">
-        <AppDashboardNavbar />
-        <div className="app-dashboard-main-content">{children}</div>
+        {children}
       </div>
     </div>
   )
 }
 
-function AppDashboardSidebar(props) {
+function AppDashboardSidebar({currentRoute, onClick}) {
   return (
     <div className="app-dashboard-sidebar">
       <div className="app-dashboard-sidebar-header"></div>
@@ -34,19 +36,13 @@ function AppDashboardSidebar(props) {
         <ul className="app-dashboard-sidebar-body-items">
         {
           AppDashboardSidebarItems.map(item => 
-            <li 
-              className="app-dashboard-sidebar-body-item" key={item.id}
-            >
-              <Link 
-                className={
-                  `
-                    app-dashboard-sidebar-body-item-btn btn btn-block w-100 
-                    ${DashboardHelper.isItemActive(item.id, props.currentId)}
-                  `
-                }
-                role="button"
-                to={item.route}
-                onClick={() => props.onClick(item.id)}
+            <li className="app-dashboard-sidebar-body-item" key={item.id}>
+              <Link to={item.route} role="button"
+                className={`
+                  app-dashboard-sidebar-body-item-btn btn btn-block w-100 
+                  ${DashboardHelper.isSelectedRoute(currentRoute, item.route)}
+                `}
+                onClick={() => onClick(item.route)}
               >
                 <span className="app-dashboard-sidebar-body-item-icon">{item.icon}</span>
                 {item.label}
@@ -63,7 +59,7 @@ function AppDashboardSidebar(props) {
 
 function AppDashboardNavbar() {
   return (
-    <div className="app-dashboard-main-navbar">
+    <div className="app-dashboard-navbar">
       <button className="btn btn-secondary">
         <SlOptionsVertical />
       </button>

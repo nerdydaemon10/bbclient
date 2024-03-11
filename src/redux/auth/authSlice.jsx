@@ -16,18 +16,18 @@ const initialState = {
   user: AppLocalStorage.readUser(),
   accessToken: AppLocalStorage.readAccessToken(),
   status: UiStatus.IDLE,
-  error: null,
-};
+  error: null
+}
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
     logout: (state) => {
-      state.user = null;
-      state.accessToken = null;
+      state.user = null
+      state.accessToken = null
 
-      AppLocalStorage.clear();
+      AppLocalStorage.clear()
     },
   },
   extraReducers: (builder) => {

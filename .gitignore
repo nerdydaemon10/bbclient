@@ -40,7 +40,7 @@ index.html
 #/src/services
 #/src/utils
 #/src/assets
-/src/layouts
+#/src/layouts
 /src/App.jsx
 #/src/redux
 #.env

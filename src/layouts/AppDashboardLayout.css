@@ -9,29 +9,25 @@
 .app-dashboard {
     display: grid;
     grid-template-columns: var(--app-dashboard-sidebar-min-width) 1fr;
-    grid-template-rows: 1fr;
-    grid-template-areas: "sidebar main";
+    grid-template-rows: var(--app-dashboard-sidebar-top-height) 1fr;
+    grid-template-areas: 
+        "sidebar navbar"
+        "sidebar main";
     height: 100vh;
 }
 
 /* --APP-DASHBOARD-SIDEBAR-- */
 .app-dashboard-sidebar {
-    grid-area: "sidebar";
+    grid-area: sidebar;
     border-right: 1px solid var(--app-border-color);
 }
-
-/* --APP-DASHBOARD-SIDEBAR-HEADER-- */
 .app-dashboard-sidebar-header {
     border: 1px solid var(--app-border-color);
     height: var(--app-dashboard-sidebar-top-height);
 }
-
-/* --APP-DASHBOARD-SIDEBAR-BODY-- */
 .app-dashboard-sidebar-body {
     padding: var(--app-dashboard-sidebar-padding);
 }
-
-/* --APP-DASHBOARD-SIDEBAR-BODY-ITEMS-- */
 .app-dashboard-sidebar-body-items {
     list-style: none;
     margin: 0;
@@ -54,18 +50,9 @@ span.app-dashboard-sidebar-body-item-icon {
 span.app-dashboard-sidebar-body-item-size {
     float: right;
 }
-/* --APP-DASHBOARD-MAIN-- */
-.app-dashboard-main {
-    display: grid;
-    grid-area: "main";
-    grid-template-columns: 1f;
-    grid-template-rows: var(--app-dashboard-sidebar-top-height) 1fr;
-    grid-template-areas: 
-        "navbar"
-        "main-content";
-}
-/* --APP-DASHBOARD-MAIN-NAVBAR-- */
-.app-dashboard-main-navbar {
+
+/* --APP-DASHBOARD-NAVBAR-- */
+.app-dashboard-navbar {
     grid-area: "navbar";
     display: flex;
     align-items: center;
@@ -73,20 +60,9 @@ span.app-dashboard-sidebar-body-item-size {
     border-bottom: 1px solid var(--app-border-color);
     padding: 0 var(--app-dashboard-sidebar-padding);
 }
-/* --APP-DASHBOARD-MAIN-CONTENT-- */
-.app-dashboard-main-content {
-    grid-area: "main-content";
-    padding: var(--app-padding);
-}
 
-/* --APP-EMPTY-SECTION-- */
-.app-empty-section-vector {
-    background: #f1f1f1;
-    border-radius: var(--bs-border-radius);
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
-    position: relative;
-    left: -10px;
+/* --APP-DASHBOARD-MAIN-- */
+.app-dashboard-main {
+    grid-area: main;
+    padding: var(--app-padding);
 }

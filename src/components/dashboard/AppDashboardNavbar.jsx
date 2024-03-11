@@ -1,4 +1,4 @@
-import { SlOptionsVertical } from "react-icons/sl";
+import { SlOptionsVertical } from "react-icons/sl"
 
 function AppDashboardNavbar() {
   return (

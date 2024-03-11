@@ -1,41 +1,60 @@
+.app-border {
+    border-radius: var(--bs-border-radius);
+    border: 1px solid var(--app-border-color);
+}
+
+/* -- P -- */
+.app-p-4 {
+    padding: 4px;
+}
+.app-p-8 {
+    padding: 8px;
+}
+.app-p-12 {
+    padding: 12px;
+}
+.app-p-16 {
+    padding: 16px;
+}
+
 /* --SX-- */
-.-sx-4 > * {
+.app-sx-4 > * {
     margin-right: 4px; 
 }
-.-sx-8 > * {
+.app-sx-8 > * {
     margin-right: 8px;
 }
-.-sx-12 > * {
+.app-sx-12 > * {
     margin-right: 12px;
 }
-.-sx-16 > * {
+.app-sx-16 > * {
     margin-right: 16px; 
 }
-.-sx-24 > * {
+.app-sx-24 > * {
     margin-right: 24px;
 }
 
-[class^="-sx-"] > *:last-child {
+[class^="app-sx-"] > *:last-child {
     margin-right: 0;
 }
 
 /* --SY-- */
-.-sy-4 > * {
+.app-sy-4 > * {
     margin-bottom: 4px; 
 }
-.-sy-8 > * {
+.app-sy-8 > * {
     margin-bottom: 8px;
 }
-.-sy-12 > * {
+.app-sy-12 > * {
     margin-bottom: 12px;
 }
-.-sy-16 > * {
+.app-sy-16 > * {
     margin-bottom: 16px; 
 }
-.-sy-24 > * {
+.app-sy-24 > * {
     margin-bottom: 24px;
 }
 
-[class^="-sy-"] > *:last-child {
+[class^="app-sy-"] > *:last-child {
     margin-bottom: 0;
 }

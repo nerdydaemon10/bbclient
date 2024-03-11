@@ -1,26 +1,27 @@
 import { useDispatch, useSelector } from "react-redux"
+
 import AppFormModal from "../../../../components/forms/AppFormModal.jsx"
 import AppFormSelect from "../../../../components/forms/AppFormSelect.jsx"
 import AppFormTextField from "../../../../components/forms/AppFormTextField.jsx"
 import ProductCategories from "../../../../utils/data/ProductCategories.jsx"
 import { findErrorByName } from "../../../../utils/helpers/FormHelper.jsx"
-import { changeParam, createProduct, toggleUpdateModal } from "../../../../redux/inventory/inventorySlice.jsx"
+import { changeProduct, updateProduct, toggleUpdateModal } from "../../../../redux/inventory/inventorySlice.jsx"
 
 function UpdateModal() {
-  const { update, product, param, isUpdateModalOpen } = useSelector((state) => state.inventory)
+  const { update, product, isUpdateModalOpen } = useSelector((state) => state.inventory)
   const dispatch = useDispatch()
 
   const handleChange = (e) => {
-    dispatch(changeParam({ ...param, [e.target.name]: e.target.value}))
+    dispatch(changeProduct({ ...product, [e.target.name]: e.target.value}))
   }
-  
+
   const handleClose = () => {
     dispatch(toggleUpdateModal(false))
   }
 
   const handleConfirm = (e) => {
     e.preventDefault()
-    dispatch(createProduct(param))
+    dispatch(updateProduct(product))
   }
 
   if (!product) {

@@ -4,7 +4,7 @@ import { BiCabinet } from "react-icons/bi"
 const AppDashboardSidebarItems = [
     {
         id: 1,
-        route: "/home/",
+        route: "/home",
         label: "POS System",
         icon: <BiCalculator size={20} />
     },

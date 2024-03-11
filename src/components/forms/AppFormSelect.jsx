@@ -7,7 +7,7 @@ function AppFormSelect({name, label, options, value, error, onChange}) {
   const isInvalid = error.length > 0 ? "is-invalid" : ""
   
   return (
-    <div className="-sy-4">
+    <div className="app-sy-4">
       <label className="app-text-label">{label}</label>
       <select 
         className={`form-select ${isInvalid}`} 

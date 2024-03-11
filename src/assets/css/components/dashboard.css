@@ -10,7 +10,8 @@
     display: grid;
     grid-template-columns: var(--app-dashboard-sidebar-min-width) 1fr;
     grid-template-rows: 1fr;
-    grid-template-areas: "sidebar main";
+    grid-template-areas: 
+        "sidebar main";
     height: 100vh;
 }
 
@@ -77,16 +78,4 @@ span.app-dashboard-sidebar-body-item-size {
 .app-dashboard-main-content {
     grid-area: "main-content";
     padding: var(--app-padding);
-}
-
-/* --APP-EMPTY-SECTION-- */
-.app-empty-section-vector {
-    background: #f1f1f1;
-    border-radius: var(--bs-border-radius);
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
-    position: relative;
-    left: -10px;
 }

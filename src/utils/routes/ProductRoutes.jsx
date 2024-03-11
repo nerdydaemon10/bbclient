@@ -1,6 +1,6 @@
 export default class ProductRoutes {
     static CREATE = `${import.meta.env.VITE_BASE_URL}/products`
-    static REMOVE = `${import.meta.env.VITE_BASE_URL}/products/{{id}}`
-    static PUT = `${import.meta.env.VITE_BASE_URL}/products/{{id}}`
+    static REMOVE = `${import.meta.env.VITE_BASE_URL}/products`
+    static UPDATE = `${import.meta.env.VITE_BASE_URL}/products`
     static FIND_ALL = `${import.meta.env.VITE_BASE_URL}/products`
 }

@@ -1,0 +1,33 @@
+.app-dashboard-main {
+    display: grid;
+    column-gap: var(--app-padding);
+    grid-template-columns: 1fr 1fr 500px;
+    grid-template-rows: max-content max-content 1fr;
+    grid-template-areas: 
+    "title title title"
+    "filters filters actions"
+    "products products orders";
+    overflow: hidden;
+}
+
+.pos-title-section {
+    grid-area: title;
+}
+
+.pos-filters-section {
+    grid-area: filters;
+}
+
+.pos-actions-section {
+    grid-area: actions;
+}
+
+.pos-products-section {
+    grid-area: products;
+    overflow: auto;
+}
+
+.pos-orders-section {
+    grid-area: orders;
+    overflow: auto;
+}

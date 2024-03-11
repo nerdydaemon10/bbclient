@@ -1,15 +1,16 @@
 import { useState } from "react";
 import AppDashboardSidebarItems from "../../utils/configs/AppDashboardSidebarItems.jsx";
 import StringHelper from "../../utils/helpers/StringHelper.jsx";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function AppDashboardSidebar() {
+  const location = useLocation()
   const [sidebarItem, setSidebarItem] = useState(1)
-  
+
   const handleSidebarItemClick = (id) => {
     setSidebarItem(id)
   }
-
+  
   return (
     <div className="app-dashboard-sidebar">
       <div className="app-dashboard-sidebar-header">
@@ -27,10 +28,10 @@ function AppDashboardSidebar() {
                 >
                   <span className="app-dashboard-sidebar-body-item-icon">
                       {item.icon}
-                    </span>
-                    {item.label}
-                    <span className="app-dashboard-sidebar-body-item-size">99+</span>
-                  </Link>
+                  </span>
+                  {item.label}
+                  <span className="app-dashboard-sidebar-body-item-size">99+</span>
+                </Link>
               </li>
             )
           }

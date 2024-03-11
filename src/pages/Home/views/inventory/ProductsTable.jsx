@@ -24,7 +24,7 @@ function ProductsTable() {
   }, [dispatch])
 
   return (
-    <div className="-sy-8">
+    <div className="app-sy-8">
       <FilterSection status={fetch.status} />
       <MainSection status={fetch.status} products={fetch.products} />
       <PaginationSection status={fetch.status} />
@@ -40,9 +40,9 @@ function FilterSection({status}) {
   }
 
   return (
-    <div className="-sy-8">
+    <div className="app-sy-8">
       <div className="d-flex align-center justify-content-between">
-        <div className="d-flex -sx-8">
+        <div className="d-flex app-sx-8">
           <input 
             type="text" 
             className="form-control"
@@ -58,7 +58,7 @@ function FilterSection({status}) {
           </select>
         </div>
         <button 
-          className="btn btn-secondary d-flex align-center -sx-4" 
+          className="btn btn-secondary d-flex align-center app-sx-4" 
           disabled={UiHelper.setDisabledByStatusCases(status, [UiStatus.LOADING])}
           onClick={handleClick}
         >
@@ -114,10 +114,10 @@ function MainSection({status, products}) {
                 <td>{product.member_price}</td>
                 <td>{product.created_at}</td>
                 <td>{product.updated_at}</td>
-                <td className="-sx-8">
+                <td className="app-sx-8">
                   <button
                     type="button"
-                    className="btn btn-dark btn-sm mr-2" 
+                    className="btn btn-dark btn-sm" 
                     onClick={() => handleUpdateClick(product)}
                   >
                     Update
@@ -143,13 +143,13 @@ function PaginationSection({status}) {
 
   return (
     <div className="d-flex align-items-center justify-content-between">
-      <div className="d-flex align-items-center -sx-8">
+      <div className="d-flex align-items-center app-sx-8">
         <label className="app-text-label app-text-nowrap">Rows per page</label>
         <select className="form-select" disabled={isDisabled}>
           <option>50</option>
         </select>
       </div>
-      <div className="d-flex align-items-center -sx-8">
+      <div className="d-flex align-items-center app-sx-8">
         <label className="app-text-label app-text-nowrap">Page 1 of 10</label>
         <div className="btn-group">
           <button className="btn btn-secondary" disabled={isDisabled}>

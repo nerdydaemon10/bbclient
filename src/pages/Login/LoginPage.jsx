@@ -29,20 +29,20 @@ function LoginPage() {
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
   }
-
-  const handleLoginSubmit = (e) => {
+  
+  const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(login(credentials))
   }
   
   return (
     <AppCenteredLayout>
-      <form className="w-25 -sy-16" onSubmit={handleLoginSubmit}>
+      <form className="w-25 app-sy-16" onSubmit={handleSubmit}>
         <div>
           <h1 className="app-text-title">Login</h1>
           <p className="app-text-title-caption">BARISTA BRO - The Coffee People</p>
         </div>
-        <div className="-sy-12">
+        <div className="app-sy-12">
           <AppFormTextField
             name="username" 
             label="Username"
