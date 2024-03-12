@@ -13,7 +13,7 @@ function POSView() {
     <>
       <div className="pos-title-section">
         <h3 className="mb-0">POS System</h3>
-        <p>Goodmorning Keanno, Welcome Back!</p>
+        <p>{`Goodmorning ${user.user.username} Welcome Back!`}</p>
       </div>
       <div className="pos-filters-section">
         <div className="row gx-2">
