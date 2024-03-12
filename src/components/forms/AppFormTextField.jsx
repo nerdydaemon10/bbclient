@@ -1,16 +1,23 @@
 import { FaExclamation } from "react-icons/fa6"
 
 import prototypes from "../../utils/prototypes.jsx"
+import { useEffect, useRef } from "react"
 
 prototypes.init()
 
 function AppFormTextField({name, label, placeholder, value, error, onChange}) {
+  const inputRef = useRef(null);
   const isInvalid = error.length > 0 ? "is-invalid" : ""
+
+  useEffect(() => {
+    inputRef.current.focus()
+  }, [])
 
   return (
     <div className="app-sy-4">
       <label className="app-text-label">{label}</label>
-      <input 
+      <input
+        ref={inputRef} 
         className={`form-control ${isInvalid}`} 
         type="text" 
         name={name}
