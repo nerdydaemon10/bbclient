@@ -6,14 +6,14 @@ import InventoryView from "./views/inventory/InventoryView.jsx"
 import AppDashboardLayout from "../../layouts/AppDashboardLayout.jsx"
 import { logout } from "../../redux/auth/authSlice.jsx"
 import { useEffect } from "react"
-import POSView from "./views/pos/POSView.jsx"
+import PosView from "./views/pos/PosView.jsx"
 
 function HomePage() {
   return (
     <>
       <AppDashboardLayout>
         <Routes>
-          <Route exact path="/" element={<POSView />} />
+          <Route exact path="/" element={<PosView />} />
           <Route path="/inventory" element={<InventoryView />} />
           <Route path="/sign-out" element={<SignOut />} />
         </Routes>

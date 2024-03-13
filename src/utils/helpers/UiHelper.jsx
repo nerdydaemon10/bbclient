@@ -17,3 +17,15 @@ UiHelper.isLoading = function(status) {
 UiHelper.setDisabledByStatusCases = function(status, statuses) {
   return statuses.includes(status) ? true : false
 }
+UiHelper.setDebouncer = function(callback, delay = 500) {
+  let timeoutId = null
+  
+  return (...args) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+    timeoutId = setTimeout(() => {
+      callback(...args)
+    }, delay)
+  }
+}

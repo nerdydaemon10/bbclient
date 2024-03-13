@@ -2,44 +2,34 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 
 import UiStatus from "../../utils/classes/UiStatus.jsx"
 import ProductService from "../../services/ProductService.jsx"
-import ProductCategories from "../../utils/data/ProductCategories.jsx"
 
 // state
 const initialState = {
-  fetch: {
-    products: [],
+  findAll: {
     status: UiStatus.LOADING,
-    error: null
+    error: null,
+    products: []
   },
   create: {
     status: UiStatus.IDLE,
-    message: "",
     error: null,
+    message: ""
   },
   update: {
     status: UiStatus.IDLE,
-    message: "",
-    error: null
+    error: null,
+    message: ""
   },
   remove: {
     status: UiStatus.IDLE,
-    message: "",
-    error: null
-  },
-  param: {
-    name: "", description: "",
-    category_id: ProductCategories[0].id,
-    quantity: "", srp: "", member_price: ""
-  },
-  product: null,
-  isCreateModalOpen: false,
-  isUpdateModalOpen: false,
-  isRemoveModalOpen: false
+    error: null,
+    message: ""
+  }
 }
 
 // async functions
-const fetchProducts = createAsyncThunk(
-  "inventory/fetchProducts", 
+const findAllProducts = createAsyncThunk(
+  "inventory/findAllProducts", 
   async (thunkAPI) => {
   try {
     const response = await ProductService.findAll()
@@ -80,67 +70,22 @@ const removeProduct = createAsyncThunk(
 })
 
 // core
-const inventorySlice = createSlice({
-  name: "inventory",
+const productsSlice = createSlice({
+  name: "products",
   initialState,
-  reducers: {
-    toggleCreateModal: (state, action) => {
-      state.isCreateModalOpen = action.payload
-    },
-    toggleUpdateModal: (state, action) => {
-      const { product, isOpen } = action.payload
-      
-      state.product = product == undefined ? state.product : product
-      state.isUpdateModalOpen = isOpen
-    },
-    toggleRemoveModal: (state, action) => {
-      const { product, isOpen } = action.payload
-      state.product = product == undefined ? state.product : product
-      state.isRemoveModalOpen = isOpen
-    },
-    changeParam: (state, action) => {
-      state.param = action.payload
-    },
-    changeProduct: (state, action) => {
-      state.product = action.payload
-    },
-    resetCreate: (state) => {
-      state.create = {
-        status: UiStatus.IDLE,
-        message: "",
-        error: null
-      }
-    },
-    resetUpdate: (state) => {
-      state.update = {
-        status: UiStatus.IDLE,
-        message: "",
-        error: null
-      }
-    },
-    resetRemove: (state) => {
-      state.remove = {
-        status: UiStatus.IDLE,
-        message: "",
-        error: null
-      }
-    }
-  },
   extraReducers: (builder) => {
     builder
-      // fetch
-      .addCase(fetchProducts.pending, (state) => {
-        state.fetch.status = UiStatus.LOADING
+      // findAll product
+      .addCase(findAllProducts.pending, (state) => { state.findAll.status = UiStatus.LOADING })
+      .addCase(findAllProducts.fulfilled, (state, action) => {
+        state.findAll.status = action.payload.length > 0 ? UiStatus.IDLE : UiStatus.EMPTY
+        state.findAll.products = action.payload
       })
-      .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.fetch.status = action.payload.length > 0 ? UiStatus.IDLE : UiStatus.EMPTY
-        state.fetch.products = action.payload
+      .addCase(findAllProducts.rejected, (state, action) => {
+        state.findAll.status = UiStatus.ERROR
+        state.findAll.error = action.payload
       })
-      .addCase(fetchProducts.rejected, (state, action) => {
-        state.fetch.status = UiStatus.ERROR
-        state.fetch.error = action.payload
-      })
-      // create
+      // create product
       .addCase(createProduct.pending, (state) => {
         state.create.status = UiStatus.LOADING
       })
@@ -148,13 +93,13 @@ const inventorySlice = createSlice({
         state.create.status = UiStatus.SUCCESS
         state.create.message = action.payload
 
-        state.fetch.status = UiStatus.LOADING // re-fetch products
+        state.findAll.status = UiStatus.LOADING // re-findAll products
       })
       .addCase(createProduct.rejected, (state, action) => {
         state.create.status = UiStatus.ERROR
         state.create.error = action.payload
       })
-      // create
+      // update product
       .addCase(updateProduct.pending, (state) => {
         state.update.status = UiStatus.LOADING
       })
@@ -162,7 +107,7 @@ const inventorySlice = createSlice({
         state.update.status = UiStatus.SUCCESS
         state.update.message = action.payload
 
-        state.fetch.status = UiStatus.LOADING
+        state.findAll.status = UiStatus.LOADING
 
         state.create.status = UiStatus.IDLE
       })
@@ -170,7 +115,7 @@ const inventorySlice = createSlice({
         state.update.status = UiStatus.ERROR
         state.update.error = action.payload
       })
-      // remove
+      // remove product
       .addCase(removeProduct.pending, (state) => {
         state.remove.status = UiStatus.LOADING
       })
@@ -180,7 +125,7 @@ const inventorySlice = createSlice({
         state.remove.status = UiStatus.SUCCESS
         state.remove.message = action.payload
 
-        state.fetch.status = UiStatus.LOADING //re-fetch products
+        state.findAll.status = UiStatus.LOADING //re-findAll products
       })
       .addCase(removeProduct.rejected, (state, action) => {
         state.remove.status = UiStatus.ERROR
@@ -189,15 +134,5 @@ const inventorySlice = createSlice({
   }
 })
 
-export const { 
-  toggleCreateModal, 
-  toggleRemoveModal, 
-  toggleUpdateModal, 
-  changeParam, 
-  changeProduct,
-  resetCreate,
-  resetUpdate,
-  resetRemove
-} = inventorySlice.actions
-export { fetchProducts, createProduct, updateProduct, removeProduct }
-export default inventorySlice.reducer
+export { findAllProducts, createProduct, updateProduct, removeProduct }
+export default productsSlice.reducer

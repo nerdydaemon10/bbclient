@@ -4,12 +4,15 @@
     box-shadow: 0 0 2px 0 rgba(0, 0, 0, .1);
     margin: 0;
 }
+.table thead {
+    position: sticky;
+    top: 0;
+}
 .table th {
     color: #71717A;
     font-size: 14px;
     font-weight: 500 !important;
     text-transform: none;
-    background-color: transparent;
     padding: 8px 12px;
 } 
 .table tr:hover {

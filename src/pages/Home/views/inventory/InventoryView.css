@@ -1,0 +1,30 @@
+.app-dashboard-main {
+    display: grid;
+    column-gap: var(--app-padding);
+    row-gap: var(--app-gap-8);
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content max-content 1fr max-content;
+    grid-template-areas: 
+    "title"
+    "fs"
+    "pt"
+    "ps";
+    overflow: hidden;
+}
+
+.inventory-title-section {
+    grid-area: title;
+}
+
+.inventory-filtering-section {
+    grid-area: fs;
+}
+
+.inventory-products-table {
+    grid-area: pt;
+    overflow: auto;
+}
+
+.inventory-pagination-section {
+    grid-area: ps;
+}

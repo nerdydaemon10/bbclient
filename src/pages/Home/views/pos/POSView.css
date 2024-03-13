@@ -1,33 +1,30 @@
 .app-dashboard-main {
     display: grid;
-    column-gap: var(--app-padding);
-    grid-template-columns: 1fr 1fr 500px;
-    grid-template-rows: max-content max-content 1fr;
+
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: max-content max-content 1fr max-content;
     grid-template-areas: 
-    "title title title"
-    "filters filters actions"
-    "products products orders";
+      "title title title"
+      "pth pth os"
+      "ptb ptb os"
+      "ptf ptf os";
     overflow: hidden;
 }
 
 .pos-title-section {
     grid-area: title;
 }
-
-.pos-filters-section {
-    grid-area: filters;
+.pos-products-table-header {
+    grid-area: pth;
 }
-
-.pos-actions-section {
-    grid-area: actions;
+.pos-products-table-body {
+    grid-area: ptb;
+    overflow: auto !important;
 }
-
-.pos-products-section {
-    grid-area: products;
-    overflow: auto;
+.pos-products-table-footer {
+    grid-area: ptf;
 }
-
 .pos-orders-section {
-    grid-area: orders;
-    overflow: auto;
+    grid-area: os;
+    background-color: #ccc;
 }

@@ -21,6 +21,9 @@
 .app-sx-4 > * {
     margin-right: 4px; 
 }
+.app-sx-6 > * {
+    margin-right: 6px; 
+}
 .app-sx-8 > * {
     margin-right: 8px;
 }
@@ -34,7 +37,7 @@
     margin-right: 24px;
 }
 
-[class^="app-sx-"] > *:last-child {
+[class*="app-sx-"] > *:last-child {
     margin-right: 0;
 }
 
@@ -55,6 +58,6 @@
     margin-bottom: 24px;
 }
 
-[class^="app-sy-"] > *:last-child {
+[class*="app-sy-"] > *:last-child {
     margin-bottom: 0;
 }

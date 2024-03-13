@@ -6,13 +6,15 @@ import { useDispatch, useSelector } from "react-redux"
 import CreateModal from "./CreateModal.jsx"
 import UpdateModal from "./UpdateModal.jsx"
 import RemoveDialog from "./RemoveDialog.jsx"
-import ProductsTable from "./ProductsTable.jsx"
+
 import { 
   fetchProducts, 
   resetCreate, resetUpdate, resetRemove, 
   toggleCreateModal, toggleUpdateModal,  toggleRemoveModal 
 } from "../../../../redux/inventory/inventorySlice.jsx"
 import UiStatus from "../../../../utils/classes/UiStatus.jsx"
+import "./InventoryView.css"
+import InventoryTitleSection from "./InventoryTitleSection.jsx"
 
 function InventoryView() {
   // redux-state
@@ -64,11 +66,8 @@ function InventoryView() {
 
   return (
     <>
-      <header>
-        <h3 className="mb-0">Inventory</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-      </header>
-      <ProductsTable />
+      <InventoryTitleSection />
+      <InventoryProductsSection />
       <CreateModal />
       <UpdateModal />
       <RemoveDialog />
@@ -76,6 +75,15 @@ function InventoryView() {
   )
 }
 
+function InventoryProductsSection() {
+  return (
+    <>
+      <InventoryFilteringSection />
+      <InventoryProductsTable />
+      <InventoryPaginationSection />
+    </>
+  )
+}
 const showSuccessNotification = (message) => {
   toast.success(message)
 }

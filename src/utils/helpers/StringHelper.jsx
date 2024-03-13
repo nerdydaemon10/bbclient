@@ -1,3 +1,4 @@
+import ProductCategories from "../data/ProductCategories.jsx"
 import prototypes from "../prototypes.jsx"
 
 prototypes.init()
@@ -30,4 +31,36 @@ StringHelper.extractErrorsFromError = function(name, error) {
     }
     
     return error.errors[name] 
+}
+StringHelper.toProductCategoryName = function(id) {
+    const category = ProductCategories.find((product) => product.id == id)
+
+    if (!category) {
+        return "Undefined"
+    }
+
+    return category.name
+}
+StringHelper.toStocks = function(number) {
+    if (number == 1) {
+        return `${number} stock`
+    }
+    if (number > 1) {
+        return `${number} stocks`
+    }
+    return `Empty Stock`
+}
+StringHelper.toPesoCurrency = function(number) {
+    return number.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })
+}
+
+StringHelper.isEmptyOrNull = function(arg) {
+  if (!arg) {
+    return true
+  }
+
+  const str = arg.toString()
+  const length = str.replace(" ", "").length
+  
+  return length == 0
 }

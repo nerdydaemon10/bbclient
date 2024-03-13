@@ -39,8 +39,8 @@ index.html
 #/src/components
 #/src/services
 #/src/utils
-#/src/assets
+/src/assets
 #/src/layouts
 /src/App.jsx
 #/src/redux
-#.env
+.env

@@ -4,4 +4,5 @@ export default class UiStatus {
     static SUCCESS = "SUCCESS"
     static ERROR = "ERROR"
     static EMPTY = "EMPTY"
+    static NO_MATCH = "NO_MATCH"
 }

@@ -8,6 +8,6 @@ export function findErrorByName(error, name) {
     if (!error.errors[name]) {
         return ""
     }
-
+    
     return error.errors[name]
 }
