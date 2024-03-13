@@ -66,9 +66,9 @@ function PosProductsTable() {
 
   useEffect(() => {
     handleSearchProducts()
-
-    return () => {
-      handleSearchProducts.cancel()
+    
+    return () => { 
+      handleSearchProducts.cancel() 
     }
   }, [name, categoryId, perPage, page]) //eslint-disable-line react-hooks/exhaustive-deps
 
