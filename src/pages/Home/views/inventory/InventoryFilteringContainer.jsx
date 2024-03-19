@@ -4,8 +4,12 @@ import { useDispatch } from "react-redux"
 import UiHelper from "../../../../utils/helpers/UiHelper.jsx"
 import ProductCategories from "../../../../utils/data/ProductCategories.jsx"
 import { fetchProductsAsync } from "../../../../redux/pos/posSlice.jsx"
+import AppSearchField from "../../../../components/inputs/AppSearchField.jsx"
+import AppSelect from "../../../../components/inputs/AppSelect.jsx"
+import AppPrimaryButton from "../../../../components/buttons/AppPrimaryButton.jsx"
+import { BiPlus } from "react-icons/bi"
 
-function InventoryFilteringSection() {
+function InventoryFilteringContainer() {
   const dispatch = useDispatch()
   const [params, setParams] = useState({
     name: "",
@@ -25,32 +29,31 @@ function InventoryFilteringSection() {
   }, [handleSearchFilter, params])
 
   return (
-    <div className="inventory-filtering-section">
+    <div className="inventory-filtering-container">
       <div className="row gx-2">
         <div className="col-9">
-          <input
-            name="name"
-            type="text"
-            className="form-control"
+          <AppSearchField 
             placeholder="Filter Products..."
             value={params.name}
             onChange={handleChange}
           />
         </div>
         <div className="col-3">
-          <select 
-            className="form-select" 
-            name="category_id"
+          <AppSelect
+            options={ProductCategories}
+            defaultOption="-- All Categories --"
             value={params.category_id}
             onChange={handleChange}
-          >
-            <option value={""}>-- All Categories --</option>
-            {ProductCategories.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-          </select>
+          />
         </div>
       </div>
+      <AppPrimaryButton
+        icon={<BiPlus />}
+        text="Create"
+        onClick={() => {}}
+      />
     </div>
   )
 }
 
-export default InventoryFilteringSection
+export default InventoryFilteringContainer

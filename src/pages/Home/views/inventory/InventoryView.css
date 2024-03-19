@@ -1,23 +1,23 @@
 .app-dashboard-main {
+    column-gap: var(--app-spacing);
+    row-gap: var(--app-spacing);
     display: grid;
-    column-gap: var(--app-padding);
-    row-gap: var(--app-gap-8);
     grid-template-columns: 1fr;
     grid-template-rows: max-content max-content 1fr max-content;
     grid-template-areas: 
-    "title"
-    "fs"
-    "pt"
-    "ps";
+      "title-container"
+      "filtering-container"
+      "table-container"
+      "pagination-container";
     overflow: hidden;
 }
 
-.inventory-title-section {
-    grid-area: title;
+.inventory-title-container {
+    grid-area: title-container;
 }
 
-.inventory-filtering-section {
-    grid-area: fs;
+.inventory-filtering-container {
+    grid-area: filtering-container;
 }
 
 .inventory-products-table {

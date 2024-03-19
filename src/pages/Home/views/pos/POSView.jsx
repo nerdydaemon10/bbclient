@@ -12,8 +12,8 @@ import PosPaginationContainer from "./PosPaginationContainer.jsx"
 import PosTabsContainer from "./PosTabsContainer.jsx"
 import PosTabContainer from "./PosTabContainer.jsx"
 import PosCheckoutBtn from "./PosCheckoutBtn.jsx"
-import "./POSView.css"
-import usePos from "./usePos.jsx"
+
+import "./PosView.css"
 import PosProvder, { PosContext } from "./PosProvider.jsx"
 
 function PosView() {
