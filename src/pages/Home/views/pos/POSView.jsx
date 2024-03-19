@@ -1,6 +1,5 @@
 import { debounce } from "lodash"
-import { createContext, useEffect, useState } from "react"
-import { BiFile, BiPackage } from "react-icons/bi"
+import { useContext, useEffect, useState } from "react"
 
 import PosTopContainer from "./PosTopContainer.jsx"
 import PosFilteringContainer from "./PosFilteringContainer.jsx"
@@ -14,35 +13,16 @@ import PosTabsContainer from "./PosTabsContainer.jsx"
 import PosTabContainer from "./PosTabContainer.jsx"
 import PosCheckoutBtn from "./PosCheckoutBtn.jsx"
 import "./PosView.css"
-
-const tabs = [
-  {
-    id: 1,
-    name: "Check List",
-    icon: <BiPackage className="me-1" size={18} />,
-    value: "is-checkout-list"
-  },
-  {
-    id: 2,
-    name: "Order Info",
-    icon: <BiFile className="me-1" size={18} />,
-    value: "is-order-info"
-  }
-]
-
-const PosProvider = createContext([])
+import usePos from "./usePos.jsx"
+import PosProvder, { PosContext } from "./PosProvider.jsx"
 
 function PosView() {
-  const dispatch = useDispatch()
-
-  const { checkouts } = useSelector((state) => state.pos)
-
   return (
-    <PosProvider>
+    <PosProvder>
       <PosTopContainer />
       <PosStartContainer />
       <PosEndContainer />
-    </>
+    </PosProvder>
   )
 }
 
@@ -65,7 +45,7 @@ function PosStartContainer() {
       page: currentPage
     }))
   }, AppConfig.DEBOUNCE_DELAY)
-
+  
   const handleNameChange = (e) => {
     setName(e.target.value)
     handleSearchProducts.cancel()
@@ -123,43 +103,22 @@ function PosStartContainer() {
   )
 }
 
-function PosEndContainer({checkouts}) {
-  const [tab, setTab] = useState(tabs[0].value)
-
-  const [customer, setCustomer] = useState({
-    name: "",
-    contactNumber: "",
-    deliveryAddress: ""
-  })
-  const [paymentMethod, setPaymentMethod] = useState(1)
-
-  const handleChange = (id) => {
-    setTab(id)
-  }
-
-  const handleCustomerChange = (e) => {
-    setCustomer({ ...customer, [e.target.name]: e.target.value })
-  }
-
-  const handlePaymentMethodChange = (value) => {
-    setPaymentMethod(value)
-  }
-
+function PosEndContainer() {
+  const { tabs, tab, isCheckoutBtnDisabled, handleTabChange } = useContext(PosContext)
+  
   return (
     <>
       <PosTabsContainer
         tabs={tabs}
         tab={tab}
-        onChange={handleChange}
+        onChange={handleTabChange}
       />
       <PosTabContainer 
         tab={tab}
-        customer={customer}
-        paymentMethod={paymentMethod}
-        onCustomerChange={handleCustomerChange}
-        onPaymentMethodChange={handlePaymentMethodChange}
       />
-      <PosCheckoutBtn checkouts={checkouts} customer={customer} />
+      <PosCheckoutBtn
+        disabled={isCheckoutBtnDisabled} 
+      />
     </>
   )
 }

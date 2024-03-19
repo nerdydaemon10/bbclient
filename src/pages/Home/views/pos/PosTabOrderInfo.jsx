@@ -2,6 +2,9 @@ import { BiHome, BiMoney, BiQr, BiQrScan, BiWallet } from "react-icons/bi"
 import AppFormTextField from "../../../../components/forms/AppFormTextField.jsx"
 import { findErrorByName } from "../../../../utils/helpers/FormHelper.jsx"
 import AppFormOption from "../../../../components/forms/AppFormOption.jsx"
+import usePos from "./usePos.jsx"
+import { useContext } from "react"
+import { PosContext } from "./PosProvider.jsx"
 
 const paymentMethods = [
   {
@@ -18,7 +21,9 @@ const paymentMethods = [
   }
 ]
 
-function PosTabOrderInfo({customer, paymentMethod, onCustomerChange, onPaymentMethodChange}) {
+function PosTabOrderInfo() {
+  const { customer, paymentMethod, handleCustomerChange, handlePaymentMethodChange } = useContext(PosContext)
+  
   return (
     <div className="pos-tab-order-info app-sy-12">
       <AppFormTextField
@@ -27,7 +32,7 @@ function PosTabOrderInfo({customer, paymentMethod, onCustomerChange, onPaymentMe
         placeholder="Customer Name..."
         value={customer.name}
         error={findErrorByName(null, "")}
-        onChange={onCustomerChange}
+        onChange={handleCustomerChange}
       />
       <AppFormTextField
         name="contactNumber" 
@@ -35,7 +40,7 @@ function PosTabOrderInfo({customer, paymentMethod, onCustomerChange, onPaymentMe
         placeholder="Contact Number..."
         value={customer.contactNumber}
         error={findErrorByName(null, "")}
-        onChange={onCustomerChange}
+        onChange={handleCustomerChange}
       />
       <AppFormTextField
         name="deliveryAddress" 
@@ -43,14 +48,14 @@ function PosTabOrderInfo({customer, paymentMethod, onCustomerChange, onPaymentMe
         placeholder="Delivery Address..."
         value={customer.deliveryAddress}
         error={findErrorByName(null, "")}
-        onChange={onCustomerChange}
+        onChange={handleCustomerChange}
       />
       <AppFormOption 
         name="paymentMethod"
         label="Payment Method"
         items={paymentMethods}
         value={paymentMethod}
-        onChange={onPaymentMethodChange}
+        onChange={handlePaymentMethodChange}
       />
     </div>
   )
