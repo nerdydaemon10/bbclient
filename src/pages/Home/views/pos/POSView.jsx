@@ -36,7 +36,7 @@ function PosStartContainer() {
   const [category, setCategory] = useState("")
   const [rowsPerPage, setRowsPerPage] = useState(RowsPerPages[0].id)
   const [currentPage, setCurrentPage] = useState(1)
-
+  console.log("test")
   const handleSearchProducts = debounce(() => {
     dispatch(fetchProductsAsync({
       name: name,
