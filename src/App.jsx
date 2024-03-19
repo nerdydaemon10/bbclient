@@ -1,8 +1,8 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from "react-router-dom"
 
-import AppLocalStorage from './utils/AppLocalStorage.jsx'
-import HomePage from './pages/Home/HomePage.jsx'
-import LoginPage from './pages/Login/LoginPage.jsx'
+import AppLocalStorage from "./utils/AppLocalStorage.jsx"
+import HomePage from "./pages/home/HomePage.jsx"
+import LoginPage from "./pages/login/LoginPage.jsx"
 
 function App() {
   return (
