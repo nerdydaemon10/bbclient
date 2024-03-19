@@ -1,4 +1,8 @@
+import { useSelector } from "react-redux"
+
 function PosTopContainer() {
+  const { user } = useSelector(state => state.auth)
+  
   return (
     <div className="pos-top-container">
       <h3 className="mb-0">POS System</h3>

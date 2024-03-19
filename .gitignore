@@ -33,17 +33,3 @@ index.html
 
 # custom-hides
 
-/src/main.jsx
-#/src/components
-#/src/services
-#/src/utils
-#/src/assets
-/src/layouts
-/src/App.jsx
-#/src/redux
-/src/pages/home/views/inventory
-/src/redux/auth
-/src/redux/inventory
-/src/redux/products
-.env
-test.html
