@@ -13,7 +13,7 @@ import PosTabsContainer from "./PosTabsContainer.jsx"
 import PosTabContainer from "./PosTabContainer.jsx"
 import PosCheckoutBtn from "./PosCheckoutBtn.jsx"
 
-import "./POSView.css"
+import "./PosView.css"
 import PosProvder, { PosContext } from "./PosProvider.jsx"
 
 function PosView() {
