@@ -6,7 +6,7 @@ import InventoryView from "./views/inventory/InventoryView.jsx"
 import AppDashboardLayout from "../../layouts/AppDashboardLayout.jsx"
 import { logout } from "../../redux/auth/authSlice.jsx"
 import { useEffect } from "react"
-import PosView from "./views/pos/PosView.jsx"
+import PosView from "./views/pos/POSView.jsx"
 
 function HomePage() {
   return (
