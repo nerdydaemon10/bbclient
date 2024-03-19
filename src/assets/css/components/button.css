@@ -1,9 +1,9 @@
-.-btn-stateful {
+.app-button {
     position: relative;
 }
 
-.-btn-stateful
-.-btn-stateful-icon {
+.app-button 
+.app-button-icon {
     filter: opacity(0);
     position: absolute;
     left: 50%;
@@ -12,12 +12,12 @@
     line-height: 1;
 }
 
-.-btn-stateful.is-loading
-.-btn-stateful-icon {
+.app-button.is-loading
+.app-button-icon {
     filter: opacity(1);
 }
 
-.-btn-stateful.is-loading
-.-btn-stateful-text {
+.app-button.is-loading
+.app-button-text {
     filter: opacity(0);
 }

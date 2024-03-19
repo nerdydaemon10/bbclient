@@ -1,7 +1,4 @@
 import ProductCategories from "../data/ProductCategories.jsx"
-import prototypes from "../prototypes.jsx"
-
-prototypes.init()
 
 export default class StringHelper {}
 
@@ -19,7 +16,7 @@ StringHelper.isDashboardSidebarItemActive = function(bool) {
     return bool ? "btn-dark" : "btn-secondary"
 }
 StringHelper.isFormControlInvalid = function(errorMessage) {
-    return errorMessage.isNotEmpty() ? "is-invalid" : ""
+    return StringHelper.notEmpty(errorMessage) ? "is-invalid" : ""
 }
 StringHelper.extractErrorsFromError = function(name, error) {
     if (error == null || error == undefined) {
@@ -54,7 +51,7 @@ StringHelper.toPesoCurrency = function(number) {
     return number.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })
 }
 
-StringHelper.isEmptyOrNull = function(arg) {
+StringHelper.isEmpty = function(arg) {
   if (!arg) {
     return true
   }
@@ -63,4 +60,8 @@ StringHelper.isEmptyOrNull = function(arg) {
   const length = str.replace(" ", "").length
   
   return length == 0
+}
+
+StringHelper.notEmpty = function(arg) {
+  return !StringHelper.isEmpty(arg)
 }

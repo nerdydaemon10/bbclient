@@ -1,20 +1,19 @@
-import { useSelector } from 'react-redux'
-import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 
-import HomePage from './pages/Home/HomePage.jsx'
-import LoginPage from './pages/Login/LoginPage.jsx'
+import HomePage from './pages/home/HomePage.jsx'
+import LoginPage from './pages/login/LoginPage.jsx'
 import AppLocalStorage from './utils/AppLocalStorage.jsx'
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<LoginPage />}></Route>
-      <Route path="/home/*" element={<AuthenticateRoute />} />
+      <Route path="/home/*" element={<ProtectedPage />} />
     </Routes>
   )
 }
 
-function AuthenticateRoute() {
+function ProtectedPage() {
   const accessToken = AppLocalStorage.readAccessToken()
   return (accessToken ? <HomePage /> : <Navigate to="/" replace={true} />)
 }

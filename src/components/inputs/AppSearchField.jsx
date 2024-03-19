@@ -1,6 +1,6 @@
-import { BiSearch, BiSearchAlt } from "react-icons/bi"
+import { BiSearch } from "react-icons/bi"
 
-function AppSearchTextField({placeholder, disabled, value, onChange}) {
+function AppSearchField({placeholder, disabled, value, onChange}) {
   return (
     <div className="app-input-text-search">
       <input 
@@ -18,4 +18,4 @@ function AppSearchTextField({placeholder, disabled, value, onChange}) {
   )
 }
 
-export default AppSearchTextField
+export default AppSearchField

@@ -3,7 +3,7 @@
     border: 1px solid var(--app-border-color);
     overflow: hidden;
 }
-.app-table-cell-status {
+.app-table-td-status {
     color: #71717A !important;
     text-align: center;
 }

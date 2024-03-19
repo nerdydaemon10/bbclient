@@ -7,11 +7,11 @@ ObjectHelper.toUriParams = function(object) {
   const entries = !object ? [] : Object.entries(object)
 
   const filters = entries
-    .filter(([key, value]) => !StringHelper.isEmptyOrNull(value) && !excludes.includes(key))
+    .filter(([key, value]) => !StringHelper.isEmpty(value) && !excludes.includes(key))
     .map(([key, value]) => `filter[${key}]=${encodeURIComponent(value)}`)
     
   const paginations = entries
-    .filter(([key, value]) => !StringHelper.isEmptyOrNull(value) && excludes.includes(key))
+    .filter(([key, value]) => !StringHelper.isEmpty(value) && excludes.includes(key))
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
          
   const params = filters.concat(paginations).join("&")

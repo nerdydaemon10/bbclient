@@ -1,11 +1,13 @@
 /* -start- @table */
 .table {
     display: table;
-    box-shadow: 0 0 2px 0 rgba(0, 0, 0, .1);
+    /*box-shadow: 0 0 2px 0 rgba(0, 0, 0, .1);*/
+    box-shadow: none;
     margin: 0;
 }
 .table thead {
     position: sticky;
+    z-index: 777;
     top: 0;
 }
 .table th {
@@ -15,8 +17,8 @@
     text-transform: none;
     padding: 8px 12px;
 } 
-.table tr:hover {
-    background-color: #F9F9FA;
+.table tbody > tr:hover {
+    background-color: #F9F9FA !important;
 }
 .table td {
     background-color: transparent;
@@ -26,11 +28,8 @@
     vertical-align: middle;
     padding: 8px 12px;
 }
-.table .table-actions > * {
-    margin-right: var(--app-spacing);
-}
-.table .table-actions > *:last-child {
-    margin-right: 0;
+.table tbody tr:last-child {
+    border-color: transparent;
 }
 /* -end- @table */
 

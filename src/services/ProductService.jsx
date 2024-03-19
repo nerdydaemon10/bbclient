@@ -23,10 +23,10 @@ ProductService.update = async function(product) {
 
 ProductService.findAll = async function(params=null) {
   const uriParams = ObjectHelper.toUriParams(params)
-
-  const response = StringHelper.isEmptyOrNull(uriParams) 
+  
+  const response = StringHelper.isEmpty(uriParams) 
     ? await axios.get(`${ProductRoutes.FIND_ALL}`)
     : await axios.get(`${ProductRoutes.FIND_ALL}?${uriParams}`)
-    
+  
   return response
 }

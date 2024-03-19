@@ -60,10 +60,10 @@ function LoginPage() {
             onChange={handleChange}
           />
           <AppPrimaryButton
-            type="submit"
             text="Login"
             status={status}
             fullWidth
+            submit
           />
         </div>
         <div className="text-center">
