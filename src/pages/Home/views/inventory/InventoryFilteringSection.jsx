@@ -45,7 +45,7 @@ function InventoryFilteringSection() {
             onChange={handleChange}
           >
             <option value={""}>-- All Categories --</option>
-            {ProductCategories.map((item, index) => <option key={index} value={item.id}>{item.name}</option>)}
+            {ProductCategories.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
           </select>
         </div>
       </div>
