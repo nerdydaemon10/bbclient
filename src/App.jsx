@@ -1,13 +1,13 @@
 import { Navigate, Route, Routes } from "react-router-dom"
 
 import AppLocalStorage from "./utils/AppLocalStorage.jsx"
-import HomePage from "./pages/home/HomePage.jsx"
-import LoginPage from "./pages/login/LoginPage.jsx"
+import LoginPage from "./pages/Login/LoginPage.jsx"
+import HomePage from "./pages/Home/HomePage.jsx"
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<LoginPage />} />
+      <Route path="/" element={<LoginPage/>} />
       <Route path="/home/*" element={<ProtectedPage />} />
     </Routes>
   )
