@@ -40,14 +40,46 @@
 }
 /* -end- @btn */
 
-/* --form-select-- */
+/* --FORM-SELECT-- */
+.form-select.is-valid {
+    background-image: var(--bs-form-select-bg-img, none);
+}
 .form-select.is-invalid {
     background-image: var(--bs-form-select-bg-img, none);
 }
-/* --invalid-feedback-- */
+
+/* --FEEDBACKS-- */
+.is-valid~.valid-feedback,
+.is-invalid~.invalid-feedback {
+    display: flex;
+}
+.valid-feedback, 
 .invalid-feedback {
-    background-color: #FEF6F5;
-    border-radius: var(--bs-border-radius);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
+}
+.valid-feedback > *,
+.invalid-feedback > * {
+    margin-right: 4px;
+}
+.valid-feedback > *:last-child,
+.invalid-feedback > *:last-child {
+    margin-right: 0;
+}
+.valid-feedback-icon, 
+.invalid-feedback-icon {
+    width: max-content;
+    height: max-content;
+    line-height: 1;
+}
+.valid-feedback-icon > *, 
+.invalid-feedback-icon > * {
+    position: relative;
+    top: 0.03em;
+}
+.valid-feedback-message,
+.invalid-feedback-message {
+    width: 100%;
+    word-break: break-word;
+    line-height: 1.2;
 }

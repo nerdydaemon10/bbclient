@@ -1,13 +1,16 @@
 import AppBaseButton from "./AppBaseButton.jsx";
 
-function AppSecondaryButton({text, type, status, fullWidth, onClick}) {
+function AppSecondaryButton({icon, text, status, size, fullWidth, submit, disabled, onClick}) {
   return (
     <AppBaseButton
+      icon={icon}
       text={text}
-      type={type}
       status={status}
-      color="btn-secondary"
+      variant="btn-secondary"
+      size={size}
       fullWidth={fullWidth}
+      submit={submit}
+      disabled={disabled}
       onClick={onClick}
     />
   )

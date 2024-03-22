@@ -1,22 +1,32 @@
-import { FaExclamation } from "react-icons/fa6"
+import { FaCheck, FaExclamation } from "react-icons/fa6"
 
-function AppFormTextField({name, label, placeholder, value, error, onChange}) {
-  const isInvalid = error.length > 0 ? "is-invalid" : ""
-  
+function AppFormTextField({name, label, placeholder, value, feedback, onChange}) {
+  const { state, message } = feedback
+  const variant = state == "is-valid"
+    ? "valid"
+    : "invalid"
+  const icon = state == "is-valid" 
+    ? (<FaCheck />)
+    : (<FaExclamation />)
+    
   return (
-    <div className="app-sy-4">
+    <div className="app-sy-8">
       <label className="app-text-label">{label}</label>
       <input
-        className={`form-control ${isInvalid}`} 
+        className={`form-control ${state}`} 
         type="text" 
         name={name}
         placeholder={placeholder} 
         value={value} 
         onChange={onChange} 
       />
-      <div className="invalid-feedback">
-        <FaExclamation />
-        {error}
+      <div className={`${variant}-feedback`}>
+        <div className={`${variant}-feedback-icon`}>
+          {icon}
+        </div>
+        <span className={`${variant}-feedback-message`}>
+          {message}
+        </span>
       </div>
     </div>
   )

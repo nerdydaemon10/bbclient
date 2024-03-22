@@ -2,7 +2,6 @@
 .app-dashboard-main {
     column-gap: var(--app-spacing);
     row-gap: var(--app-spacing);
-    display: grid;
     grid-template-columns: 1fr 1fr 0.7fr;
     grid-template-rows: max-content max-content 1fr max-content;
     grid-template-areas: 
@@ -10,7 +9,6 @@
       "filtering-container filtering-container tabs-container"
       "table-container table-container tab-container"
       "pagination-container pagination-container checkout-btn";
-    overflow: hidden;
 }
 
 /* --TITLE-CONTAINER-- */
@@ -60,13 +58,11 @@
 /* --TAB-CONTAINER:IS-ORDER-INFO-- */
 .pos-tab-container.is-order-info {
     border: 1px solid var(--app-border-color);
-    border-radius: 0;/*var(--app-border-radius);*/
 }
 
-/* --CHECKOUT-LIST */
+/* --TAB-CHECKOUT-LIST */
 .pos-tab-checkout-list {
     border: 1px solid var(--app-border-color);
-    border-radius: 0;/*var(--app-border-radius);*/
     grid-area: tab-checkout-list;
     padding: 0;
     margin: 0;
@@ -136,9 +132,6 @@
     border-radius: 8px;
     color: #fff;
     text-decoration: none;
-}
-.pos-tab-checkout-list-item-qty-btn-group-btn:hover {
-    /*color: #fff;*/
 }
 .pos-tab-checkout-list-item-qty-btn-group-txt {
     color: var(--app-main-color);

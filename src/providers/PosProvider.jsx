@@ -1,27 +1,12 @@
-import { createContext, useEffect, useState } from "react";
-import { BiFile, BiPackage } from "react-icons/bi";
-import { useSelector } from "react-redux";
-
-export const PosContext = createContext()
-export const tabs = [
-  {
-    id: 1,
-    name: "Check List",
-    icon: <BiPackage className="me-1" size={18} />,
-    value: "is-checkout-list"
-  },
-  {
-    id: 2,
-    name: "Order Info",
-    icon: <BiFile className="me-1" size={18} />,
-    value: "is-order-info"
-  }
-]
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
+import PosContext from "../contexts/PosContext.jsx"
+import AppCheckoutTabs from "../utils/configs/AppCheckoutTabs.jsx"
 
 export default function PosProvder({children}) {
   const { checkouts } = useSelector((state) => state.pos)
 
-  const [tab, setTab] = useState(tabs[0].value)
+  const [tab, setTab] = useState(AppCheckoutTabs[0].value)
   const [customer, setCustomer] = useState({
     name: "",
     contactNumber: "",
@@ -29,7 +14,7 @@ export default function PosProvder({children}) {
   })
   const [paymentMethod, setPaymentMethod] = useState(1)
   const [isCheckoutBtnDisabled, setIsCheckoutBtnDisabled] = useState(false)
-
+  
   const handleTabChange = (id) => {
     setTab(id)
   }
@@ -52,7 +37,6 @@ export default function PosProvder({children}) {
   return (
     <PosContext.Provider value={{
       checkouts, 
-      tabs,
       tab, 
       customer, 
       paymentMethod,

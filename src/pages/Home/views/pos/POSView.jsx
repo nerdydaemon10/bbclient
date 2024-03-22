@@ -1,32 +1,50 @@
 import { debounce } from "lodash"
 import { useContext, useEffect, useState } from "react"
 
-import PosTopContainer from "./PosTopContainer.jsx"
-import PosFilteringContainer from "./PosFilteringContainer.jsx"
 import RowsPerPages from "../../../../utils/configs/RowsPerPages.jsx"
 import { fetchProductsAsync } from "../../../../redux/pos/posSlice.jsx"
 import { useDispatch, useSelector } from "react-redux"
 import AppConfig from "../../../../utils/classes/AppConfig.jsx"
-import PosTableContainer from "./PosTableContainer.jsx"
-import PosPaginationContainer from "./PosPaginationContainer.jsx"
-import PosTabsContainer from "./PosTabsContainer.jsx"
-import PosTabContainer from "./PosTabContainer.jsx"
-import PosCheckoutBtn from "./PosCheckoutBtn.jsx"
 
-import "./PosView.css"
-import PosProvder, { PosContext } from "./PosProvider.jsx"
+import { AppDashboardMain } from "../../../../layouts/AppDashboardLayout.jsx"
+import AppLocalStorage from "../../../../utils/AppLocalStorage.jsx"
+import FilteringContainer from "./FilteringContainer.jsx"
+import TableContainer from "./TableContainer.jsx"
+import PaginationContainer from "./PaginationContainer.jsx"
+import TabsContainer from "./TabsContainer.jsx"
+import AppCheckoutTabs from "../../../../utils/configs/AppCheckoutTabs.jsx"
+import TabContainer from "./TabContainer.jsx"
+import CheckoutBtnContainer from "./CheckoutBtnContainer.jsx"
+import PosProvder from "../../../../providers/PosProvider.jsx"
+import PosContext from "../../../../contexts/PosContext.jsx"
+import PosStyle from "./PosStyle.jsx"
 
 function PosView() {
   return (
     <PosProvder>
-      <PosTopContainer />
-      <PosStartContainer />
-      <PosEndContainer />
+      <PosStyle />
+      <AppDashboardMain>
+        <TitleContainer />
+        <TableWrapper />
+        <CheckoutWrapper />
+      </AppDashboardMain>
     </PosProvder>
   )
 }
 
-function PosStartContainer() {
+
+function TitleContainer() {
+  const user = AppLocalStorage.readUser()
+
+  return (
+    <div className="title-container">
+      <h3 className="mb-0">POS System</h3>
+      <p className="mb-0">Hello {user.user.full_name}, welcome back!</p>
+    </div>
+  )
+}
+
+function TableWrapper() {
   const dispatch = useDispatch()
 
   const { productsApi } = useSelector((state) => state.pos)
@@ -36,7 +54,7 @@ function PosStartContainer() {
   const [category, setCategory] = useState("")
   const [rowsPerPage, setRowsPerPage] = useState(RowsPerPages[0].id)
   const [currentPage, setCurrentPage] = useState(1)
-  console.log("test")
+
   const handleSearchProducts = debounce(() => {
     dispatch(fetchProductsAsync({
       name: name,
@@ -45,12 +63,12 @@ function PosStartContainer() {
       page: currentPage
     }))
   }, AppConfig.DEBOUNCE_DELAY)
-  
+
   const handleNameChange = (e) => {
     setName(e.target.value)
     handleSearchProducts.cancel()
   }
-
+  
   const handleCategoryChange = (e) => {
     setCurrentPage(1)
     setCategory(e.target.value)
@@ -75,23 +93,23 @@ function PosStartContainer() {
 
   useEffect(() => {
     handleSearchProducts()
-    return () => { handleSearchProducts.cancel() }
+    return () => handleSearchProducts.cancel()
   }, [name, category, rowsPerPage, currentPage]) //eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
-      <PosFilteringContainer 
-        name={name} 
-        category={category} 
-        onNameChange={handleNameChange} 
-        onCategoryChange={handleCategoryChange} 
+      <FilteringContainer 
+        name={name}
+        category={category}
+        onNameChange={handleNameChange}
+        onCategoryChange={handleCategoryChange}
       />
-      <PosTableContainer 
+      <TableContainer 
         status={status} 
         data={data} 
         error={error} 
       />
-      <PosPaginationContainer 
+      <PaginationContainer 
         meta={meta}
         currentPage={currentPage}
         rowsPerPage={rowsPerPage}
@@ -103,22 +121,18 @@ function PosStartContainer() {
   )
 }
 
-function PosEndContainer() {
-  const { tabs, tab, isCheckoutBtnDisabled, handleTabChange } = useContext(PosContext)
+function CheckoutWrapper() {
+  const { tab, isCheckoutBtnDisabled, handleTabChange } = useContext(PosContext)
   
   return (
     <>
-      <PosTabsContainer
-        tabs={tabs}
+      <TabsContainer
+        tabs={AppCheckoutTabs}
         tab={tab}
         onChange={handleTabChange}
       />
-      <PosTabContainer 
-        tab={tab}
-      />
-      <PosCheckoutBtn
-        disabled={isCheckoutBtnDisabled} 
-      />
+      <TabContainer tab={tab} />
+      <CheckoutBtnContainer />
     </>
   )
 }

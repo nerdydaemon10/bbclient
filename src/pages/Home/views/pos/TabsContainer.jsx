@@ -1,8 +1,8 @@
 import AppOption from "../../../../components/inputs/AppOption.jsx"
 
-function PosTabsContainer({tabs, tab, onChange}) {
+function TabsContainer({tabs, tab, onChange}) {
   return (
-    <div className="pos-tabs-container">
+    <div className="tabs-container">
       <AppOption
         name="tab"
         items={tabs}
@@ -13,4 +13,4 @@ function PosTabsContainer({tabs, tab, onChange}) {
   )
 }
 
-export default PosTabsContainer
+export default TabsContainer

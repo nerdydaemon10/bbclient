@@ -21,9 +21,7 @@ function AppDashboardLayout({children}) {
         onClick={handleSidebarItemClick} 
       />
       <AppDashboardNavbar />
-      <div className="app-dashboard-main">
-        {children}
-      </div>
+      {children}
     </div>
   )
 }
@@ -67,4 +65,13 @@ function AppDashboardNavbar() {
   )
 }
 
+function AppDashboardMain({className, children}) {
+  return (
+    <div className={`app-dashboard-main ${className}`}>
+      {children}
+    </div>
+  )
+}
+
+export { AppDashboardMain }
 export default AppDashboardLayout

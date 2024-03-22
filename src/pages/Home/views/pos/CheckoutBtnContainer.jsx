@@ -1,8 +1,8 @@
 import AppPrimaryButton from "../../../../components/buttons/AppPrimaryButton.jsx"
 
-function PosCheckoutBtn({disabled}) {
+function CheckoutBtnContainer({disabled}) {
   return (
-    <div className="pos-checkout-btn">
+    <div className="checkout-btn-container">
       <AppPrimaryButton 
         text="Checkout"
         fullWidth={true}
@@ -12,4 +12,4 @@ function PosCheckoutBtn({disabled}) {
   )
 }
 
-export default PosCheckoutBtn
+export default CheckoutBtnContainer

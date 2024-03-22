@@ -2,202 +2,154 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 
 import UiStatus from "../../utils/classes/UiStatus.jsx"
 import ProductService from "../../services/ProductService.jsx"
-import ProductCategories from "../../utils/data/ProductCategories.jsx"
 
-// state
-const initialState = {
-  fetch: {
-    products: [],
-    status: UiStatus.LOADING,
-    error: null
-  },
-  create: {
-    status: UiStatus.IDLE,
-    message: "",
-    error: null,
-  },
-  update: {
-    status: UiStatus.IDLE,
-    message: "",
-    error: null
-  },
-  remove: {
-    status: UiStatus.IDLE,
-    message: "",
-    error: null
-  },
-  param: {
-    name: "", description: "",
-    category_id: ProductCategories[0].id,
-    quantity: "", srp: "", member_price: ""
-  },
-  product: null,
-  isCreateModalOpen: false,
-  isUpdateModalOpen: false,
-  isRemoveModalOpen: false
-}
-
-// async functions
-const fetchProducts = createAsyncThunk(
-  "inventory/fetchProducts", 
-  async (thunkAPI) => {
+const fetchProductsAsync = createAsyncThunk(
+  "inventory/fetchProductsAsync", 
+  async (params=null, thunkAPI) => {
   try {
-    const response = await ProductService.findAll()
+    const response = await ProductService.findAll(params)
     return response.data
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data)
   }
 })
-const createProduct = createAsyncThunk(
-  "inventory/createProduct", 
+const createProductAsync = createAsyncThunk(
+  "inventory/createProductAsync", 
   async (product, thunkAPI) => {
     try {
         const response = await ProductService.create(product)
-        return response
+        return response.data
     } catch (error) {
         return thunkAPI.rejectWithValue(error.response.data)
     }
 })
-const updateProduct = createAsyncThunk(
-  "inventory/updateProduct", 
+const removeProductAsync = createAsyncThunk(
+  "inventory/removeProductAsync", 
+  async (id, thunkAPI) => {
+    try {
+        const response = await ProductService.remove(id)
+        return response.data
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.response.data)
+    }
+})
+const updateProductAsync = createAsyncThunk(
+  "inventory/updateProductAsync", 
   async (product, thunkAPI) => {
     try {
         const response = await ProductService.update(product)
-        return response
+        return response.data
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data)
     }
 })
-const removeProduct = createAsyncThunk(
-  "inventory/removeProduct", 
-  async (product, thunkAPI) => {
-    try {
-        const response = await ProductService.remove(product.id)
-        return response
-    } catch (error) {
-        return thunkAPI.rejectWithValue(error.response.data)
-    }
-})
+
+// state
+const initialState = {
+  fetchProductsApi: {
+    status: UiStatus.LOADING,
+    data: [],
+    meta: {
+      current_page: 0,
+      last_page: 0,
+      total: 0
+    },
+    error: null
+  },
+  createProductApi: {
+    status: UiStatus.IDLE,
+    message: "",
+    error: null
+  },
+  removeProductApi: {
+    status: UiStatus.IDLE,
+    message: "",
+    error: null
+  },
+  updateProductApi: {
+    status: UiStatus.IDLE,
+    message: "",
+    error: null
+  }
+}
 
 // core
 const inventorySlice = createSlice({
   name: "inventory",
   initialState,
   reducers: {
-    toggleCreateModal: (state, action) => {
-      state.isCreateModalOpen = action.payload
-    },
-    toggleUpdateModal: (state, action) => {
-      const { product, isOpen } = action.payload
-      
-      state.product = product == undefined ? state.product : product
-      state.isUpdateModalOpen = isOpen
-    },
-    toggleRemoveModal: (state, action) => {
-      const { product, isOpen } = action.payload
-      state.product = product == undefined ? state.product : product
-      state.isRemoveModalOpen = isOpen
-    },
-    changeParam: (state, action) => {
-      state.param = action.payload
-    },
-    changeProduct: (state, action) => {
-      state.product = action.payload
-    },
-    resetCreate: (state) => {
-      state.create = {
-        status: UiStatus.IDLE,
-        message: "",
-        error: null
-      }
-    },
-    resetUpdate: (state) => {
-      state.update = {
-        status: UiStatus.IDLE,
-        message: "",
-        error: null
-      }
-    },
-    resetRemove: (state) => {
-      state.remove = {
-        status: UiStatus.IDLE,
-        message: "",
-        error: null
-      }
+    resetErrors: (state) => {
+      state.createProductApi.error = null
+      state.removeProductApi.error = null
+      state.updateProductApi.error = null
     }
   },
   extraReducers: (builder) => {
     builder
-      // fetch
-      .addCase(fetchProducts.pending, (state) => {
-        state.fetch.status = UiStatus.LOADING
+      // fetchProductsAsync
+      .addCase(fetchProductsAsync.pending, (state) => {
+        state.fetchProductsApi.status = UiStatus.LOADING
       })
-      .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.fetch.status = action.payload.length > 0 ? UiStatus.IDLE : UiStatus.EMPTY
-        state.fetch.products = action.payload
+      .addCase(fetchProductsAsync.fulfilled, (state, action) => {
+        const { data, meta } = action.payload
+
+        state.fetchProductsApi.status = data.length > 0 ? UiStatus.SUCCESS : UiStatus.EMPTY
+        state.fetchProductsApi.data = data
+        state.fetchProductsApi.meta = meta
       })
-      .addCase(fetchProducts.rejected, (state, action) => {
-        state.fetch.status = UiStatus.ERROR
-        state.fetch.error = action.payload
+      .addCase(fetchProductsAsync.rejected, (state, action) => {
+        state.fetchProductsApi.status = UiStatus.ERROR
+        state.fetchProductsApi.error = action.payload
       })
       // create
-      .addCase(createProduct.pending, (state) => {
-        state.create.status = UiStatus.LOADING
+      .addCase(createProductAsync.pending, (state) => {
+        state.createProductApi.status = UiStatus.LOADING
       })
-      .addCase(createProduct.fulfilled, (state, action) =>  {
-        state.create.status = UiStatus.SUCCESS
-        state.create.message = action.payload
-
-        state.fetch.status = UiStatus.LOADING // re-fetch products
+      .addCase(createProductAsync.fulfilled, (state, action) =>  {
+        state.createProductApi.status = UiStatus.SUCCESS
+        state.createProductApi.message = action.payload
+        state.createProductApi.error = null
+        
+        state.fetchProductsApi.status = UiStatus.LOADING // re-fetch products
       })
-      .addCase(createProduct.rejected, (state, action) => {
-        state.create.status = UiStatus.ERROR
-        state.create.error = action.payload
-      })
-      // create
-      .addCase(updateProduct.pending, (state) => {
-        state.update.status = UiStatus.LOADING
-      })
-      .addCase(updateProduct.fulfilled, (state, action) => {
-        state.update.status = UiStatus.SUCCESS
-        state.update.message = action.payload
-
-        state.fetch.status = UiStatus.LOADING
-
-        state.create.status = UiStatus.IDLE
-      })
-      .addCase(updateProduct.rejected, (state, action) => {
-        state.update.status = UiStatus.ERROR
-        state.update.error = action.payload
+      .addCase(createProductAsync.rejected, (state, action) => {
+        state.createProductApi.status = UiStatus.ERROR
+        state.createProductApi.error = action.payload
       })
       // remove
-      .addCase(removeProduct.pending, (state) => {
-        state.remove.status = UiStatus.LOADING
+      .addCase(removeProductAsync.pending, (state) => {
+        state.removeProductApi.status = UiStatus.LOADING
       })
-      .addCase(removeProduct.fulfilled, (state, action) => {
-        state.product = null // remove temp product
+      .addCase(removeProductAsync.fulfilled, (state, action) => {
+        state.removeProductApi.status = UiStatus.SUCCESS
+        state.removeProductApi.message = action.payload
 
-        state.remove.status = UiStatus.SUCCESS
-        state.remove.message = action.payload
-
-        state.fetch.status = UiStatus.LOADING //re-fetch products
+        state.fetchProductsApi.status = UiStatus.LOADING //re-fetch products
       })
-      .addCase(removeProduct.rejected, (state, action) => {
-        state.remove.status = UiStatus.ERROR
-        state.remove.error = action.payload
+      .addCase(removeProductAsync.rejected, (state, action) => {
+        state.removeProductApi.status = UiStatus.ERROR
+        state.removeProductApi.error = action.payload
+      })
+      //update
+      .addCase(updateProductAsync.pending, (state) => {
+        state.updateProductApi.status = UiStatus.LOADING
+      })
+      .addCase(updateProductAsync.fulfilled, (state, action) => {
+        state.updateProductApi.status = UiStatus.SUCCESS
+        state.updateProductApi.message = action.payload
+        state.updateProductApi.error = null
+
+        state.fetchProductsApi.status = UiStatus.LOADING
+      })
+      .addCase(updateProductAsync.rejected, (state, action) => {
+        state.updateProductApi.status = UiStatus.ERROR
+        state.updateProductApi.error = action.payload
       })
   }
 })
 
 export const { 
-  toggleCreateModal, 
-  toggleRemoveModal, 
-  toggleUpdateModal, 
-  changeParam, 
-  changeProduct,
-  resetCreate,
-  resetUpdate,
-  resetRemove
+  resetErrors
 } = inventorySlice.actions
-export { fetchProducts, createProduct, updateProduct, removeProduct }
+export { fetchProductsAsync, createProductAsync, removeProductAsync, updateProductAsync }
 export default inventorySlice.reducer

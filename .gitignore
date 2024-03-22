@@ -31,5 +31,14 @@ package.json
 index.html
 .eslintrc.cjs
 
-# custom-hides
-
+# Custom
+.env
+test.html
+/src/assets
+#/src/components/
+#/src/utils
+/src/App.jsx
+/src/main.jsx
+/src/pages/home/views/inventory
+#/src/redux
+/src/services

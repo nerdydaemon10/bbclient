@@ -14,11 +14,11 @@ const headers = [
 ]
 const headersSize = headers.length
 
-function PosTable({status, data, error}) {
+function TableContainer({status, data, error}) {
   const { checkouts } = useSelector((state) => state.pos)
 
   return (
-    <div className="pos-table-container app-table-wrapper">
+    <div className="table-container app-table-wrapper">
       <table className="table">
         <thead>
           <THeaders headers={headers} />
@@ -66,7 +66,7 @@ function TDProduct({product, disabled}) {
       dispatch(checkoutProduct(product))
     }
   }
-
+  
   return (
     <tr key={product.product_id}>
       <td>{name}</td>
@@ -95,4 +95,4 @@ function checkProduct(checkouts, id) {
   return !!checkouts.find(checkout => checkout.id == id)
 }
 
-export default PosTable
+export default TableContainer

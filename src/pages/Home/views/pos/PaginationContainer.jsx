@@ -2,9 +2,9 @@ import { BiChevronLeft, BiChevronRight } from "react-icons/bi"
 import AppSelect from "../../../../components/inputs/AppSelect.jsx"
 import RowsPerPages from "../../../../utils/configs/RowsPerPages.jsx"
 
-function PosPaginationContainer({meta, currentPage, rowsPerPage, onChange, onPrevious, onNext}) {
+function PaginationContainer({meta, currentPage, rowsPerPage, onChange, onPrevious, onNext}) {
   return (
-    <div className="pos-pagination-container d-flex align-items-center justify-content-between">
+    <div className="pagination-container">
       <div className="d-flex align-items-center app-sx-8">
         <label className="app-text-label app-text-nowrap">Rows per page</label>
         <AppSelect
@@ -15,7 +15,7 @@ function PosPaginationContainer({meta, currentPage, rowsPerPage, onChange, onPre
         />
       </div>
       <div className="d-flex align-items-center app-sx-8">
-        <label className="app-text-label app-text-nowrap">Page {meta.current_page} of {meta.last_page}</label>
+        <label className="app-text-label app-text-nowrap">Page {currentPage} of {meta.last_page}</label>
         <div className="btn-group">
           <button 
             className="btn btn-secondary" 
@@ -37,4 +37,4 @@ function PosPaginationContainer({meta, currentPage, rowsPerPage, onChange, onPre
   )
 }
 
-export default PosPaginationContainer
+export default PaginationContainer

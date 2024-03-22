@@ -50,6 +50,9 @@ StringHelper.toStocks = function(number) {
 StringHelper.toPesoCurrency = function(number) {
     return number.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })
 }
+StringHelper.toPeso = function(number) {
+    return number.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })
+}
 
 StringHelper.isEmpty = function(arg) {
   if (!arg) {
@@ -64,4 +67,12 @@ StringHelper.isEmpty = function(arg) {
 
 StringHelper.notEmpty = function(arg) {
   return !StringHelper.isEmpty(arg)
+}
+
+StringHelper.capitalize = function(string) {
+  if (!string) {
+    return ""
+  }
+  
+  return string[0].toUpperCase() + string.slice(1)
 }

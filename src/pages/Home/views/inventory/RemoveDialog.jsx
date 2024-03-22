@@ -1,30 +1,44 @@
 import { useDispatch, useSelector } from "react-redux"
-
-import { removeProduct, toggleRemoveModal } from "../../../../redux/inventory/inventorySlice.jsx"
+import { removeProductAsync } from "../../../../redux/inventory/inventorySlice.jsx"
 import AppFormDialog from "../../../../components/forms/AppFormDialog.jsx"
+import { useContext, useEffect } from "react"
+import InventoryContext from "../../../../contexts/InventoryContext.jsx"
+import UiStatus from "../../../../utils/classes/UiStatus.jsx"
+import { enqueueSnackbar } from "notistack"
 
 function RemoveDialog() {
   const dispatch = useDispatch()
-  const { remove, product, isRemoveModalOpen } = useSelector((state) => state.inventory)
-  
+
+  const { removeProductApi } = useSelector((state) => state.inventory)
+  const { status, message } = removeProductApi
+  const { isRemoveDialogOpen, setIsRemoveDialogOpen, product } = useContext(InventoryContext)
+
   const handleClose = () => {
-    dispatch(toggleRemoveModal(false))
+    setIsRemoveDialogOpen(false)
   }
 
   const handleConfirm = (e) => { 
     e.preventDefault()
-    dispatch(removeProduct(product))
+    
+    dispatch(removeProductAsync(product.id))
+    setIsRemoveDialogOpen(false)
   }
+
+  useEffect(() => {
+    if (status == UiStatus.SUCCESS) {
+      enqueueSnackbar(message)
+    }
+  }, [status]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!product) {
     return <></>
   }
-  
+
   return (
     <AppFormDialog 
       title="Remove Product"
-      status={remove.status}
-      isOpen={isRemoveModalOpen} 
+      status={status}
+      isOpen={isRemoveDialogOpen} 
       onClose={handleClose}
       onConfirm={handleConfirm}
     >

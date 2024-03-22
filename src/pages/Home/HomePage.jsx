@@ -1,5 +1,4 @@
 import { useDispatch } from "react-redux"
-import { Toaster } from "react-hot-toast"
 import { Route, Routes, useNavigate } from "react-router-dom"
 
 import InventoryView from "./views/inventory/InventoryView.jsx"
@@ -18,7 +17,6 @@ function HomePage() {
           <Route path="/sign-out" element={<SignOut />} />
         </Routes>
       </AppDashboardLayout>
-      <Toaster />
     </>
   )
 }

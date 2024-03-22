@@ -1,13 +1,19 @@
-import { FaExclamation } from "react-icons/fa6"
+import { FaCheck, FaExclamation } from "react-icons/fa6"
 
-function AppFormSelect({name, label, options, value, error, onChange}) {
-  const isInvalid = error.length > 0 ? "is-invalid" : ""
-  
+function AppFormSelect({name, label, options, value, feedback, onChange}) {
+  const { state, message } = feedback
+  const variant = state == "is-valid"
+    ? "valid"
+    : "invalid"
+  const icon = state == "is-valid" 
+    ? (<FaCheck />)
+    : (<FaExclamation />)
+
   return (
-    <div className="app-sy-4">
+    <div className="app-sy-8">
       <label className="app-text-label">{label}</label>
       <select 
-        className={`form-select ${isInvalid}`} 
+        className={`form-select ${state}`} 
         name={name}
         defaultValue={value}
         onChange={onChange}
@@ -16,11 +22,15 @@ function AppFormSelect({name, label, options, value, error, onChange}) {
           options.map((item, index) => (
             <option key={index} value={item.id}>{item.name}</option>
           ))
-        }
+      }
       </select>
-      <div className="invalid-feedback">
-        <FaExclamation />
-        {error}
+      <div className={`${variant}-feedback`}>
+        <div className={`${variant}-feedback-icon`}>
+          {icon}
+        </div>
+        <span className={`${variant}-feedback-message`}>
+          {message}
+        </span>
       </div>
     </div>
   )

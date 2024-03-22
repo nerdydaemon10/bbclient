@@ -48,7 +48,7 @@ function LoginPage() {
             label="Username"
             placeholder="Username..."
             value={credentials.username}
-            error={findErrorByName(error, "username")}
+            feedback={findErrorByName(error, "username")}
             onChange={handleChange}
           />
           <AppFormPasswordTextField
@@ -56,7 +56,7 @@ function LoginPage() {
             label="Password"
             placeholder="Password..."
             value={credentials.password}
-            error={findErrorByName(error, "password")}
+            feedback={findErrorByName(error, "password")}
             onChange={handleChange}
           />
           <AppPrimaryButton

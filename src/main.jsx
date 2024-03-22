@@ -12,6 +12,7 @@ import './assets/css/components/components.css'
 import App from './App.jsx'
 import inits from './utils/inits.jsx'
 import { IconContext } from 'react-icons'
+import { SnackbarProvider } from 'notistack'
 
 inits()
 
@@ -20,7 +21,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Provider store={store}>
         <IconContext.Provider value={{ className: "react-icons" }}>
-          <App />
+          <SnackbarProvider
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+          >
+            <App />
+          </SnackbarProvider>
         </IconContext.Provider>
       </Provider>
     </BrowserRouter>

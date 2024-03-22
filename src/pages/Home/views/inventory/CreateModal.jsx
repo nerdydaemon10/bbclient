@@ -4,29 +4,49 @@ import AppFormSelect from "../../../../components/forms/AppFormSelect.jsx"
 import AppFormTextField from "../../../../components/forms/AppFormTextField.jsx"
 import ProductCategories from "../../../../utils/data/ProductCategories.jsx"
 import { findErrorByName } from "../../../../utils/helpers/FormHelper.jsx"
-import { changeParam, createProduct, toggleCreateModal } from "../../../../redux/inventory/inventorySlice.jsx"
+import { useContext, useEffect } from "react"
+import { createProductAsync } from "../../../../redux/inventory/inventorySlice.jsx"
+import UiStatus from "../../../../utils/classes/UiStatus.jsx"
+import InventoryContext from "../../../../contexts/InventoryContext.jsx"
+import { enqueueSnackbar } from "notistack"
 
 function CreateModal() {
-  const { create, param, isCreateModalOpen } = useSelector((state) => state.inventory)
   const dispatch = useDispatch()
 
+  const { 
+    isCreateModalOpen, setIsCreateModalOpen, 
+    createParam, setCreateParam
+  } = useContext(InventoryContext)
+
+  const { createProductApi } = useSelector((state) => state.inventory)
+  const { status, message, error } = createProductApi
+
   const handleChange = (e) => {
-    dispatch(changeParam({ ...param, [e.target.name]: e.target.value}))
+    setCreateParam(prev => {
+      return {...prev, [e.target.name]: e.target.value} 
+    })
   }
 
   const handleClose = () => {
-    dispatch(toggleCreateModal(false))
+    setIsCreateModalOpen(false)
   }
 
   const handleConfirm = (e) => {
     e.preventDefault()
-    dispatch(createProduct(param))
+    dispatch(createProductAsync(createParam))
   }
-  
+
+  useEffect(() => {
+    if (status == UiStatus.SUCCESS) {
+      setIsCreateModalOpen(false)
+      enqueueSnackbar(message)
+    }
+  }, [status]) // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <AppFormModal 
       title="Create Product"
-      status={create.status}
+      status={status}
       isOpen={isCreateModalOpen} 
       onClose={handleClose}
       onConfirm={handleConfirm}
@@ -37,8 +57,8 @@ function CreateModal() {
             name="name"
             label="Name"
             placeholder="e.g., Coffee Power"
-            value={param.name}
-            error={findErrorByName(create.error, "name")}
+            value={createParam.name}
+            feedback={findErrorByName(error, "name")}
             onChange={handleChange}
           />
         </div>
@@ -47,8 +67,8 @@ function CreateModal() {
             name="description"
             label="Description"
             placeholder="e.g., 100 grams, with free spoon"
-            value={param.description}
-            error={findErrorByName(create.error, "description")}
+            value={createParam.description}
+            feedback={findErrorByName(error, "description")}
             onChange={handleChange}
           />
         </div>
@@ -59,8 +79,8 @@ function CreateModal() {
             name="category_id"
             label="Category"
             options={ProductCategories}
-            value={param.category_id}
-            error={findErrorByName(create.error, "category_id")}
+            value={createParam.category_id}
+            feedback={findErrorByName(error, "category_id", "category")}
             onChange={handleChange}
           />
         </div>
@@ -69,8 +89,8 @@ function CreateModal() {
               name="quantity"
               label="Quantity"
               placeholder="e.g., 75"
-              value={param.quantity}
-              error={findErrorByName(create.error, "quantity")}
+              value={createParam.quantity}
+              feedback={findErrorByName(error,"quantity")}
               onChange={handleChange}
             />
         </div>
@@ -81,8 +101,8 @@ function CreateModal() {
             name="srp"
             label="SRP"
             placeholder="e.g., 80.00"
-            value={param.srp}
-            error={findErrorByName(create.error, "srp")}
+            value={createParam.srp}
+            feedback={findErrorByName(error, "srp")}
             onChange={handleChange}
           />
         </div>
@@ -91,8 +111,8 @@ function CreateModal() {
             name="member_price"
             label="Member Price"
             placeholder="e.g., 90.00"
-            value={param.member_price}
-            error={findErrorByName(create.error, "member_price")}
+            value={createParam.member_price}
+            feedback={findErrorByName(error, "member_price")}
             onChange={handleChange}
           />
         </div>

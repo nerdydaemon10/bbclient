@@ -1,10 +1,9 @@
-import { BiHome, BiMoney, BiQr, BiQrScan, BiWallet } from "react-icons/bi"
+import { BiQr, BiWallet } from "react-icons/bi"
 import AppFormTextField from "../../../../components/forms/AppFormTextField.jsx"
 import { findErrorByName } from "../../../../utils/helpers/FormHelper.jsx"
 import AppFormOption from "../../../../components/forms/AppFormOption.jsx"
-import usePos from "./usePos.jsx"
 import { useContext } from "react"
-import { PosContext } from "./PosProvider.jsx"
+import PosContext from "../../../../contexts/PosContext.jsx"
 
 const paymentMethods = [
   {
@@ -25,13 +24,13 @@ function PosTabOrderInfo() {
   const { customer, paymentMethod, handleCustomerChange, handlePaymentMethodChange } = useContext(PosContext)
   
   return (
-    <div className="pos-tab-order-info app-sy-12">
+    <div className="tab-order-info app-sy-12">
       <AppFormTextField
         name="name" 
         label="Customer's Name"
         placeholder="Customer Name..."
         value={customer.name}
-        error={findErrorByName(null, "")}
+        feedback={findErrorByName(null, "")}
         onChange={handleCustomerChange}
       />
       <AppFormTextField
@@ -39,7 +38,7 @@ function PosTabOrderInfo() {
         label="Customer's Contact Number"
         placeholder="Contact Number..."
         value={customer.contactNumber}
-        error={findErrorByName(null, "")}
+        feedback={findErrorByName(null, "")}
         onChange={handleCustomerChange}
       />
       <AppFormTextField
@@ -47,7 +46,7 @@ function PosTabOrderInfo() {
         label="Customer's Delivery Address"
         placeholder="Delivery Address..."
         value={customer.deliveryAddress}
-        error={findErrorByName(null, "")}
+        feedback={findErrorByName(null, "")}
         onChange={handleCustomerChange}
       />
       <AppFormOption 

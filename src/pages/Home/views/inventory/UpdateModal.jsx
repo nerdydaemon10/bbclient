@@ -5,24 +5,37 @@ import AppFormSelect from "../../../../components/forms/AppFormSelect.jsx"
 import AppFormTextField from "../../../../components/forms/AppFormTextField.jsx"
 import ProductCategories from "../../../../utils/data/ProductCategories.jsx"
 import { findErrorByName } from "../../../../utils/helpers/FormHelper.jsx"
-import { changeProduct, updateProduct, toggleUpdateModal } from "../../../../redux/inventory/inventorySlice.jsx"
+import { resetErrors, updateProductAsync } from "../../../../redux/inventory/inventorySlice.jsx"
+import { useContext, useEffect } from "react"
+import InventoryContext from "../../../../contexts/InventoryContext.jsx"
+import { enqueueSnackbar } from "notistack"
+import UiStatus from "../../../../utils/classes/UiStatus.jsx"
 
 function UpdateModal() {
-  const { update, product, isUpdateModalOpen } = useSelector((state) => state.inventory)
   const dispatch = useDispatch()
+  const { updateProductApi } = useSelector((state) => state.inventory)
+  const { status, message, error } = updateProductApi
+  const { isUpdateModalOpen, setIsUpdateModalOpen, product, setProduct } = useContext(InventoryContext)
 
   const handleChange = (e) => {
-    dispatch(changeProduct({ ...product, [e.target.name]: e.target.value}))
+    setProduct({ ...product, [e.target.name]: e.target.value})
   }
-
+  
   const handleClose = () => {
-    dispatch(toggleUpdateModal(false))
+    setIsUpdateModalOpen(false)
   }
 
   const handleConfirm = (e) => {
     e.preventDefault()
-    dispatch(updateProduct(product))
+    dispatch(updateProductAsync(product))
   }
+
+  useEffect(() => {
+    if (status == UiStatus.SUCCESS) {
+      setIsUpdateModalOpen(false)
+      enqueueSnackbar(message)
+    }
+  }, [status]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!product) {
     return <></>
@@ -31,7 +44,7 @@ function UpdateModal() {
   return (
     <AppFormModal 
       title="Update Product"
-      status={update.status}
+      status={status}
       isOpen={isUpdateModalOpen} 
       onClose={handleClose}
       onConfirm={handleConfirm}
@@ -43,7 +56,7 @@ function UpdateModal() {
             label="Name"
             placeholder="e.g., Coffee Power"
             value={product.name}
-            error={findErrorByName(update.error, "name")}
+            feedback={findErrorByName(error, "name")}
             onChange={handleChange}
           />
         </div>
@@ -53,7 +66,7 @@ function UpdateModal() {
             label="Description"
             placeholder="e.g., 100 grams, with free spoon"
             value={product.description}
-            error={findErrorByName(update.error, "description")}
+            feedback={findErrorByName(error, "description")}
             onChange={handleChange}
           />
         </div>
@@ -65,7 +78,7 @@ function UpdateModal() {
             label="Category"
             options={ProductCategories}
             value={product.category_id}
-            error={findErrorByName(update.error, "category_id")}
+            feedback={findErrorByName(error, "category_id", "category")}
             onChange={handleChange}
           />
         </div>
@@ -75,7 +88,7 @@ function UpdateModal() {
               label="Quantity"
               placeholder="e.g., 75"
               value={product.quantity}
-              error={findErrorByName(update.error, "quantity")}
+              feedback={findErrorByName(error, "quantity")}
               onChange={handleChange}
             />
         </div>
@@ -87,7 +100,7 @@ function UpdateModal() {
             label="SRP"
             placeholder="e.g., 80.00"
             value={product.srp}
-            error={findErrorByName(update.error, "srp")}
+            feedback={findErrorByName(error, "srp")}
             onChange={handleChange}
           />
         </div>
@@ -97,7 +110,7 @@ function UpdateModal() {
             label="Member Price"
             placeholder="e.g., 90.00"
             value={product.member_price}
-            error={findErrorByName(update.error, "member_price")}
+            feedback={findErrorByName(error, "member_price")}
             onChange={handleChange}
           />
         </div>

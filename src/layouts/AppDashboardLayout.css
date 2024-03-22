@@ -10,7 +10,7 @@
     display: grid;
     grid-template-columns: var(--app-dashboard-sidebar-min-width) 1fr;
     grid-template-rows: var(--app-dashboard-sidebar-top-height) 1fr;
-    grid-template-areas: 
+    grid-template-areas:
         "sidebar navbar"
         "sidebar main";
     height: 100vh;
@@ -21,33 +21,36 @@
     grid-area: sidebar;
     border-right: 1px solid var(--app-border-color);
 }
+
 .app-dashboard-sidebar-header {
     border: 1px solid var(--app-border-color);
     height: var(--app-dashboard-sidebar-top-height);
 }
+
 .app-dashboard-sidebar-body {
     padding: var(--app-dashboard-sidebar-padding);
 }
+
 .app-dashboard-sidebar-body-items {
     list-style: none;
     margin: 0;
     padding: 0;
 }
-.app-dashboard-sidebar-body-items 
-li.app-dashboard-sidebar-body-item {
+
+.app-dashboard-sidebar-body-items li.app-dashboard-sidebar-body-item {
     margin-bottom: var(--app-dashboard-sidebar-spacing);
 }
-.app-dashboard-sidebar-body-items 
-.app-dashboard-sidebar-body-item-btn {
+
+.app-dashboard-sidebar-body-items .app-dashboard-sidebar-body-item-btn {
     text-align: left;
     justify-content: start;
 }
-.app-dashboard-sidebar-body-items 
-span.app-dashboard-sidebar-body-item-icon {
+
+.app-dashboard-sidebar-body-items span.app-dashboard-sidebar-body-item-icon {
     margin-right: var(--app-dashboard-sidebar-spacing);
 }
-.app-dashboard-sidebar-body-items 
-span.app-dashboard-sidebar-body-item-size {
+
+.app-dashboard-sidebar-body-items span.app-dashboard-sidebar-body-item-size {
     float: right;
 }
 
@@ -64,5 +67,9 @@ span.app-dashboard-sidebar-body-item-size {
 /* --APP-DASHBOARD-MAIN-- */
 .app-dashboard-main {
     grid-area: main;
+    display: grid;
+    row-gap: var(--app-spacing);
+    column-gap: var(--app-spacing);
     padding: var(--app-padding);
+    overflow: hidden;
 }
