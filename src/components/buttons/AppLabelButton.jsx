@@ -2,10 +2,12 @@ import "boxicons"
 import UiHelper from "../../utils/helpers/UiHelper.jsx"
 import UiStatus from "../../utils/classes/UiStatus.jsx"
 
-function AppBaseButton({icon, text, status, variant, size="md", fullWidth, submit, disabled, onClick}) {
+function AppLabelButton({icon, text, status, variant, size="md", htmlFor, fullWidth, disabled, onClick}) {
   return (
-    <button 
-      type={submit ? "submit" : "button"} 
+    <label 
+      type="button"
+      role="button"
+      htmlFor={htmlFor}
       className={`
         btn
         app-button
@@ -20,7 +22,7 @@ function AppBaseButton({icon, text, status, variant, size="md", fullWidth, submi
     >
       <LoadingIcon status={status} />
       <IconAndText icon={icon} text={text} />
-    </button>
+    </label>
   )
 }
 
@@ -49,4 +51,4 @@ function IconAndText({icon, text}) {
   )
 }
 
-export default AppBaseButton
+export default AppLabelButton

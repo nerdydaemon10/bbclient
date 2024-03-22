@@ -8,7 +8,7 @@ const PosStyle = createGlobalStyle`
     "title-container title-container title-container"
     "filtering-container filtering-container tabs-container"
     "table-container table-container tab-container"
-    "pagination-container pagination-container checkout-btn-container";
+    "pagination-container pagination-container place-order-btn-container";
 }
 
 /* --TITLE-CONTAINER-- */
@@ -184,9 +184,9 @@ const PosStyle = createGlobalStyle`
     padding: calc(var(--app-padding) / 2);
 }
 
-/* --CHECKOUT-BTN-CONTAINER-- */
-.checkout-btn-container {
-  grid-area: checkout-btn-container;
+/* --PLACE-ORDER-BTN-CONTAINER-- */
+.place-order-btn-container {
+  grid-area: place-order-btn-container;
 }
 `
 export default PosStyle

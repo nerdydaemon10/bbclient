@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { SlOptionsVertical } from "react-icons/sl"
 
 import "./AppDashboardLayout.css"
 import DashboardHelper from "../utils/helpers/DashboardHelper.jsx"
-import AppDashboardSidebarItems from "../utils/configs/AppDashboardSidebarItems.jsx"
+import DashboardSidebarItems from "../utils/configs/DashboardSidebarItems.jsx"
 
 function AppDashboardLayout({children}) {
   const location = useLocation()
@@ -33,7 +33,7 @@ function AppDashboardSidebar({currentRoute, onClick}) {
       <div className="app-dashboard-sidebar-body">
         <ul className="app-dashboard-sidebar-body-items">
         {
-          AppDashboardSidebarItems.map(item => 
+          DashboardSidebarItems.map(item => 
             <li className="app-dashboard-sidebar-body-item" key={item.id}>
               <Link to={item.route} role="button"
                 className={`

@@ -1,23 +1,29 @@
 import { FaCheck, FaExclamation } from "react-icons/fa6"
+import { BiUpload } from "react-icons/bi"
+import AppLabelButton from "../buttons/AppLabelButton.jsx"
+import ObjectHelper from "../../utils/helpers/ObjectHelper.jsx"
 
-function AppFormPasswordTextField({name, label, placeholder, value, feedback, onChange}) {
+function AppFormFile({name, label, placeholder, value, feedback, onChange}) {
   const { state, message } = feedback
+
   const variant = state == "is-valid"
     ? "valid"
     : "invalid"
+
   const icon = state == "is-valid" 
     ? (<FaCheck />)
     : (<FaExclamation />)
 
+  const text = ObjectHelper.isFile(value) ? value.name : placeholder
+  
   return (
     <div className="app-sy-8">
       <label className="app-text-label">{label}</label>
-      <input 
-        className={`form-control ${state}`} 
-        type="password" 
+      <input
+        className={`${state} d-none`} 
+        type="file"
         name={name}
-        placeholder={placeholder} 
-        value={value} 
+        id={name}
         onChange={onChange} 
       />
       <div className={`${variant}-feedback`}>
@@ -28,8 +34,15 @@ function AppFormPasswordTextField({name, label, placeholder, value, feedback, on
           {message}
         </span>
       </div>
+      <AppLabelButton
+        icon={<BiUpload className="me-2" />}
+        text={text}
+        htmlFor={name}
+        variant="btn-secondary"
+        fullWidth={true}
+      />
     </div>
   )
 }
 
-export default AppFormPasswordTextField
+export default AppFormFile

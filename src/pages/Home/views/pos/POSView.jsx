@@ -1,5 +1,5 @@
 import { debounce } from "lodash"
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 import RowsPerPages from "../../../../utils/configs/RowsPerPages.jsx"
 import { fetchProductsAsync } from "../../../../redux/pos/posSlice.jsx"
@@ -12,12 +12,10 @@ import FilteringContainer from "./FilteringContainer.jsx"
 import TableContainer from "./TableContainer.jsx"
 import PaginationContainer from "./PaginationContainer.jsx"
 import TabsContainer from "./TabsContainer.jsx"
-import AppCheckoutTabs from "../../../../utils/configs/AppCheckoutTabs.jsx"
 import TabContainer from "./TabContainer.jsx"
-import CheckoutBtnContainer from "./CheckoutBtnContainer.jsx"
 import PosProvder from "../../../../providers/PosProvider.jsx"
-import PosContext from "../../../../contexts/PosContext.jsx"
 import PosStyle from "./PosStyle.jsx"
+import PlaceOrderBtnContainer from "./PlaceOrderBtnContainer.jsx"
 
 function PosView() {
   return (
@@ -122,17 +120,11 @@ function TableWrapper() {
 }
 
 function CheckoutWrapper() {
-  const { tab, isCheckoutBtnDisabled, handleTabChange } = useContext(PosContext)
-  
   return (
     <>
-      <TabsContainer
-        tabs={AppCheckoutTabs}
-        tab={tab}
-        onChange={handleTabChange}
-      />
-      <TabContainer tab={tab} />
-      <CheckoutBtnContainer />
+      <TabsContainer/>
+      <TabContainer />
+      <PlaceOrderBtnContainer/>
     </>
   )
 }

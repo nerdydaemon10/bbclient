@@ -1,6 +1,6 @@
 import { BiFile, BiPackage } from "react-icons/bi"
 
-export const AppCheckoutTabs = [
+const PosTabs = [
   {
     id: 1,
     name: "Check List",
@@ -15,4 +15,4 @@ export const AppCheckoutTabs = [
   }
 ]
 
-export default AppCheckoutTabs
+export default PosTabs

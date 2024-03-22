@@ -1,7 +1,7 @@
 import { BiCalculator, BiCalendar, BiChart } from "react-icons/bi";
 import { BiCabinet } from "react-icons/bi"
 
-const AppDashboardSidebarItems = [
+const DashboardSidebarItems = [
     {
         id: 1,
         route: "/home",
@@ -28,4 +28,4 @@ const AppDashboardSidebarItems = [
     }
 ]
 
-export default AppDashboardSidebarItems
+export default DashboardSidebarItems

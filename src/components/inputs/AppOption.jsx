@@ -2,7 +2,7 @@ import React from "react"
 
 function AppOption({name, items, value, onChange}) {
   return (
-    <div className="btn-group w-100" role="group">
+    <div className="btn-group w-100 mb-0" role="group">
       {
         items.map((item, index) => (
           <React.Fragment key={index}>

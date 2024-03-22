@@ -1,49 +1,43 @@
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import PosContext from "../contexts/PosContext.jsx"
-import AppCheckoutTabs from "../utils/configs/AppCheckoutTabs.jsx"
+import PosTabs from "../utils/configs/PosCheckoutTabs.jsx"
+import PaymentMethod from "../utils/classes/PaymentMethod.jsx"
+import StringHelper from "../utils/helpers/StringHelper.jsx"
 
 export default function PosProvder({children}) {
   const { checkouts } = useSelector((state) => state.pos)
 
-  const [tab, setTab] = useState(AppCheckoutTabs[0].value)
+  const [tab, setTab] = useState(PosTabs[0].value)
   const [customer, setCustomer] = useState({
     name: "",
     contactNumber: "",
     deliveryAddress: ""
   })
   const [paymentMethod, setPaymentMethod] = useState(1)
-  const [isCheckoutBtnDisabled, setIsCheckoutBtnDisabled] = useState(false)
-  
-  const handleTabChange = (id) => {
-    setTab(id)
-  }
-
-  const handleCustomerChange = (e) => {
-    setCustomer({ ...customer, [e.target.name]: e.target.value })
-  }
-
-  const handlePaymentMethodChange = (value) => {
-    setPaymentMethod(value)
-  }
+  const [proofOfPayment, setProofOfPayment] = useState("")
+  const [isPlaceOrderBtnDisabled, setIsPlaceOrderBtnDisabled] = useState(false)
 
   useEffect(() => {
-    const isCheckoutsEmpty = checkouts.length == 0
-    const isSomeCustomerFieldsEmpty = Object.entries(customer).some(([, v]) => v.trim().length == 0)
+    const checkoutsEmpty = checkouts.length == 0
+    const someOrderFieldsAreEmpty = Object.entries(customer).some(([, v]) => v.trim().length == 0)
+    const proofOfPaymentEmpty = paymentMethod == PaymentMethod.SCAN_TO_PAY && StringHelper.isEmpty(proofOfPayment)
 
-    setIsCheckoutBtnDisabled(isCheckoutsEmpty || isSomeCustomerFieldsEmpty)
-  }, [checkouts, customer])
+    setIsPlaceOrderBtnDisabled(
+      checkoutsEmpty || 
+      someOrderFieldsAreEmpty || 
+      proofOfPaymentEmpty
+    )
+  }, [checkouts, customer, paymentMethod, proofOfPayment])
 
   return (
     <PosContext.Provider value={{
       checkouts, 
-      tab, 
-      customer, 
-      paymentMethod,
-      isCheckoutBtnDisabled, 
-      handleTabChange, 
-      handleCustomerChange, 
-      handlePaymentMethodChange 
+      tab, setTab, 
+      customer, setCustomer, 
+      paymentMethod, setPaymentMethod,
+      proofOfPayment, setProofOfPayment,
+      isPlaceOrderBtnDisabled
     }}>
       {children}
     </PosContext.Provider>

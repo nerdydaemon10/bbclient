@@ -19,3 +19,10 @@ ObjectHelper.toUriParams = function(object) {
   return params
 }
 
+ObjectHelper.isFile = function(object) {
+  if (!object) {
+    return false
+  } 
+  
+  return object instanceof File
+}

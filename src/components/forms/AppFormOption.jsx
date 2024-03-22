@@ -3,7 +3,7 @@ import AppOption from "../inputs/AppOption.jsx"
 
 function AppFormOption({name, label, items, value, error=null, onChange}) {
   return (
-    <div className="app-sy-4">
+    <div className="app-sy-8">
       <label className="app-text-label">{label}</label>
       <AppOption
         name={name}

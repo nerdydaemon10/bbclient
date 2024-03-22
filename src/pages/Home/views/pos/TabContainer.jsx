@@ -1,15 +1,19 @@
-import PosTabOrderInfo from "./PosTabOrderInfo.jsx"
+import TabOrderInfo from "./TabOrderInfo.jsx"
 import TabCheckoutList from "./TabCheckoutList.jsx"
 import TabCheckoutTotalContainer from "./TabCheckoutTotalContainer.jsx"
+import { useContext } from "react"
+import PosContext from "../../../../contexts/PosContext.jsx"
 
-function TabContainer({tab, customer, paymentMethod, onCustomerChange, onPaymentMethodChange}) {
+function TabContainer({customer, paymentMethod, onCustomerChange, onPaymentMethodChange}) {
+  const { tab } = useContext(PosContext)
+  
   return (
     <div className={`tab-container ${tab}`}>
       {
         tab === "is-checkout-list" ? (
           <TabCheckoutListWrapper />
         ) : tab === "is-order-info" ? (
-          <PosTabOrderInfo
+          <TabOrderInfo
             customer={customer}
             paymentMethod={paymentMethod}
             onCustomerChange={onCustomerChange}
