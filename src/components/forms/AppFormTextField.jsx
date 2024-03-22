@@ -19,6 +19,7 @@ function AppFormTextField({name, label, placeholder, value, feedback, onChange})
         placeholder={placeholder} 
         value={value} 
         onChange={onChange} 
+        ref={inputRef}
       />
       <div className={`${variant}-feedback`}>
         <div className={`${variant}-feedback-icon`}>
