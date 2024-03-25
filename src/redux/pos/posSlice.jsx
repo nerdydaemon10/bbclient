@@ -6,6 +6,14 @@ import ProductService from "../../services/ProductService.jsx"
 import RowsPerPages from "../../utils/configs/RowsPerPages.jsx"
 
 const defaultState = {
+  total: 0.00,
+  checkouts: [],
+  searchQuery: {
+    name: "",
+    category_id: "",
+    per_page: RowsPerPages[0].id,
+    page: 1
+  },
   productsResponse: {
     isInitialize: false,
     status: UiStatus.LOADING,
@@ -22,14 +30,6 @@ const defaultState = {
     message: "",
     error: null
   },
-  checkouts: [],
-  total: 0.00,
-  searchQuery: {
-    name: "",
-    category_id: "",
-    per_page: RowsPerPages[0].id,
-    page: 1
-  }
 }
 
 const initialState = { ...defaultState }
@@ -114,6 +114,11 @@ const posSlice = createSlice({
     cleanupStatesBeforeLeave: (state) => {
       state.createOrderResponse = { ...defaultState.createOrderResponse }
     },
+    cleanupSomeStates: (state) => {
+      state.total = 0.00
+      state.checkouts = []
+      state.createOrderResponse = { ...defaultState.createOrderResponse }
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -168,7 +173,8 @@ export const {
   checkoutProduct,
   incrementQty,
   decrementQty,
-  cleanupStatesBeforeLeave
+  cleanupStatesBeforeLeave,
+  cleanupSomeStates
 } = posSlice.actions
 export { fetchProductsAsync, searchProductsAsync, createOrderAsync }
 export default posSlice.reducer

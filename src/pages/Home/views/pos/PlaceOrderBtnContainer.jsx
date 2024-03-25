@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react"
 import AppPrimaryButton from "../../../../components/buttons/AppPrimaryButton.jsx"
 import PosContext from "../../../../contexts/PosContext.jsx"
 import { useDispatch, useSelector } from "react-redux"
-import { createOrderAsync } from "../../../../redux/pos/posSlice.jsx"
+import { cleanupSomeStates, createOrderAsync } from "../../../../redux/pos/posSlice.jsx"
 import UiStatus from "../../../../utils/classes/UiStatus.jsx"
 import { enqueueSnackbar } from "notistack"
 
@@ -22,10 +22,14 @@ function PlaceOrderBtnContainer() {
   }
 
   useEffect(() => {
-    if (status == UiStatus.SUCCESS || status == UiStatus.ERROR) {
-      enqueueSnackbar(status == UiStatus.SUCCESS ? message : error.message)
+    if (status == UiStatus.SUCCESS) {
+      enqueueSnackbar(message)
+      dispatch(cleanupSomeStates())
     }
-  }, [status, message, error])
+    if (status == UiStatus.ERROR) {
+      enqueueSnackbar(error.message)
+    }
+  }, [status, message, dispatch, error])
 
   return (
     <div className="place-order-btn-container">

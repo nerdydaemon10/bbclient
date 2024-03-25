@@ -58,7 +58,8 @@ function TableWrapper() {
   const handleNameChange = (e) => {
     dispatch(setSearchQuery({
       ...searchQuery,
-      name: e.target.value
+      name: e.target.value,
+      page: 1
     }))
     setIsSearching(true)
   }
@@ -102,7 +103,7 @@ function TableWrapper() {
       dispatch(fetchProductsAsync())
     }
   }, [isInitialize, dispatch])
-
+  
   useEffect(() => {
     if (isSearching) {
       searchProductsCallback(searchQuery)
