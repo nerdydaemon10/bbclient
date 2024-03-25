@@ -4,7 +4,7 @@ import FilteringContainer from "./FilteringContainer.jsx"
 import PaginationContainer from "./PaginationContainer.jsx"
 import TableContainer from "./TableContainer.jsx"
 
-import { fetchProductsAsync } from "../../../../redux/inventory/inventorySlice.jsx"
+import { fetchProductsAsync, searchProductsAsync } from "../../../../redux/inventory/inventorySlice.jsx"
 import CreateModal from "./CreateModal.jsx"
 import styles from "./styles.module.css"
 import { useEffect, useState } from "react"
@@ -42,16 +42,16 @@ function TitleContainer() {
 function TableWrapper() {
   const dispatch = useDispatch()
 
-  const { fetchProductsApi } = useSelector((state) => state.inventory)
-  const { status, data, meta, error } = fetchProductsApi 
+  const { productsResponse } = useSelector((state) => state.inventory)
+  const { status, data, meta, error } = productsResponse
 
   const [name, setName] = useState("")
   const [category, setCategory] = useState("")
   const [rowsPerPage, setRowsPerPage] = useState(RowsPerPages[0].id)
   const [currentPage, setCurrentPage] = useState(1)
 
-  const handleFetchProductsAsync = debounce(() => {
-    dispatch(fetchProductsAsync({
+  const handleSearchProductsAsync = debounce(() => {
+    dispatch(searchProductsAsync({
       name: name,
       category_id: category,
       per_page: rowsPerPage,
@@ -61,44 +61,50 @@ function TableWrapper() {
 
   const handleNameChange = (e) => {
     setName(e.target.value)
-    handleFetchProductsAsync.cancel()
+    handleSearchProductsAsync.cancel()
   }
   
   const handleCategoryChange = (e) => {
     setCurrentPage(1)
     setCategory(e.target.value)
-    handleFetchProductsAsync.cancel()
+    handleSearchProductsAsync.cancel()
   }
 
   const handleRowsPerPageChange = (e) => {
     setCurrentPage(1)
     setRowsPerPage(e.target.value)
-    handleFetchProductsAsync.cancel()
+    handleSearchProductsAsync.cancel()
   }
 
   const handlePreviousClick = () => {
     setCurrentPage(prev => (prev > 1) ? prev - 1 : 1)
-    handleFetchProductsAsync.cancel()
+    handleSearchProductsAsync.cancel()
   }
 
   const handleNextClick = () => {
     setCurrentPage(prev => (prev < meta.last_page) ? prev + 1 : meta.last_page)
-    handleFetchProductsAsync.cancel()
+    handleSearchProductsAsync.cancel()
   }
 
   // fetching
   useEffect(() => {
-    if (status == UiStatus.LOADING) {
-      handleFetchProductsAsync()
+    if (status == UiStatus.FETCHING) {
+      console.log("fetching")
+      dispatch(fetchProductsAsync())
     }
-    return () => { handleFetchProductsAsync.cancel() }
   }, [status]) //eslint-disable-line react-hooks/exhaustive-deps
 
   // searching
   useEffect(() => {
-    handleFetchProductsAsync()
-    return () => { handleFetchProductsAsync.cancel() }
+    if (status != UiStatus.FETCHING) {
+      console.log("searching")
+      handleSearchProductsAsync()
+    }
   }, [name, category, rowsPerPage, currentPage]) //eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    return () => handleSearchProductsAsync.cancel()
+  }, []) //eslint-disable-line react-hooks/exhaustive-deps
   
   return (
     <>

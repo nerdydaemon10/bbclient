@@ -16,7 +16,8 @@ const headersSize = headers.length
 
 function TableContainer({status, data, error}) {
   const { checkouts } = useSelector((state) => state.pos)
-
+  const isLoading = status == UiStatus.FETCHING || status == UiStatus.SEARCHING || status == UiStatus.LOADING
+  
   return (
     <div className="table-container app-table-wrapper">
       <table className="table">
@@ -25,7 +26,7 @@ function TableContainer({status, data, error}) {
         </thead>
         <tbody>
           {
-            status == UiStatus.LOADING ? (
+            isLoading ? (
               <TDStatus 
                 message={GenericMessage.PRODUCTS_FETCHING} 
                 headersSize={headersSize} />
@@ -66,7 +67,7 @@ function TDProduct({product, disabled}) {
       dispatch(checkoutProduct(product))
     }
   }
-  
+
   return (
     <tr key={product.product_id}>
       <td>{name}</td>

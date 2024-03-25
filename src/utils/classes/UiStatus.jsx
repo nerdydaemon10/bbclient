@@ -5,4 +5,6 @@ export default class UiStatus {
     static ERROR = "ERROR"
     static EMPTY = "EMPTY"
     static NO_MATCH = "NO_MATCH"
+    static FETCHING = "FETCHING"
+    static SEARCHING = "SEARCHING"
 }

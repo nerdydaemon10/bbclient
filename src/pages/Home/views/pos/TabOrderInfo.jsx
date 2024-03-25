@@ -58,6 +58,30 @@ function TabOrderInfo() {
         value={paymentMethod}
         onChange={handlePaymentMethodChange}
       />
+    </div>
+  )
+}
+
+function Test() {
+  const { paymentMethod, setPaymentMethod, proofOfPayment, setProofOfPayment  } = useContext(PosContext)
+
+  const handleCustomerChange = (e) => {
+    setCustomer({ ...customer, [e.target.name]: e.target.value })
+  }
+  
+  const handlePaymentMethodChange = (value) => {
+    setPaymentMethod(value)
+  }
+
+  const handleProofOfPaymentChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setProofOfPayment(file)
+    }
+  }
+
+  return (
+    <>
       {
         paymentMethod == PaymentMethod.SCAN_TO_PAY && (
           <AppFormFile 
@@ -70,7 +94,7 @@ function TabOrderInfo() {
           />
         )
       }
-    </div>
+    </>
   )
 }
 

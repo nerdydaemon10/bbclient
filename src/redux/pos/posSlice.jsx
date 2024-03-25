@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 import UiStatus from "../../utils/classes/UiStatus.jsx"
+import OrderService from "../../services/OrderService.jsx"
 import ProductService from "../../services/ProductService.jsx"
 
 const initialState = {
-  productsApi: {
+  fetchfetchProductsResponse: {
     status: UiStatus.LOADING,
     data: [],
     meta: {
@@ -12,6 +13,11 @@ const initialState = {
       last_page: 0,
       total: 0
     },
+    error: null
+  },
+  createOrderResponse: {
+    status: UiStatus.IDLE,
+    message: "",
     error: null
   },
   checkouts: [],
@@ -29,11 +35,26 @@ const fetchProductsAsync = createAsyncThunk(
   }
 })
 
+const createOrderAsync = createAsyncThunk(
+  "pos/createOrderAsync", 
+  async (order, thunkAPI) => {
+  try {
+    const response = await OrderService.create(order)
+    return response.data
+  } catch (error) {
+    console.log(error.response.data)
+    return thunkAPI.rejectWithValue(error.response.data)
+  }
+})
+
 const buildCheckout = (product) => {
+  const { id, category_id, name, description, srp, member_price } = product
+  
   return {
-    ...product,
-    quantity: 1,
-    total: product.srp
+    id: id, category_id: category_id,
+    name: name, description: description,
+    srp: srp, member_price: member_price,
+    quantity: 1, total: srp
   }
 }
 const updateCheckout = (checkouts, productId, accum) => {
@@ -68,24 +89,41 @@ const posSlice = createSlice({
     incrementQty: (state, action) => {
       state.checkouts = updateCheckout(state.checkouts, action.payload, 1)
       state.total = calculateTotal(state.checkouts)
+    },
+    resetState: (state) => {
+      state.createOrderResponse.status = UiStatus.IDLE
+      state.createOrderResponse.message = ""
+      state.createOrderResponse.error = null
     }
   },
   extraReducers: (builder) => {
     builder
       // fetchProductsAsync
       .addCase(fetchProductsAsync.pending, (state) => {
-        state.productsApi.status = UiStatus.LOADING
+        state.fetchfetchProductsResponse.status = UiStatus.LOADING
       })
       .addCase(fetchProductsAsync.fulfilled, (state, action) => {
         const { data, meta } = action.payload
 
-        state.productsApi.status = data.length > 0 ? UiStatus.SUCCESS : UiStatus.EMPTY
-        state.productsApi.data = data
-        state.productsApi.meta = meta
+        state.fetchfetchProductsResponse.status = data.length > 0 ? UiStatus.SUCCESS : UiStatus.EMPTY
+        state.fetchfetchProductsResponse.data = data
+        state.fetchfetchProductsResponse.meta = meta
       })
       .addCase(fetchProductsAsync.rejected, (state, action) => {
-        state.productsApi.status = UiStatus.ERROR
-        state.productsApi.error = action.payload
+        state.fetchfetchProductsResponse.status = UiStatus.ERROR
+        state.fetchfetchProductsResponse.error = action.payload
+      })
+      // createOrderAsync
+      .addCase(createOrderAsync.pending, (state) => {
+        state.createOrderResponse.status = UiStatus.LOADING
+      })
+      .addCase(createOrderAsync.fulfilled, (state, action) => {
+        state.createOrderResponse.status = UiStatus.SUCCESS
+        state.createOrderResponse.message = action.payload
+      })
+      .addCase(createOrderAsync.rejected, (state, action) => {
+        state.createOrderResponse.status = UiStatus.ERROR
+        state.createOrderResponse.error = action.payload
       })
   }
 })
@@ -93,7 +131,8 @@ const posSlice = createSlice({
 export const {
   checkoutProduct,
   incrementQty,
-  decrementQty
+  decrementQty,
+  resetState
 } = posSlice.actions
-export { fetchProductsAsync }
+export { fetchProductsAsync, createOrderAsync }
 export default posSlice.reducer

@@ -30,7 +30,6 @@ function PosView() {
   )
 }
 
-
 function TitleContainer() {
   const user = AppLocalStorage.readUser()
 
@@ -45,8 +44,8 @@ function TitleContainer() {
 function TableWrapper() {
   const dispatch = useDispatch()
 
-  const { productsApi } = useSelector((state) => state.pos)
-  const { status, data, meta, error } = productsApi
+  const { fetchfetchProductsResponse } = useSelector((state) => state.pos)
+  const { status, data, meta, error } = fetchfetchProductsResponse
 
   const [name, setName] = useState("")
   const [category, setCategory] = useState("")
@@ -93,7 +92,7 @@ function TableWrapper() {
     handleSearchProducts()
     return () => handleSearchProducts.cancel()
   }, [name, category, rowsPerPage, currentPage]) //eslint-disable-line react-hooks/exhaustive-deps
-
+  
   return (
     <>
       <FilteringContainer 

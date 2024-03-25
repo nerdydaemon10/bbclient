@@ -19,6 +19,8 @@ const headers = [
 const headersSize = headers.length
 
 function TableContainer({status, data, error}) {
+  const isLoading = status == UiStatus.FETCHING || status == UiStatus.SEARCHING || status == UiStatus.LOADING
+
   return (
     <div className={`${styles.tableContainer} app-table-wrapper`}>
       <table className="table">
@@ -27,7 +29,7 @@ function TableContainer({status, data, error}) {
         </thead>
         <tbody>
           {
-            status == UiStatus.LOADING ? (
+            isLoading ? (
               <TDStatus 
                 message={GenericMessage.PRODUCTS_FETCHING} 
                 headersSize={headersSize} />

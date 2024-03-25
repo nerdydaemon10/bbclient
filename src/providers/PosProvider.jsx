@@ -2,12 +2,10 @@ import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import PosContext from "../contexts/PosContext.jsx"
 import PosTabs from "../utils/configs/PosCheckoutTabs.jsx"
-import PaymentMethod from "../utils/classes/PaymentMethod.jsx"
-import StringHelper from "../utils/helpers/StringHelper.jsx"
 
 export default function PosProvder({children}) {
   const { checkouts } = useSelector((state) => state.pos)
-
+  
   const [tab, setTab] = useState(PosTabs[0].value)
   const [customer, setCustomer] = useState({
     name: "",
@@ -17,16 +15,16 @@ export default function PosProvder({children}) {
   const [paymentMethod, setPaymentMethod] = useState(1)
   const [proofOfPayment, setProofOfPayment] = useState("")
   const [isPlaceOrderBtnDisabled, setIsPlaceOrderBtnDisabled] = useState(false)
-
+  
   useEffect(() => {
     const checkoutsEmpty = checkouts.length == 0
-    const someOrderFieldsAreEmpty = Object.entries(customer).some(([, v]) => v.trim().length == 0)
-    const proofOfPaymentEmpty = paymentMethod == PaymentMethod.SCAN_TO_PAY && StringHelper.isEmpty(proofOfPayment)
+    //const someOrderFieldsAreEmpty = Object.entries(customer).some(([, v]) => v.trim().length == 0)
+    //const proofOfPaymentEmpty = paymentMethod == PaymentMethod.SCAN_TO_PAY && StringHelper.isEmpty(proofOfPayment)
 
     setIsPlaceOrderBtnDisabled(
-      checkoutsEmpty || 
+      checkoutsEmpty/* || 
       someOrderFieldsAreEmpty || 
-      proofOfPaymentEmpty
+      proofOfPaymentEmpty*/
     )
   }, [checkouts, customer, paymentMethod, proofOfPayment])
 
