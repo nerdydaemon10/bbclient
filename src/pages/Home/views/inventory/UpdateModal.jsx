@@ -5,7 +5,7 @@ import AppFormSelect from "../../../../components/forms/AppFormSelect.jsx"
 import AppFormTextField from "../../../../components/forms/AppFormTextField.jsx"
 import ProductCategories from "../../../../utils/data/ProductCategories.jsx"
 import { findErrorByName } from "../../../../utils/helpers/FormHelper.jsx"
-import { resetErrors, updateProductAsync } from "../../../../redux/inventory/inventorySlice.jsx"
+import { fetchProductsAsync, updateProductAsync } from "../../../../redux/inventory/inventorySlice.jsx"
 import { useContext, useEffect } from "react"
 import InventoryContext from "../../../../contexts/InventoryContext.jsx"
 import { enqueueSnackbar } from "notistack"
@@ -13,8 +13,8 @@ import UiStatus from "../../../../utils/classes/UiStatus.jsx"
 
 function UpdateModal() {
   const dispatch = useDispatch()
-  const { updateProductApi } = useSelector((state) => state.inventory)
-  const { status, message, error } = updateProductApi
+  const { updateProductResponse } = useSelector((state) => state.inventory)
+  const { status, message, error } = updateProductResponse
   const { isUpdateModalOpen, setIsUpdateModalOpen, product, setProduct } = useContext(InventoryContext)
 
   const handleChange = (e) => {
@@ -29,11 +29,13 @@ function UpdateModal() {
     e.preventDefault()
     dispatch(updateProductAsync(product))
   }
-
+  
   useEffect(() => {
     if (status == UiStatus.SUCCESS) {
       setIsUpdateModalOpen(false)
       enqueueSnackbar(message)
+
+      dispatch(fetchProductsAsync())
     }
   }, [status]) // eslint-disable-line react-hooks/exhaustive-deps
 

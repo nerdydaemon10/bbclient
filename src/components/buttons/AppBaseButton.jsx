@@ -3,6 +3,8 @@ import UiHelper from "../../utils/helpers/UiHelper.jsx"
 import UiStatus from "../../utils/classes/UiStatus.jsx"
 
 function AppBaseButton({icon, text, status, variant, size="md", fullWidth, submit, disabled, onClick}) {
+  const isDisabled = disabled || (status == UiStatus.LOADING)
+  
   return (
     <button 
       type={submit ? "submit" : "button"} 
@@ -15,7 +17,7 @@ function AppBaseButton({icon, text, status, variant, size="md", fullWidth, submi
         ${UiHelper.isLoading(status)}
         `
       }
-      disabled={disabled}
+      disabled={isDisabled}
       onClick={onClick}
     >
       <LoadingIcon status={status} />

@@ -9,14 +9,14 @@ import AppSecondaryButton from "../../../../components/buttons/AppSecondaryButto
 import styles from "./styles.module.css"
 import InventoryContext from "../../../../contexts/InventoryContext.jsx"
 import { useDispatch } from "react-redux"
-import { resetErrors } from "../../../../redux/inventory/inventorySlice.jsx"
+import { resetErrorsAndNotifications } from "../../../../redux/inventory/inventorySlice.jsx"
 
 function FilteringContainer({name, category, onNameChange, onCategoryChange}) {
   const dispatch = useDispatch()
   const { setIsCreateModalOpen, resetCreateParam } = useContext(InventoryContext)
   
   const handleCreateClick = () => {
-    dispatch(resetErrors())
+    dispatch(resetErrorsAndNotifications())
     resetCreateParam()
     setIsCreateModalOpen(true)
   }

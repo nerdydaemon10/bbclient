@@ -9,7 +9,7 @@ import DateHelper from "../../../../utils/helpers/DateHelper.jsx"
 import { useContext } from "react"
 import InventoryContext from "../../../../contexts/InventoryContext.jsx"
 import { useDispatch } from "react-redux"
-import { resetErrors } from "../../../../redux/inventory/inventorySlice.jsx"
+import { resetErrorsAndNotifications } from "../../../../redux/inventory/inventorySlice.jsx"
 
 const headers = [
   "Name", "Category", "Quantity", 
@@ -19,7 +19,7 @@ const headers = [
 const headersSize = headers.length
 
 function TableContainer({status, data, error}) {
-  const isLoading = status == UiStatus.FETCHING || status == UiStatus.SEARCHING || status == UiStatus.LOADING
+  const isLoading = status == UiStatus.LOADING
 
   return (
     <div className={`${styles.tableContainer} app-table-wrapper`}>
@@ -68,11 +68,12 @@ function TDProduct({product, disabled}) {
   const category = StringHelper.toProductCategoryName(product.category_id)
 
   const handleUpdateClick = (product) => {
-    dispatch(resetErrors())
+    dispatch(resetErrorsAndNotifications())
+
     setProduct(product)
     setIsUpdateModalOpen(true)
   }
-
+  
   const handleRemoveClick = (product) => {
     setProduct(product)
     setIsRemoveDialogOpen(true)

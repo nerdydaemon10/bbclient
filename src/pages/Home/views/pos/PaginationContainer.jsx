@@ -8,6 +8,7 @@ function PaginationContainer({meta, currentPage, rowsPerPage, onChange, onPrevio
       <div className="d-flex align-items-center app-sx-8">
         <label className="app-text-label app-text-nowrap">Rows per page</label>
         <AppSelect
+          name="rowsPerPage"
           options={RowsPerPages}
           disabled={meta.total == 0}
           value={rowsPerPage}

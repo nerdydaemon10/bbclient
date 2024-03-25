@@ -1,8 +1,7 @@
 import { debounce } from "lodash"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
-import RowsPerPages from "../../../../utils/configs/RowsPerPages.jsx"
-import { fetchProductsAsync } from "../../../../redux/pos/posSlice.jsx"
+import { cleanupStatesBeforeLeave, fetchProductsAsync, searchProductsAsync, setSearchQuery } from "../../../../redux/pos/posSlice.jsx"
 import { useDispatch, useSelector } from "react-redux"
 import AppConfig from "../../../../utils/classes/AppConfig.jsx"
 
@@ -44,60 +43,81 @@ function TitleContainer() {
 function TableWrapper() {
   const dispatch = useDispatch()
 
-  const { fetchfetchProductsResponse } = useSelector((state) => state.pos)
-  const { status, data, meta, error } = fetchfetchProductsResponse
+  const { searchQuery, productsResponse } = useSelector((state) => state.pos)
+  const { isInitialize, status, data, meta, error } = productsResponse
 
-  const [name, setName] = useState("")
-  const [category, setCategory] = useState("")
-  const [rowsPerPage, setRowsPerPage] = useState(RowsPerPages[0].id)
-  const [currentPage, setCurrentPage] = useState(1)
+  const [isSearching, setIsSearching] = useState(false)
 
-  const handleSearchProducts = debounce(() => {
-    dispatch(fetchProductsAsync({
-      name: name,
-      category_id: category,
-      per_page: rowsPerPage,
-      page: currentPage
-    }))
+  const handleSearchProductsAsync = debounce(query => {
+    dispatch(searchProductsAsync(query))
+    setIsSearching(false)
   }, AppConfig.DEBOUNCE_DELAY)
-
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const searchProductsCallback = useCallback(handleSearchProductsAsync, []) 
   const handleNameChange = (e) => {
-    setName(e.target.value)
-    handleSearchProducts.cancel()
+    dispatch(setSearchQuery({
+      ...searchQuery,
+      name: e.target.value
+    }))
+    setIsSearching(true)
   }
   
   const handleCategoryChange = (e) => {
-    setCurrentPage(1)
-    setCategory(e.target.value)
-    handleSearchProducts.cancel()
+    dispatch(setSearchQuery({ 
+      ...searchQuery,
+      category_id: e.target.value,
+      page: 1
+    }))
+    setIsSearching(true)
   }
 
   const handleRowsPerPageChange = (e) => {
-    setCurrentPage(1)
-    setRowsPerPage(e.target.value)
-    handleSearchProducts.cancel()
+    dispatch(setSearchQuery({
+      ...searchQuery,
+      page: 1,
+      per_page: e.target.value,
+    }))
+    setIsSearching(true)
   }
 
   const handlePreviousClick = () => {
-    setCurrentPage(prev => (prev > 1) ? prev - 1 : 1)
-    handleSearchProducts.cancel()
+    dispatch(setSearchQuery({ 
+      ...searchQuery,
+      page: searchQuery.page > 1 ? searchQuery.page - 1 : 1,
+    }))
+    setIsSearching(true)
   }
 
   const handleNextClick = () => {
-    setCurrentPage(prev => (prev < meta.last_page) ? prev + 1 : meta.last_page)
-    handleSearchProducts.cancel()
+    dispatch(setSearchQuery({ 
+      ...searchQuery,
+      page: (searchQuery.page < meta.last_page) ? searchQuery.page + 1 : meta.last_page,
+    }))
+    setIsSearching(true)
   }
 
   useEffect(() => {
-    handleSearchProducts()
-    return () => handleSearchProducts.cancel()
-  }, [name, category, rowsPerPage, currentPage]) //eslint-disable-line react-hooks/exhaustive-deps
-  
+    if (!isInitialize) {
+      dispatch(fetchProductsAsync())
+    }
+  }, [isInitialize, dispatch])
+
+  useEffect(() => {
+    if (isSearching) {
+      searchProductsCallback(searchQuery)
+    }
+  }, [isSearching, searchProductsCallback, searchQuery])
+
+  useEffect(() => {
+    return () => dispatch(cleanupStatesBeforeLeave())
+  }, [dispatch])
+
   return (
     <>
       <FilteringContainer 
-        name={name}
-        category={category}
+        name={searchQuery.name}
+        category={searchQuery.category_id}
         onNameChange={handleNameChange}
         onCategoryChange={handleCategoryChange}
       />
@@ -108,8 +128,8 @@ function TableWrapper() {
       />
       <PaginationContainer 
         meta={meta}
-        currentPage={currentPage}
-        rowsPerPage={rowsPerPage}
+        currentPage={searchQuery.page}
+        rowsPerPage={searchQuery.per_page}
         onChange={handleRowsPerPageChange}
         onPrevious={handlePreviousClick}
         onNext={handleNextClick}

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 
 import UiStatus from "../../utils/classes/UiStatus.jsx"
 import ProductService from "../../services/ProductService.jsx"
+import RowsPerPages from "../../utils/configs/RowsPerPages.jsx"
 
 const fetchProductsAsync = createAsyncThunk(
   "inventory/fetchProductsAsync", 
@@ -13,21 +14,11 @@ const fetchProductsAsync = createAsyncThunk(
     return thunkAPI.rejectWithValue(error.response.data)
   }
 })
-/*const fetchProductsAsync = createAsyncThunk(
-  "inventory/fetchProductsAsync", 
-  async (params=null, thunkAPI) => {
-  try {
-    const response = await ProductService.findAll(params)
-    return response.data
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data)
-  }
-})*/
 const searchProductsAsync = createAsyncThunk(
   "inventory/searchProductsAsync", 
-  async (params=null, thunkAPI) => {
+  async (query=null, thunkAPI) => {
   try {
-    const response = await ProductService.findAll(params)
+    const response = await ProductService.findAll(query)
     return response.data
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data)
@@ -64,20 +55,11 @@ const updateProductAsync = createAsyncThunk(
     }
 })
 
-// state
-const initialState = {
-  fetchProductsResponse: {
-    status: UiStatus.LOADING,
-    data: [],
-    meta: {
-      current_page: 0,
-      last_page: 0,
-      total: 0
-    },
-    error: null
-  },
+// states
+const defaultState = {
   productsResponse: {
-    status: UiStatus.FETCHING,
+    isInitialize: false,
+    status: UiStatus.IDLE,
     data: [],
     meta: {
       current_page: 0,
@@ -86,43 +68,59 @@ const initialState = {
     },
     error: null
   },
-  createProductApi: {
+  createProductResponse: {
     status: UiStatus.IDLE,
     message: "",
     error: null
   },
-  removeProductApi: {
+  removeProductResponse: {
     status: UiStatus.IDLE,
     message: "",
     error: null
   },
-  updateProductApi: {
+  updateProductResponse: {
     status: UiStatus.IDLE,
     message: "",
     error: null
+  },
+  searchQuery: {
+    name: "",
+    category_id: "",
+    per_page: RowsPerPages[0].id,
+    page: 1
   }
 }
+const initialState = { ...defaultState }
 
 // core
 const inventorySlice = createSlice({
   name: "inventory",
   initialState,
   reducers: {
-    resetErrors: (state) => {
-      state.createProductApi.error = null
-      state.removeProductApi.error = null
-      state.updateProductApi.error = null
+    setSearchQuery: (state, action) => {
+      state.searchQuery = action.payload
+    },
+    cleanupStatesBeforeLeave: (state) => {
+      state.createProductResponse = { ...defaultState.createProductResponse }
+      state.updateProductResponse = { ...defaultState.updateProductResponse }
+      state.removeProductResponse = { ...defaultState.removeProductResponse }
+    },
+    resetErrorsAndNotifications: (state) => {
+      state.createProductResponse = { ...defaultState.createProductResponse }
+      state.updateProductResponse = { ...defaultState.updateProductResponse }
+      state.removeProductResponse = { ...defaultState.removeProductResponse }
     }
   },
   extraReducers: (builder) => {
     builder
       // fetchProductsAsync
       .addCase(fetchProductsAsync.pending, (state) => {
-        state.productsResponse.status = UiStatus.FETCHING
+        state.productsResponse.status = UiStatus.LOADING
       })
       .addCase(fetchProductsAsync.fulfilled, (state, action) => {
         const { data, meta } = action.payload
 
+        state.productsResponse.isInitialize = true
         state.productsResponse.status = data.length > 0 ? UiStatus.SUCCESS : UiStatus.EMPTY
         state.productsResponse.data = data
         state.productsResponse.meta = meta
@@ -133,12 +131,12 @@ const inventorySlice = createSlice({
       })
       // searchProductsAsync
       .addCase(searchProductsAsync.pending, (state) => {
-        state.productsResponse.status = UiStatus.SEARCHING
+        state.productsResponse.status = UiStatus.LOADING
       })
       .addCase(searchProductsAsync.fulfilled, (state, action) => {
         const { data, meta } = action.payload
 
-        state.productsResponse.status = data.length > 0 ? UiStatus.SUCCESS : UiStatus.EMPTY
+        state.productsResponse.status = data.length > 0 ? UiStatus.SUCCESS : UiStatus.EMPTY 
         state.productsResponse.data = data
         state.productsResponse.meta = meta
       })
@@ -148,53 +146,45 @@ const inventorySlice = createSlice({
       })
       // create
       .addCase(createProductAsync.pending, (state) => {
-        state.createProductApi.status = UiStatus.LOADING
+        state.createProductResponse.status = UiStatus.LOADING
       })
       .addCase(createProductAsync.fulfilled, (state, action) =>  {
-        state.createProductApi.status = UiStatus.SUCCESS
-        state.createProductApi.message = action.payload
-        state.createProductApi.error = null
-
-        state.productsResponse.status = UiStatus.FETCHING //re-fetch products
+        state.createProductResponse.status = UiStatus.SUCCESS
+        state.createProductResponse.message = action.payload
+        state.createProductResponse.error = null
       })
       .addCase(createProductAsync.rejected, (state, action) => {
-        state.createProductApi.status = UiStatus.ERROR
-        state.createProductApi.error = action.payload
+        state.createProductResponse.status = UiStatus.ERROR
+        state.createProductResponse.error = action.payload
       })
       // remove
       .addCase(removeProductAsync.pending, (state) => {
-        state.removeProductApi.status = UiStatus.LOADING
+        state.removeProductResponse.status = UiStatus.LOADING
       })
       .addCase(removeProductAsync.fulfilled, (state, action) => {
-        state.removeProductApi.status = UiStatus.SUCCESS
-        state.removeProductApi.message = action.payload
-
-        state.productsResponse.status = UiStatus.FETCHING //re-fetch products
+        state.removeProductResponse.status = UiStatus.SUCCESS
+        state.removeProductResponse.message = action.payload
       })
       .addCase(removeProductAsync.rejected, (state, action) => {
-        state.removeProductApi.status = UiStatus.ERROR
-        state.removeProductApi.error = action.payload
+        state.removeProductResponse.status = UiStatus.ERROR
+        state.removeProductResponse.error = action.payload
       })
       //update
       .addCase(updateProductAsync.pending, (state) => {
-        state.updateProductApi.status = UiStatus.LOADING
+        state.updateProductResponse.status = UiStatus.LOADING
       })
       .addCase(updateProductAsync.fulfilled, (state, action) => {
-        state.updateProductApi.status = UiStatus.SUCCESS
-        state.updateProductApi.message = action.payload
-        state.updateProductApi.error = null
-
-        state.productsResponse.status = UiStatus.FETCHING //re-fetch products
+        state.updateProductResponse.status = UiStatus.SUCCESS
+        state.updateProductResponse.message = action.payload
+        state.updateProductResponse.error = null
       })
       .addCase(updateProductAsync.rejected, (state, action) => {
-        state.updateProductApi.status = UiStatus.ERROR
-        state.updateProductApi.error = action.payload
+        state.updateProductResponse.status = UiStatus.ERROR
+        state.updateProductResponse.error = action.payload
       })
   }
 })
 
-export const { 
-  resetErrors
-} = inventorySlice.actions
+export const { setSearchQuery, cleanupStatesBeforeLeave, resetErrorsAndNotifications } = inventorySlice.actions
 export { fetchProductsAsync, searchProductsAsync, createProductAsync, removeProductAsync, updateProductAsync }
 export default inventorySlice.reducer

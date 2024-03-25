@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { removeProductAsync } from "../../../../redux/inventory/inventorySlice.jsx"
+import { fetchProductsAsync, removeProductAsync } from "../../../../redux/inventory/inventorySlice.jsx"
 import AppFormDialog from "../../../../components/forms/AppFormDialog.jsx"
 import { useContext, useEffect } from "react"
 import InventoryContext from "../../../../contexts/InventoryContext.jsx"
@@ -9,8 +9,8 @@ import { enqueueSnackbar } from "notistack"
 function RemoveDialog() {
   const dispatch = useDispatch()
 
-  const { removeProductApi } = useSelector((state) => state.inventory)
-  const { status, message } = removeProductApi
+  const { removeProductResponse } = useSelector((state) => state.inventory)
+  const { status, message } = removeProductResponse
   const { isRemoveDialogOpen, setIsRemoveDialogOpen, product } = useContext(InventoryContext)
 
   const handleClose = () => {
@@ -19,21 +19,22 @@ function RemoveDialog() {
 
   const handleConfirm = (e) => { 
     e.preventDefault()
-    
     dispatch(removeProductAsync(product.id))
-    setIsRemoveDialogOpen(false)
   }
 
   useEffect(() => {
     if (status == UiStatus.SUCCESS) {
+      setIsRemoveDialogOpen(false)
       enqueueSnackbar(message)
+
+      dispatch(fetchProductsAsync())
     }
   }, [status]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!product) {
     return <></>
   }
-
+  
   return (
     <AppFormDialog 
       title="Remove Product"

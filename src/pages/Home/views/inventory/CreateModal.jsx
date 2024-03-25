@@ -5,7 +5,7 @@ import AppFormTextField from "../../../../components/forms/AppFormTextField.jsx"
 import ProductCategories from "../../../../utils/data/ProductCategories.jsx"
 import { findErrorByName } from "../../../../utils/helpers/FormHelper.jsx"
 import { useContext, useEffect } from "react"
-import { createProductAsync } from "../../../../redux/inventory/inventorySlice.jsx"
+import { createProductAsync, fetchProductsAsync } from "../../../../redux/inventory/inventorySlice.jsx"
 import UiStatus from "../../../../utils/classes/UiStatus.jsx"
 import InventoryContext from "../../../../contexts/InventoryContext.jsx"
 import { enqueueSnackbar } from "notistack"
@@ -18,8 +18,8 @@ function CreateModal() {
     createParam, setCreateParam
   } = useContext(InventoryContext)
 
-  const { createProductApi } = useSelector((state) => state.inventory)
-  const { status, message, error } = createProductApi
+  const { createProductResponse } = useSelector((state) => state.inventory)
+  const { status, message, error } = createProductResponse
 
   const handleChange = (e) => {
     setCreateParam(prev => {
@@ -37,10 +37,13 @@ function CreateModal() {
   }
 
   useEffect(() => {
-    if (status == UiStatus.SUCCESS) {
-      setIsCreateModalOpen(false)
-      enqueueSnackbar(message)
+    if (status != UiStatus.SUCCESS) {
+      return
     }
+
+    setIsCreateModalOpen(false)
+    enqueueSnackbar(message)
+    dispatch(fetchProductsAsync())
   }, [status]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (

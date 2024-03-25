@@ -2,12 +2,13 @@ import { useContext, useEffect } from "react"
 import AppPrimaryButton from "../../../../components/buttons/AppPrimaryButton.jsx"
 import PosContext from "../../../../contexts/PosContext.jsx"
 import { useDispatch, useSelector } from "react-redux"
-import { createOrderAsync, resetState } from "../../../../redux/pos/posSlice.jsx"
+import { createOrderAsync } from "../../../../redux/pos/posSlice.jsx"
 import UiStatus from "../../../../utils/classes/UiStatus.jsx"
 import { enqueueSnackbar } from "notistack"
 
 function PlaceOrderBtnContainer() {
   const dispatch = useDispatch()
+
   const { createOrderResponse } = useSelector((state) => state.pos)
   const { status, message, error } = createOrderResponse
   const { isPlaceOrderBtnDisabled, checkouts, customer, paymentMethod } = useContext(PosContext)
@@ -21,17 +22,10 @@ function PlaceOrderBtnContainer() {
   }
 
   useEffect(() => {
-    if (status == UiStatus.SUCCESS) {
-      enqueueSnackbar(message)
+    if (status == UiStatus.SUCCESS || status == UiStatus.ERROR) {
+      enqueueSnackbar(status == UiStatus.SUCCESS ? message : error.message)
     }
-    if (status == UiStatus.ERROR) {
-      enqueueSnackbar(error.message)
-    }
-  }, [status]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    return () => dispatch(resetState())
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [status, message, error])
 
   return (
     <div className="place-order-btn-container">
