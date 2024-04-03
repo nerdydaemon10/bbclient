@@ -25,7 +25,7 @@ ProductService.findAll = async function(query=null) {
   const params = ObjectHelper.toUriParams(query)
   
   const response = StringHelper.isEmpty(params) 
-    ? await axios.get(`${ProductRoutes.FIND_ALL}`)
+    ? await axios.get(`${ProductRoutes.FIND_ALL}?sort=-created_at,-updated_at`)
     : await axios.get(`${ProductRoutes.FIND_ALL}?${params}`)
 
   return response

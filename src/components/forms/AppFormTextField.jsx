@@ -1,6 +1,6 @@
 import { FaCheck, FaExclamation } from "react-icons/fa6"
 
-function AppFormTextField({name, label, placeholder, value, feedback, onChange}) {
+function AppFormTextField({name, label, placeholder, value, feedback, onChange, inputRef}) {
   const { state, message } = feedback
   const variant = state == "is-valid"
     ? "valid"
@@ -8,7 +8,7 @@ function AppFormTextField({name, label, placeholder, value, feedback, onChange})
   const icon = state == "is-valid" 
     ? (<FaCheck />)
     : (<FaExclamation />)
-    
+
   return (
     <div className="app-sy-8">
       <label className="app-text-label">{label}</label>
@@ -18,7 +18,8 @@ function AppFormTextField({name, label, placeholder, value, feedback, onChange})
         name={name}
         placeholder={placeholder} 
         value={value} 
-        onChange={onChange} 
+        onChange={onChange}
+        ref={inputRef ?? null}
       />
       <div className={`${variant}-feedback`}>
         <div className={`${variant}-feedback-icon`}>

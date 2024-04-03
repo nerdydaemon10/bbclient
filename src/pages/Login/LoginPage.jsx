@@ -1,5 +1,5 @@
 import "boxicons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import AppCenteredLayout from "../../layouts/AppCenteredLayout.jsx"
@@ -19,11 +19,14 @@ function LoginPage() {
     username: "",
     password: ""
   })
+  const inputRef = useRef(null)
 
   useEffect(() => {
     if(accessToken != null) {
       navigate("/home")
     }
+
+    inputRef.current.focus()
   }, [navigate, accessToken])
 
   const handleChange = (e) => {
@@ -50,6 +53,7 @@ function LoginPage() {
             value={credentials.username}
             feedback={findErrorByName(error, "username")}
             onChange={handleChange}
+            inputRef={inputRef}
           />
           <AppFormPasswordTextField
             name="password"
