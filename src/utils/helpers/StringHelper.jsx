@@ -1,4 +1,4 @@
-import ProductCategories from "../data/ProductCategories.jsx"
+import { productCategories } from "../Configs.jsx"
 
 export default class StringHelper {}
 
@@ -30,7 +30,7 @@ StringHelper.extractErrorsFromError = function(name, error) {
     return error.errors[name] 
 }
 StringHelper.toProductCategoryName = function(id) {
-    const category = ProductCategories.find((product) => product.id == id)
+    const category = productCategories.find((product) => product.id == id)
 
     if (!category) {
         return "Undefined"
