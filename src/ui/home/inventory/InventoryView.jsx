@@ -5,19 +5,40 @@ import { DashboardMain } from "../../home/Dashboard.jsx"
 import RemoveModal from "./RemoveModal.jsx"
 import ProductsTable from "./ProductsTable.jsx"
 import InventoryStyle from "./InventoryStyle.jsx"
+import { BiGridAlt } from "react-icons/bi"
 
 function InventoryView() {
   return (
     <InventoryProvider>
       <InventoryStyle />
       <DashboardMain>
-        <TitleContainer />
+        <BreadcrumbContainer />
         <ProductsTable />
       </DashboardMain>
       <CreateModal />
       <UpdateModal />
       <RemoveModal />
     </InventoryProvider>
+  )
+}
+
+function BreadcrumbContainer() {
+  return (
+    <ol className="app-breadcrumb breadcrumb-container">
+      <li className="app-breadcrumb-item">
+        <span className="app-breadcrumb-item-icon">
+          <BiGridAlt className="me-1" />
+        </span>
+        <a href="#">
+          POS System
+        </a>
+      </li>
+      <li className="app-breadcrumb-item is-active">
+        <a href="#">  
+          Customers
+        </a>
+      </li>
+    </ol>
   )
 }
 

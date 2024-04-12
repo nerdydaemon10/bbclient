@@ -11,6 +11,7 @@ const OrdersStyle = createGlobalStyle`
     "pagination-container";
 }
 
+/* --BREADCRUMB-CONTAINER-- */
 .breadcrumb-container {
   grid-area: breadcrumb-container;
   padding-bottom: calc(var(--app-spacing) / 2);
