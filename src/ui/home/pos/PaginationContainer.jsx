@@ -1,6 +1,6 @@
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi"
 import AppSelect from "../../components/inputs/AppSelect.jsx"
-import { rowsPerPages } from "../../../utils/Configs.jsx"
+import { rowsPerPages } from "../../../utils/Config.jsx"
 
 function PaginationContainer({meta, currentPage, rowsPerPage, onChange, onPrevious, onNext}) {
   return (

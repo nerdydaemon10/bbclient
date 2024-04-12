@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 import { useSelector } from "react-redux"
-import PosContext from "./PosContext.jsx"
 import { posTabs } from "./Util.jsx"
 
-export default function PosProvder({children}) {
+const PosContext = createContext()
+
+function PosProvder({children}) {
   const { checkouts } = useSelector((state) => state.pos)
   
   const [tab, setTab] = useState(posTabs[0].value)
@@ -15,7 +16,7 @@ export default function PosProvder({children}) {
   const [paymentMethod, setPaymentMethod] = useState(1)
   const [proofOfPayment, setProofOfPayment] = useState("")
   const [isPlaceOrderBtnDisabled, setIsPlaceOrderBtnDisabled] = useState(false)
-  
+
   useEffect(() => {
     const checkoutsEmpty = checkouts.length == 0
     //const someOrderFieldsAreEmpty = Object.entries(customer).some(([, v]) => v.trim().length == 0)
@@ -41,3 +42,6 @@ export default function PosProvder({children}) {
     </PosContext.Provider>
   )
 }
+
+export { PosContext }
+export default PosProvder

@@ -1,44 +1,58 @@
-import { useState } from "react"
+/* eslint-disable react-hooks/exhaustive-deps */
+import { debounce } from "lodash"
+import { useSelector } from "react-redux"
+import { createContext, useEffect, useState } from "react"
 
-import InventoryContext from "./InventoryContext.jsx"
-import { productCategories } from "../../../utils/Configs.jsx"
+import ProductService from "../../../data/services/ProductService.jsx"
+
+const VITE_DELAY = import.meta.env.VITE_DELAY
+const InventoryContext = createContext()
 
 function InventoryProvider({children}) {
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
-  const [isRemoveDialogOpen, setIsRemoveDialogOpen] = useState(false)
-  const [product, setProduct] = useState(null)
-  const [createParam, setCreateParam] = useState({
-    name: "",
-    description: "",
-    category_id: productCategories[0].id,
-    quantity: "",
-    srp: "",
-    member_price: ""
+  const { searchQuery } = useSelector((state) => state.inventory)
+  const [apiResource, setApiResource] = useState({
+    isLoading: true,
+    data: { data: [], meta: { current_page: 0, last_page: 0 }},
+    meta: null,
+    error: null
   })
 
-  const resetCreateParam = () => {
-    setCreateParam({
-      name: "",
-      description: "",
-      category_id: productCategories[0].id,
-      quantity: "",
-      srp: "",
-      member_price: ""
+  const handleFetchProductsAsync = () => {
+    setApiResource({...apiResource, isLoading: true})
+    ProductService.findAll(searchQuery).then((response) => {
+      setApiResource({
+          isLoading: false,
+          data: response,
+          error: null
+        })
+      })
+    .catch((error) => {
+      setApiResource({
+        isLoading: false,
+        data: { data: [], meta: { current_page: 0, last_page: 0 }},
+        error: error
+      })
     })
   }
 
+  const handleSearchProductsAsync = debounce(() => {
+    handleFetchProductsAsync()
+  }, VITE_DELAY)
+
+  useEffect(() => {
+    handleSearchProductsAsync()
+  }, [searchQuery])
+  
   return (
     <InventoryContext.Provider value={{
-      isCreateModalOpen, setIsCreateModalOpen,
-      isUpdateModalOpen, setIsUpdateModalOpen,
-      isRemoveDialogOpen, setIsRemoveDialogOpen,
-      createParam, setCreateParam, resetCreateParam,
-      product, setProduct
+      apiResource, 
+      handleFetchProductsAsync,
+      handleSearchProductsAsync
     }}>
       {children}
     </InventoryContext.Provider>
   )
 }
 
+export { InventoryContext }
 export default InventoryProvider

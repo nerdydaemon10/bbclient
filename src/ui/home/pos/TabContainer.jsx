@@ -2,7 +2,7 @@ import TabOrderInfo from "./TabOrderInfo.jsx"
 import TabCheckoutList from "./TabCheckoutList.jsx"
 import TabCheckoutTotalContainer from "./TabCheckoutTotalContainer.jsx"
 import { useContext } from "react"
-import PosContext from "./PosContext.jsx"
+import { PosContext } from "./PosProvider.jsx"
 
 function TabContainer({customer, paymentMethod, onCustomerChange, onPaymentMethodChange}) {
   const { tab } = useContext(PosContext)

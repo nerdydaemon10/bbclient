@@ -1,6 +1,6 @@
 import AppSearchField from "../../components/inputs/AppSearchField.jsx"
 import AppSelect from "../../components/inputs/AppSelect.jsx"
-import { productCategories } from "../../../utils/Configs.jsx"
+import { productCategories } from "../../../utils/Config.jsx"
 
 function FilteringContainer({name, category, onNameChange, onCategoryChange}) {
   return (

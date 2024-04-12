@@ -1,10 +1,10 @@
 import { useContext, useEffect } from "react"
-import AppPrimaryButton from "../../components/buttons/AppPrimaryButton.jsx"
-import PosContext from "./PosContext.jsx"
 import { useDispatch, useSelector } from "react-redux"
 import { cleanupSomeStates, createOrderAsync } from "../../redux/pos/posSlice.jsx"
 import UiStatus from "../../../utils/classes/UiStatus.jsx"
 import { enqueueSnackbar } from "notistack"
+import { PrimaryButton } from "../../common"
+import { PosContext } from "./PosProvider.jsx"
 
 function PlaceOrderBtnContainer() {
   const dispatch = useDispatch()
@@ -12,7 +12,7 @@ function PlaceOrderBtnContainer() {
   const { createOrderResponse } = useSelector((state) => state.pos)
   const { status, message, error } = createOrderResponse
   const { isPlaceOrderBtnDisabled, checkouts, customer, paymentMethod } = useContext(PosContext)
-
+  
   const handleClick = () => {
     dispatch(createOrderAsync({
       customer: [customer],
@@ -29,17 +29,18 @@ function PlaceOrderBtnContainer() {
     if (status == UiStatus.ERROR) {
       enqueueSnackbar(error.message)
     }
-  }, [status, message, dispatch, error])
+  }, [status])
 
   return (
     <div className="place-order-btn-container">
-      <AppPrimaryButton 
-        text="Place Order"
+      <PrimaryButton 
         status={status}
-        fullWidth={true}
-        disabled={isPlaceOrderBtnDisabled}
+        isFullWidth={true}
+        isDisabled={isPlaceOrderBtnDisabled}
         onClick={handleClick}
-      />
+      >
+        Place Order
+      </PrimaryButton>
     </div>
   )
 }

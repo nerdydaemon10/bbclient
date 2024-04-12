@@ -1,6 +1,5 @@
-import { BiCalculator, BiCalendar, BiChart } from "react-icons/bi";
+import { BiCalculator, BiChart, BiGroup } from "react-icons/bi";
 import { BiCabinet } from "react-icons/bi"
-
 export const DashboardSidebarItems = [
   {
     id: 1,
@@ -16,16 +15,16 @@ export const DashboardSidebarItems = [
   },
   {
     id: 3,
-    route: "/home/transactions",
-    label: "Transactions",
+    route: "/home/orders",
+    label: "Orders",
     icon: <BiChart size={20} />
   },
   {
     id: 4,
-    route: "/home/trainings",
-    label: "Trainings",
-    icon: <BiCalendar size={20} />
-  }
+    route: "/home/customers",
+    label: "Customers",
+    icon: <BiGroup size={20} />
+  },
 ]
 
 export function isSelected(route, currentRoute) {

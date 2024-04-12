@@ -1,123 +1,121 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { enqueueSnackbar } from "notistack"
+import { useContext, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
-import AppFormModal from "../../components/forms/AppFormModal.jsx"
-import AppFormSelect from "../../components/forms/AppFormSelect.jsx"
-import AppFormTextField from "../../components/forms/AppFormTextField.jsx"
-import { productCategories } from "../../../utils/Configs.jsx"
+import { DELAY_MILLIS, productCategories } from "../../../utils/Config.jsx"
 import { findErrorByName } from "../../../utils/helpers/FormHelper.jsx"
-import { fetchProductsAsync, updateProductAsync } from "../../redux/inventory/inventorySlice.jsx"
-import { useContext, useEffect } from "react"
-import InventoryContext from "./InventoryContext.jsx"
-import { enqueueSnackbar } from "notistack"
-import UiStatus from "../../../utils/classes/UiStatus.jsx"
+import { resetStates, setProduct, toggleModal, updateProductAsync } from "../../redux/inventorySlice.jsx"
+
+import { FormModal, FormSelectInput, FormTextFieldInput } from "../../common"
+import { InventoryContext } from "./InventoryProvider.jsx"
+import ModalType from "../../../utils/classes/ModalType.jsx"
+import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
 
 function UpdateModal() {
   const dispatch = useDispatch()
-  const { updateProductResponse } = useSelector((state) => state.inventory)
-  const { status, message, error } = updateProductResponse
-  const { isUpdateModalOpen, setIsUpdateModalOpen, product, setProduct } = useContext(InventoryContext)
-
-  const handleChange = (e) => {
-    setProduct({ ...product, [e.target.name]: e.target.value})
-  }
   
+  const { isUpdateModalOpen, product, updateApiResource } = useSelector((state) => state.inventory)
+  const { handleFetchProductsAsync } = useContext(InventoryContext)
+
   const handleClose = () => {
-    setIsUpdateModalOpen(false)
+    dispatch(toggleModal({ modalType: ModalType.UPDATE, open: false }))
   }
 
   const handleConfirm = (e) => {
     e.preventDefault()
     dispatch(updateProductAsync(product))
   }
+
+  const handleChange = (e) => {
+    dispatch(setProduct({ ...product, [e.target.name]: e.target.value}))
+  }
   
   useEffect(() => {
-    if (status == UiStatus.SUCCESS) {
-      setIsUpdateModalOpen(false)
-      enqueueSnackbar(message)
-
-      dispatch(fetchProductsAsync())
+    if (updateApiResource.isSuccess) {
+      dispatch(toggleModal({modalType: ModalType.UPDATE, open: false}))
+      enqueueSnackbar(GenericMessage.PRODUCT_UPDATED)
+      handleFetchProductsAsync()
+      // reset all redux-action-states including success that trigger snackbar
+      setTimeout(() => dispatch(resetStates()), DELAY_MILLIS)
     }
-  }, [status]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  if (!product) {
-    return <></>
-  }
-
+  }, [updateApiResource.isSuccess])
+  
   return (
-    <AppFormModal 
+    <FormModal 
       title="Update Product"
-      status={status}
+      isLoading={updateApiResource.isLoading}
       isOpen={isUpdateModalOpen} 
       onClose={handleClose}
       onConfirm={handleConfirm}
     >
       <div className="row mb-2">
         <div className="col-6">
-          <AppFormTextField 
-            name="name"
+          <FormTextFieldInput 
             label="Name"
+            name="name"
             placeholder="e.g., Coffee Power"
             value={product.name}
-            feedback={findErrorByName(error, "name")}
+            feedback={findErrorByName(updateApiResource.error, "name")}
             onChange={handleChange}
           />
         </div>
         <div className="col-6">
-          <AppFormTextField 
-            name="description"
+          <FormTextFieldInput 
             label="Description"
+            name="description"
             placeholder="e.g., 100 grams, with free spoon"
             value={product.description}
-            feedback={findErrorByName(error, "description")}
+            feedback={findErrorByName(updateApiResource.error, "description")}
             onChange={handleChange}
           />
         </div>
       </div>
       <div className="row mb-2">
         <div className="col-6">
-          <AppFormSelect 
-            name="category_id"
+          <FormSelectInput
             label="Category"
+            name="category_id"
             options={productCategories}
             value={product.category_id}
-            feedback={findErrorByName(error, "category_id", "category")}
+            feedback={findErrorByName(updateApiResource.error, "category_id", "category")}
             onChange={handleChange}
           />
         </div>
         <div className="col-6">
-          <AppFormTextField 
-              name="quantity"
+          <FormTextFieldInput 
               label="Quantity"
+              name="quantity"
               placeholder="e.g., 75"
               value={product.quantity}
-              feedback={findErrorByName(error, "quantity")}
+              feedback={findErrorByName(updateApiResource.error, "quantity")}
               onChange={handleChange}
             />
         </div>
       </div>
       <div className="row mb-2">
         <div className="col-6">
-          <AppFormTextField 
-            name="srp"
+          <FormTextFieldInput 
             label="SRP"
+            name="srp"
             placeholder="e.g., 80.00"
             value={product.srp}
-            feedback={findErrorByName(error, "srp")}
+            feedback={findErrorByName(updateApiResource.error, "srp")}
             onChange={handleChange}
           />
         </div>
         <div className="col-6">
-          <AppFormTextField 
-            name="member_price"
+          <FormTextFieldInput 
             label="Member Price"
+            name="member_price"
             placeholder="e.g., 90.00"
             value={product.member_price}
-            feedback={findErrorByName(error, "member_price")}
+            feedback={findErrorByName(updateApiResource.error, "member_price")}
             onChange={handleChange}
           />
         </div>
       </div>
-    </AppFormModal>
+    </FormModal>
   )
 }
 

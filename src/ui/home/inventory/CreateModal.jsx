@@ -1,126 +1,133 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import AppFormModal from "../../components/forms/AppFormModal.jsx"
-import AppFormSelect from "../../components/forms/AppFormSelect.jsx"
-import AppFormTextField from "../../components/forms/AppFormTextField.jsx"
-import { productCategories } from "../../../utils/Configs.jsx"
+import { useContext, useEffect, useState } from "react"
+
+import { DELAY_MILLIS, productCategories } from "../../../utils/Config.jsx"
 import { findErrorByName } from "../../../utils/helpers/FormHelper.jsx"
-import { useContext, useEffect } from "react"
-import { createProductAsync, fetchProductsAsync } from "../../redux/inventory/inventorySlice.jsx"
-import UiStatus from "../../../utils/classes/UiStatus.jsx"
-import InventoryContext from "./InventoryContext.jsx"
+import { createProductAsync, resetStates, toggleModal } from "../../redux/inventorySlice.jsx"
 import { enqueueSnackbar } from "notistack"
+import { FormModal, FormSelectInput, FormTextFieldInput } from "../../common"
+import ModalType from "../../../utils/classes/ModalType.jsx"
+import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
+import { InventoryContext } from "./InventoryProvider.jsx"
+
+const defaultParam = {
+  name: "",
+  description: "",
+  category_id: productCategories[0].id,
+  quantity: "",
+  srp: "",
+  member_price: ""
+}
 
 function CreateModal() {
   const dispatch = useDispatch()
 
-  const { 
-    isCreateModalOpen, setIsCreateModalOpen, 
-    createParam, setCreateParam
-  } = useContext(InventoryContext)
+  const { isCreateModalOpen, createApiResource } = useSelector((state) => state.inventory)
+  const { handleFetchProductsAsync } = useContext(InventoryContext)
 
-  const { createProductResponse } = useSelector((state) => state.inventory)
-  const { status, message, error } = createProductResponse
-
-  const handleChange = (e) => {
-    setCreateParam(prev => {
-      return {...prev, [e.target.name]: e.target.value} 
-    })
-  }
+  const [param, setParam] = useState({ ...defaultParam })
 
   const handleClose = () => {
-    setIsCreateModalOpen(false)
+    dispatch(toggleModal({modalType: ModalType.CREATE, open: false}))
   }
 
   const handleConfirm = (e) => {
     e.preventDefault()
-    dispatch(createProductAsync(createParam))
+    dispatch(createProductAsync(param))
+  }
+
+  const handleChange = (e) => {
+    setParam({ ...param, [e.target.name]: e.target.value })
   }
 
   useEffect(() => {
-    if (status != UiStatus.SUCCESS) {
-      return
+    if (createApiResource.isSuccess) {
+      dispatch(toggleModal({modalType: ModalType.CREATE, open: false}))
+      enqueueSnackbar(GenericMessage.PRODUCT_ADDED)
+      handleFetchProductsAsync()
+      // reset param-state
+      setParam({ ...defaultParam })
+      // reset all redux-action-states including success that trigger snackbar
+      setTimeout(() => dispatch(resetStates()), DELAY_MILLIS)
     }
-    
-    setIsCreateModalOpen(false)
-    enqueueSnackbar(message)
-    dispatch(fetchProductsAsync())
-  }, [status]) // eslint-disable-line react-hooks/exhaustive-deps
-
+  }, [createApiResource.isSuccess])
+  
   return (
-    <AppFormModal 
+    <FormModal 
       title="Create Product"
-      status={status}
+      isLoading={createApiResource.isLoading}
       isOpen={isCreateModalOpen} 
       onClose={handleClose}
       onConfirm={handleConfirm}
     >
       <div className="row mb-2">
         <div className="col-6">
-          <AppFormTextField 
-            name="name"
+          <FormTextFieldInput
             label="Name"
+            name="name"
             placeholder="e.g., Coffee Power"
-            value={createParam.name}
-            feedback={findErrorByName(error, "name")}
+            value={param.name}
+            feedback={findErrorByName(createApiResource.error, "name")}
             onChange={handleChange}
           />
         </div>
         <div className="col-6">
-          <AppFormTextField 
-            name="description"
+          <FormTextFieldInput 
             label="Description"
+            name="description"
             placeholder="e.g., 100 grams, with free spoon"
-            value={createParam.description}
-            feedback={findErrorByName(error, "description")}
+            value={param.description}
+            feedback={findErrorByName(createApiResource.error, "description")}
             onChange={handleChange}
           />
         </div>
       </div>
       <div className="row mb-2">
         <div className="col-6">
-          <AppFormSelect 
-            name="category_id"
+          <FormSelectInput
             label="Category"
+            name="category_id"
             options={productCategories}
-            value={createParam.category_id}
-            feedback={findErrorByName(error, "category_id", "category")}
+            value={param.category_id}
+            feedback={findErrorByName(createApiResource.error, "category_id", "category")}
             onChange={handleChange}
           />
         </div>
         <div className="col-6">
-          <AppFormTextField 
-              name="quantity"
-              label="Quantity"
-              placeholder="e.g., 75"
-              value={createParam.quantity}
-              feedback={findErrorByName(error,"quantity")}
-              onChange={handleChange}
+          <FormTextFieldInput 
+            label="Quantity"
+            name="quantity"
+            placeholder="e.g., 75"
+            value={param.quantity}
+            feedback={findErrorByName(createApiResource.error,"quantity")}
+            onChange={handleChange}
             />
         </div>
       </div>
       <div className="row mb-2">
         <div className="col-6">
-          <AppFormTextField 
+          <FormTextFieldInput 
             name="srp"
             label="SRP"
             placeholder="e.g., 80.00"
-            value={createParam.srp}
-            feedback={findErrorByName(error, "srp")}
+            value={param.srp}
+            feedback={findErrorByName(createApiResource.error, "srp")}
             onChange={handleChange}
           />
         </div>
         <div className="col-6">
-          <AppFormTextField 
+          <FormTextFieldInput
+            label="Member Price" 
             name="member_price"
-            label="Member Price"
             placeholder="e.g., 90.00"
-            value={createParam.member_price}
-            feedback={findErrorByName(error, "member_price")}
+            value={param.member_price}
+            feedback={findErrorByName(createApiResource.error, "member_price")}
             onChange={handleChange}
           />
         </div>
       </div>
-    </AppFormModal>
+    </FormModal>
   )
 }
 

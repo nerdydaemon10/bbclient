@@ -14,7 +14,7 @@
   -moz-osx-font-smoothing: grayscale;
 
   user-select: none;
-  
+
   --app-main-color: #09090B;
   --app-border-color: #E4E4E7;
   --app-padding: 16px;
@@ -39,8 +39,4 @@ h1, h2, h3, h4, h5, h6 {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-.app-mr-4 {
-  margin-right: 4px;
 }

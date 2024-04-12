@@ -1,111 +1,107 @@
-import { useDispatch, useSelector } from "react-redux"
-import FilteringContainer from "./FilteringContainer.jsx"
-import PaginationContainer from "./PaginationContainer.jsx"
-import TableContainer from "./TableContainer.jsx"
-
-import { cleanupStatesBeforeLeave, fetchProductsAsync, searchProductsAsync, setSearchQuery } from "../../redux/inventory/inventorySlice.jsx"
 import CreateModal from "./CreateModal.jsx"
-import styles from "./styles.module.css"
-import { useCallback, useEffect, useState } from "react"
-import { debounce } from "lodash"
-import AppConfig from "../../../utils/classes/AppConfig.jsx"
 import InventoryProvider from "./InventoryProvider.jsx"
-import RemoveDialog from "./RemoveDialog.jsx"
 import UpdateModal from "./UpdateModal.jsx"
 import { DashboardMain } from "../../home/Dashboard.jsx"
+import RemoveModal from "./RemoveModal.jsx"
+import ProductsTable from "./ProductsTable.jsx"
+import InventoryStyle from "./InventoryStyle.jsx"
 
 function InventoryView() {
   return (
     <InventoryProvider>
-      <DashboardMain className={styles.appDashboardMain}>
+      <InventoryStyle />
+      <DashboardMain>
         <TitleContainer />
-        <TableWrapper />
+        <ProductsTable />
       </DashboardMain>
       <CreateModal />
-      <RemoveDialog />
       <UpdateModal />
+      <RemoveModal />
     </InventoryProvider>
   )
 }
 
 function TitleContainer() {
   return (
-    <div className="pos-top-container">
+    <div className="title-container">
       <h3 className="mb-0">Inventory</h3>
       <p className="mb-0">Please add some descriptions...</p>
     </div>
   )
 }
 
-function TableWrapper() {
+/*function TableWrapper() {
   const dispatch = useDispatch()
 
-  const { searchQuery, productsResponse } = useSelector((state) => state.inventory)
+  const { query, productsResponse } = useSelector((state) => state.inventory)
   const { isInitialize, status, data, meta, error } = productsResponse
   
   const [isSearching, setIsSearching] = useState(false)
-
   const handleSearchProductsAsync = debounce(query => {
     dispatch(searchProductsAsync(query))
     setIsSearching(false)
   }, AppConfig.DEBOUNCE_DELAY)
-  
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const searchProductsCallback = useCallback(handleSearchProductsAsync, []) 
+
   const handleNameChange = (e) => {
-    dispatch(setSearchQuery({
-      ...searchQuery,
+    dispatch(setQuery({
+      ...query,
       name: e.target.value,
       page: 1
     }))
     setIsSearching(true)
+    handleSearchProductsAsync.cancel()
   }
-  
+
   const handleCategoryChange = (e) => {
-    dispatch(setSearchQuery({ 
-      ...searchQuery,
+    dispatch(setQuery({
+      ...query,
       category_id: e.target.value,
       page: 1
     }))
     setIsSearching(true)
+    handleSearchProductsAsync.cancel()
   }
 
   const handleRowsPerPageChange = (e) => {
-    dispatch(setSearchQuery({
-      ...searchQuery,
+    dispatch(setQuery({
+      ...query,
       page: 1,
       per_page: e.target.value,
     }))
     setIsSearching(true)
+    handleSearchProductsAsync.cancel()
   }
 
   const handlePreviousClick = () => {
-    dispatch(setSearchQuery({ 
-      ...searchQuery,
-      page: searchQuery.page > 1 ? searchQuery.page - 1 : 1,
+    dispatch(setQuery({ 
+      ...query,
+      page: query.page > 1 ? query.page - 1 : 1,
     }))
     setIsSearching(true)
+    handleSearchProductsAsync.cancel()
   }
 
   const handleNextClick = () => {
-    dispatch(setSearchQuery({ 
-      ...searchQuery,
-      page: (searchQuery.page < meta.last_page) ? searchQuery.page + 1 : meta.last_page,
+    dispatch(setQuery({
+      ...query,
+      page: (query.page < meta.last_page) ? query.page + 1 : meta.last_page,
     }))
     setIsSearching(true)
+    handleSearchProductsAsync.cancel()
   }
 
   useEffect(() => {
     if (!isInitialize) {
       dispatch(fetchProductsAsync())
     }
-  }, [isInitialize, dispatch])
+  }, [isInitialize])
 
   useEffect(() => {
     if (isSearching) {
-      searchProductsCallback(searchQuery)
+      handleSearchProductsAsync(query)
     }
-  }, [isSearching, searchProductsCallback, searchQuery])
+  }, [isSearching, query])
+
 
   useEffect(() => {
     return () => dispatch(cleanupStatesBeforeLeave())
@@ -114,8 +110,8 @@ function TableWrapper() {
   return (
     <>
       <FilteringContainer
-        name={searchQuery.name}
-        category={searchQuery.category_id}
+        name={query.name}
+        category={query.category_id}
         onNameChange={handleNameChange}
         onCategoryChange={handleCategoryChange}
       />
@@ -125,15 +121,15 @@ function TableWrapper() {
         error={error} 
       />
       <PaginationContainer
+        status={status}
         meta={meta}
-        currentPage={searchQuery.page}
-        rowsPerPage={searchQuery.per_page}
+        query={query}
         onChange={handleRowsPerPageChange}
         onPrevious={handlePreviousClick}
         onNext={handleNextClick}
       />
     </>
   )
-}
+}*/
 
 export default InventoryView 

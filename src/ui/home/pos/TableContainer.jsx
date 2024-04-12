@@ -4,9 +4,9 @@ import UiStatus from "../../../utils/classes/UiStatus.jsx"
 import StringHelper from "../../../utils/helpers/StringHelper.jsx"
 import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
 import { THeaders, TDStatus } from "../../components/TableUtils.jsx"
-import AppPrimaryButton from "../../components/buttons/AppPrimaryButton.jsx"
 import { useDispatch, useSelector } from "react-redux"
 import { checkoutProduct } from "../../redux/pos/posSlice.jsx"
+import { PrimaryButton } from "../../common"
 
 const headers = [
   "Name", "Category", "Quantity", 
@@ -80,13 +80,14 @@ function TDProduct({product, disabled}) {
       <td>{srp}</td>
       <td>{memberPrice}</td>
       <td>
-        <AppPrimaryButton
-          icon={<BiPlus className="me-1" />}
-          text="Checkout"
+        <PrimaryButton
           size="btn-sm"
-          disabled={disabled}
+          isDisabled={disabled}
           onClick={() => handleClick(product)}
-        />
+        >
+          <BiPlus className="me-1" />
+          Checkout
+        </PrimaryButton>
       </td>
     </tr>
   )

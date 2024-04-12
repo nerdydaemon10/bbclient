@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from "react"
 
 import { cleanupStatesBeforeLeave, fetchProductsAsync, searchProductsAsync, setSearchQuery } from "../../redux/pos/posSlice.jsx"
 import { useDispatch, useSelector } from "react-redux"
-import AppConfig from "../../../utils/classes/AppConfig.jsx"
 
 import AppLocalStorage from "../../../utils/AppLocalStorage.jsx"
 import FilteringContainer from "./FilteringContainer.jsx"
@@ -15,6 +14,7 @@ import PosProvder from "./PosProvider.jsx"
 import PosStyle from "./PosStyle.jsx"
 import PlaceOrderBtnContainer from "./PlaceOrderBtnContainer.jsx"
 import { DashboardMain } from "../Dashboard.jsx"
+import { DELAY_MILLIS } from "../../../utils/Config.jsx"
 
 function PosView() {
   return (
@@ -51,7 +51,7 @@ function TableWrapper() {
   const handleSearchProductsAsync = debounce(query => {
     dispatch(searchProductsAsync(query))
     setIsSearching(false)
-  }, AppConfig.DEBOUNCE_DELAY)
+  }, DELAY_MILLIS)
   
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const searchProductsCallback = useCallback(handleSearchProductsAsync, []) 

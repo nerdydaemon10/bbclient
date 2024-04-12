@@ -43,6 +43,18 @@
     padding: 0 var(--app-padding);
 }
 
+.app-modal-body-text {
+    color: #71717A;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1;
+}
+
+.app-modal-body-text > b {
+    color: var(--app-main-color);;
+}
+
 .app-modal-footer {
     display: flex;
     justify-content: end;

@@ -15,8 +15,8 @@ ObjectHelper.toUriParams = function(object) {
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
          
   const params = filters.concat(paginations).join("&")
-
-  return params
+  
+  return `${params}`
 }
 
 ObjectHelper.isFile = function(object) {

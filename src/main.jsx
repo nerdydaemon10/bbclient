@@ -10,11 +10,8 @@ import "./ui/assets/css/bootstrap.min.custom.css"
 import "./ui/assets/css/components/components.css"
 
 import App from "./App.jsx"
-import inits from "./utils/inits.jsx"
 import { IconContext } from "react-icons"
 import { SnackbarProvider } from "notistack"
-
-inits()
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

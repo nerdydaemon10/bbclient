@@ -1,32 +1,28 @@
-import axios from "axios"
+import client from "../../utils/client.jsx"
 
 import ObjectHelper from "../../utils/helpers/ObjectHelper.jsx"
-import StringHelper from "../../utils/helpers/StringHelper.jsx"
 import ProductRoutes from "../../utils/routes/ProductRoutes.jsx"
 
 export default class ProductService {}
 
-ProductService.create = async function(product) {
-  const response = await axios.post(ProductRoutes.CREATE, product)
-  return response
+ProductService.create = async function(param) {
+  const response = await client.post("/products", param)
+  return response.data
 }
 
-ProductService.remove = async function(id) {
-  const response = await axios.delete(`${ProductRoutes.REMOVE}/${id}`)
-  return response
+ProductService.findAll = async function(searchQuery=null) {
+  const params = ObjectHelper.toUriParams(searchQuery)
+  const response = await client.get(`/products?${params}`)
+
+  return response.data
 }
 
 ProductService.update = async function(product) {
-  const response = await axios.put(`${ProductRoutes.UPDATE}/${product.id}`, product)
-  return response
+  const response = await client.put(`${ProductRoutes.UPDATE}/${product.id}`, product)
+  return response.data
 }
 
-ProductService.findAll = async function(query=null) {
-  const params = ObjectHelper.toUriParams(query)
-  
-  const response = StringHelper.isEmpty(params) 
-    ? await axios.get(`${ProductRoutes.FIND_ALL}?sort=-created_at,-updated_at`)
-    : await axios.get(`${ProductRoutes.FIND_ALL}?${params}`)
-
-  return response
+ProductService.remove = async function(id) {
+  const response = await client.delete(`/products/${id}`)
+  return response.data
 }

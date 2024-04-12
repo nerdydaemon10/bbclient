@@ -2,10 +2,10 @@ import AppFormTextField from "../../components/forms/AppFormTextField.jsx"
 import { findErrorByName } from "../../../utils/helpers/FormHelper.jsx"
 import AppFormOption from "../../components/forms/AppFormOption.jsx"
 import { useContext, useState } from "react"
-import PosContext from "./PosContext.jsx"
 import AppFormFile from "../../components/forms/AppFormFile.jsx"
-import { paymentMethods } from "../../../utils/Configs.jsx"
+import { paymentMethods } from "../../../utils/Config.jsx"
 import PaymentMethod from "../../../utils/classes/PaymentMethod.jsx"
+import { PosContext } from "./PosProvider.jsx"
 
 function TabOrderInfo() {
   const { customer, setCustomer, paymentMethod, setPaymentMethod, proofOfPayment, setProofOfPayment  } = useContext(PosContext)

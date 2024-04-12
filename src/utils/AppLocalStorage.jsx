@@ -13,7 +13,6 @@ AppLocalStorage.readUser = function() {
 AppLocalStorage.readAccessToken = function() {
     return AppLocalStorage.read("accessToken")
 }
-
 AppLocalStorage.save = function(key, data) {
     //localStorage.removeItem(key)
     localStorage.setItem(key, data)

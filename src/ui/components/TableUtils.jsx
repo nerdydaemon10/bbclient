@@ -1,17 +1,25 @@
-export function THeaders({headers}) {
+export function THeaders({columns}) {
   return (
     <tr>
-      {headers.map((item, index) => <th key={index}>{item}</th>)}
+      {columns.map((column, index) => <th key={index}>{column}</th>)}
     </tr>
   )
 }
 
-export function TDStatus({message, headersSize}) {
+export function TDStatus({colSpan, children}) {
   return (
     <tr>
-      <td className="app-table-td-status" colSpan={headersSize}>
+      <td className="app-td-status" colSpan={colSpan}>{children}</td>
+    </tr>
+  )
+}
+
+/*export function TDStatus({colSpan, message}) {
+  return (
+    <tr>
+      <td className="app-table-td-status" colSpan={colSpan}>
         {message}
       </td>
     </tr>
   )
-}
+}*/

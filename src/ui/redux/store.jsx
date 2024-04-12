@@ -1,15 +1,17 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
 
-import authSlice from "./auth/authSlice.jsx"
-import inventorySlice from "./inventory/inventorySlice.jsx"
-import productsSlice from "./products/productsSlice.jsx"
+import inventorySlice from "./inventorySlice.jsx"
 import posSlice from "./pos/posSlice.jsx"
+import customersSlice from "./customersSlice.jsx"
+import authSlice from "./authSlice.jsx"
+import ordersSlice from "./ordersSlice.jsx"
 
 const reducer = combineReducers({
   auth: authSlice,
+  pos: posSlice,
   inventory: inventorySlice,
-  products: productsSlice,
-  pos: posSlice
+  customers: customersSlice,
+  orders: ordersSlice
 })
 
 const store = configureStore({

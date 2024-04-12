@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 import UiStatus from "../../../utils/classes/UiStatus.jsx"
-import { rowsPerPages } from "../../../utils/Configs.jsx"
-import OrderService from "../../../data/services/OrderService.jsx"
+import { rowsPerPages } from "../../../utils/Config.jsx"
 import ProductService from "../../../data/services/ProductService.jsx"
+import OrderService from "../../../data/services/OrderService.jsx"
 
 const defaultState = {
   total: 0.00,
