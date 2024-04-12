@@ -3,7 +3,7 @@ import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
 import { columns, columnsSize } from "./Util.jsx"
 import DateHelper from "../../../utils/helpers/DateHelper.jsx"
 import StringHelper from "../../../utils/helpers/StringHelper.jsx"
-import { orderStatuses, rowsPerPages } from "../../../utils/Config.jsx"
+import { DELAY_MILLIS, orderStatuses, rowsPerPages } from "../../../utils/Config.jsx"
 import { isItemsEmpty, isSearchHasEmptyResults } from "../../../utils/Helper.jsx"
 import { SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
@@ -105,7 +105,7 @@ function TableContainer({isLoading, searchQuery, data, error}) {
     // adding delay to finish the hiding effect of errors
     setTimeout(() => dispatch(toggleModal({
       modalType: ModalType.UPDATE, open: true}
-    )), VITE_DELAY)
+    )), DELAY_MILLIS)
   }
 
   const handleRemoveClick = (product) => {
@@ -159,7 +159,7 @@ function TDOrder({order}) {
   const customer = StringHelper.truncate(order.customer.full_name)
   const amountDue = StringHelper.toPesoCurrency(Number(order.amount_due))
   const totalItems = StringHelper.toPcs(order.number_of_items)
-  const status = OrderStatus.toStatus(order.status)
+  const status = StringHelper.truncate(order.status)
   const paymentMethod = PaymentMethod.toMethod(order.payment_method)
   const creator = StringHelper.truncate(order.employee.full_name)
   const dateCreated = DateHelper.toIsoStandard(order.created_at)

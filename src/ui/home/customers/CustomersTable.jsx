@@ -154,7 +154,7 @@ function TDCustomer({customer, onUpdateClick, onRemoveClick}) {
   const address = StringHelper.truncate(customer.address)
   const phoneNumber = StringHelper.truncate(customer.phone_number)
   const emailAddress = StringHelper.truncate(customer.email_address)
-  const createdBy = 32//StringHelper.truncate(customer.employee.full_name)
+  const createdBy = StringHelper.truncate(customer.employee.full_name)
   const dateCreated = DateHelper.toIsoStandard(customer.created_at)
   const dateModified = DateHelper.toIsoStandard(customer.updated_at)
 
