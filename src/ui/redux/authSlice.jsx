@@ -14,9 +14,14 @@ export const loginAsync = createAsyncThunk(
 })
 
 const initialState = {
+  loginApiResource: { 
+    isLoading: false, 
+    isSuccess: false, 
+    data: null, 
+    error: null
+  },
   accessToken: AppLocalStorage.readAccessToken(),
   user: AppLocalStorage.readUser(),
-  loginApiResource: { isLoading: false, isSuccess: false, data: null, error: null }
 }
 
 const authSlice = createSlice({

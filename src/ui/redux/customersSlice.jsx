@@ -88,17 +88,17 @@ const customersSlice = createSlice({
     })
     .addCase(createCustomerAsync.fulfilled, (state, action) =>  {
       state.createApiResource = {
-        ...state.createApiResource,
         isLoading: false,
         isSuccess: true,
-        data: action.payload
+        data: action.payload,
+        error: null
       }
     })
     .addCase(createCustomerAsync.rejected, (state, action) => {
-      console.log(action.payload)
       state.createApiResource = { 
-        ...state.createApiResource,
         isLoading: false,
+        isSuccess: false,
+        data: null,
         error: action.payload
       }
     })

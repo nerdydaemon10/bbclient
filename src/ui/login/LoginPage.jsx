@@ -71,7 +71,7 @@ function LoginView() {
           <FormTextFieldInput
             label="Username"
             name="username" 
-            placeholder="Username..."
+            placeholder="Username"
             value={credentials.username}
             feedback={findErrorByName(loginApiResource.error, "username")}
             onChange={handleChange}
@@ -80,7 +80,7 @@ function LoginView() {
           <FormPasswordTextField
             label="Password"
             name="password"
-            placeholder="Password..."
+            placeholder="Password"
             value={credentials.password}
             feedback={findErrorByName(loginApiResource.error, "password")}
             onChange={handleChange}

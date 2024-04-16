@@ -23,6 +23,7 @@ const FormTextFieldInput = forwardRef(function FormTextFieldInput(props, ref) {
         value={value} 
         onChange={onChange}
         ref={ref}
+        readOnly={props.isReadOnly}
       />
       <div className={`${variant}-feedback`}>
         <div className={`${variant}-feedback-icon`}>

@@ -1,18 +1,18 @@
 import { useContext, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { cleanupSomeStates, createOrderAsync } from "../../redux/pos/posSlice.jsx"
+import { cleanupSomeStates, createOrderAsync } from "../../redux/posSlice.jsx"
 import UiStatus from "../../../utils/classes/UiStatus.jsx"
 import { enqueueSnackbar } from "notistack"
-import { PrimaryButton } from "../../common"
+import { PrimaryButton } from "../../common/index.jsx"
 import { PosContext } from "./PosProvider.jsx"
 
-function PlaceOrderBtnContainer() {
+function PlaceOrderButton() {
   const dispatch = useDispatch()
-
+  
   const { createOrderResponse } = useSelector((state) => state.pos)
   const { status, message, error } = createOrderResponse
   const { isPlaceOrderBtnDisabled, checkouts, customer, paymentMethod } = useContext(PosContext)
-  
+
   const handleClick = () => {
     dispatch(createOrderAsync({
       customer: [customer],
@@ -20,7 +20,7 @@ function PlaceOrderBtnContainer() {
       checkouts: checkouts
     }))
   }
-
+  
   useEffect(() => {
     if (status == UiStatus.SUCCESS) {
       enqueueSnackbar(message)
@@ -38,11 +38,11 @@ function PlaceOrderBtnContainer() {
         isFullWidth={true}
         isDisabled={isPlaceOrderBtnDisabled}
         onClick={handleClick}
-      >
+      > 
         Place Order
       </PrimaryButton>
     </div>
   )
 }
 
-export default PlaceOrderBtnContainer
+export default PlaceOrderButton

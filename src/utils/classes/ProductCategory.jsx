@@ -9,9 +9,7 @@ export default class ProductCategory {
   static toCategory = (id) => {
     const category = productCategories.find((category) => category.id == id)
 
-    if (!category) {
-        return "N/A"
-    }
+    if (!category) return "N/A"
     
     return category.name
   }

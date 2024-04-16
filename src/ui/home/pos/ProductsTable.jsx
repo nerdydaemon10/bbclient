@@ -1,63 +1,59 @@
 import { useDispatch, useSelector } from "react-redux"
 import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
 import InputSelect from "../../components/inputs/InputSelect.jsx"
-import { columns, columnsSize } from "./Util.jsx"
-import DateHelper from "../../../utils/helpers/DateHelper.jsx"
+import { isCheckedOut, productCols } from "./Util.jsx"
 import StringHelper from "../../../utils/helpers/StringHelper.jsx"
-import AppSearchField from "../../components/inputs/AppSearchField.jsx"
 import { productCategories, rowsPerPages } from "../../../utils/Config.jsx"
-import { BiPlus } from "react-icons/bi"
 import { isItemsEmpty, isSearchHasEmptyResults } from "../../../utils/Helper.jsx"
-import { PrimaryButton, SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
+import { PrimaryButton, SearchFieldInput, SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
-import ModalType from "../../../utils/classes/ModalType.jsx"
 import ProductCategory from "../../../utils/classes/ProductCategory.jsx"
-import { InventoryContext } from "./InventoryProvider.jsx"
-import { resetStates, setProduct, setSearchQuery, toggleModal } from "../../redux/inventorySlice.jsx"
-
-const VITE_DELAY = import.meta.VITE_DELAY
+import { addToCheckout, setSearchQuery } from "../../redux/posSlice.jsx"
+import { PosContext } from "./PosProvider.jsx"
+import { size } from "lodash"
 
 function ProductsTable() {
   const dispatch = useDispatch()
 
-  const { searchQuery } = useSelector((state) => state.inventory)
-  const { apiResource, handleSearchProductsAsync } = useContext(InventoryContext)
-  const { data, meta } = apiResource.data
+  const { products } = useSelector((state) => state.pos)
+  const { searchQuery, fetchResponse } = products
+  const { isLoading, data, meta, error } = fetchResponse
+
+  const { searchProducts } = useContext(PosContext)
 
   const handleChange = (e) => {
     dispatch(setSearchQuery({ ...searchQuery, [e.target.name]: e.target.value, page: 1 }))
-    handleSearchProductsAsync.cancel()
+    searchProducts.cancel()
   }
-
   const handlePrevious = () => {
     let page = searchQuery.page > 1 ? searchQuery.page - 1 : 1
     dispatch(setSearchQuery({ ...searchQuery, page: page }))
-    handleSearchProductsAsync.cancel()
+    searchProducts.cancel()
   }
   const handleNext = () => {
     let page = searchQuery.page < meta.last_page ? searchQuery.page + 1 : meta.last_page
     dispatch(setSearchQuery({ ...searchQuery, page: page }))
-    handleSearchProductsAsync.cancel()
+    searchProducts.cancel()
   }
 
   return (
     <>
-      <FilteringContainer 
+      <FilteringContainer
         name={searchQuery.name}
         status={searchQuery.status}
         onChange={handleChange}
       />
       <TableContainer 
-        isLoading={apiResource.isLoading} 
+        isLoading={isLoading} 
         searchQuery={searchQuery}
         data={data}
-        error={apiResource.error}
+        error={error}
       />
       <PaginationContainer
         rowsPerPage={searchQuery.per_page}
         currentPage={meta.current_page}
         lastPage={meta.last_page}
-        isLoading={apiResource.isLoading}
+        isLoading={isLoading}
         onChange={handleChange} 
         onPrevious={handlePrevious}
         onNext={handleNext}
@@ -66,17 +62,11 @@ function ProductsTable() {
   )
 }
 function FilteringContainer({name, category, onChange}) {
-  const dispatch = useDispatch()
-
-  const handleClick = () => {
-    dispatch(toggleModal({modalType: ModalType.CREATE, open: true}))
-  }
-
   return (
-    <div className="filtering-container">
+    <div className="filtering-container is-products-table">
       <div className="row gx-2">
         <div className="col-6">
-          <AppSearchField
+          <SearchFieldInput
             name="name"
             placeholder="Search by Product..."
             value={name}
@@ -93,64 +83,50 @@ function FilteringContainer({name, category, onChange}) {
           />
         </div>
       </div>
-      <div>
-        <SecondaryButton onClick={handleClick}>
-          <BiPlus className="me-1" />
-          Create Product
-        </SecondaryButton>
-      </div>
     </div>
   )
 }
 function TableContainer({isLoading, searchQuery, data, error}) {
   const dispatch = useDispatch()
 
-  const handleUpdateClick = (product) => {
-    // reset errors before showing modal
-    dispatch(resetStates())
-    dispatch(setProduct(product))
-    
-    // adding delay to finish the hiding effect of errors
-    setTimeout(() => dispatch(toggleModal({
-      modalType: ModalType.UPDATE, open: true}
-    )), VITE_DELAY)
-  }
+  const { checkouts } = useSelector(state => state.pos)
 
-  const handleRemoveClick = (product) => {
-    dispatch(setProduct(product))
-    dispatch(toggleModal({modalType: ModalType.REMOVE, open: true}))
+  const colSpan = size(productCols)
+
+  const handleClick = (product) => {
+    dispatch(addToCheckout(product))
   }
 
   return (
     <div className="app-table-wrapper table-container">
       <table className="table">
         <thead>
-          <THeaders columns={columns}/>
+          <THeaders columns={productCols}/>
         </thead>
         <tbody>
           {
             isLoading ? (
-              <TDStatus colSpan={columnsSize}>
+              <TDStatus colSpan={colSpan}>
                 {GenericMessage.PRODUCTS_FETCHING}
               </TDStatus>
             ) : error ? (
-              <TDStatus colSpan={columnsSize}>
+              <TDStatus colSpan={colSpan}>
                 {error.message ? error.message : GenericMessage.PRODUCTS_ERROR}
               </TDStatus>
             ) : isSearchHasEmptyResults(searchQuery, data) ? (
-              <TDStatus colSpan={columnsSize}>
+              <TDStatus colSpan={colSpan}>
                 {GenericMessage.PRODUCTS_NO_MATCH}
               </TDStatus>
             ) : isItemsEmpty(data) ? (
-              <TDStatus colSpan={columnsSize}>
+              <TDStatus colSpan={colSpan}>
                 {GenericMessage.PRODUCTS_EMPTY}
               </TDStatus>
             ) : data ? data.map((product, index) => (
               <TDProduct
                 key={index}
                 product={product}
-                onUpdateClick={handleUpdateClick}
-                onRemoveClick={handleRemoveClick}
+                isCheckedOut={isCheckedOut(checkouts, product.id)}
+                onClick={() => handleClick(product)}
               />
             )) : (
               <></>
@@ -162,16 +138,12 @@ function TableContainer({isLoading, searchQuery, data, error}) {
   )
 }
 
-function TDProduct({product, onUpdateClick, onRemoveClick}) {
+function TDProduct({product, isCheckedOut, onClick}) {
   const name = StringHelper.truncate(product.name)
   const description = StringHelper.truncate(product.description)
   const category = ProductCategory.toCategory(product.category_id)
   const stocks = StringHelper.toStocks(product.quantity)
-  const srp = StringHelper.toPesoCurrency(product.srp)
-  const memberPrice = StringHelper.toPesoCurrency(product.member_price)
-  const createdBy = StringHelper.truncate(product.employee.full_name)
-  const dateCreated = DateHelper.toIsoStandard(product.created_at)
-  const dateModified = DateHelper.toIsoStandard(product.updated_at)
+  const price = StringHelper.toPesoCurrency(product.srp)
 
   return (
     <tr key={product.id}>
@@ -183,28 +155,20 @@ function TDProduct({product, onUpdateClick, onRemoveClick}) {
         </span>
       </td>
       <td>{stocks}</td>
-      <td>{srp}</td>
-      <td>{memberPrice}</td>
-      <td>{createdBy}</td>
-      <td>{dateCreated}</td>
-      <td>{dateModified}</td>
+      <td>{price}</td>
       <td className="app-sx-8">
         <PrimaryButton 
           size="btn-sm"
-          onClick={() => onUpdateClick(product)}
+          isDisabled={isCheckedOut}
+          onClick={onClick}
         >
-          Update
+          Checkout
         </PrimaryButton>
-        <SecondaryButton 
-          size="btn-sm"
-          onClick={() => onRemoveClick(product)}
-        >
-          Remove
-        </SecondaryButton>
       </td>
     </tr>
   )
 }
+
 function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onChange, onPrevious, onNext}) {
   return (
     <div className="pagination-container">

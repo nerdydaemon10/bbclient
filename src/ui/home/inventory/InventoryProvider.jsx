@@ -4,8 +4,8 @@ import { useSelector } from "react-redux"
 import { createContext, useEffect, useState } from "react"
 
 import ProductService from "../../../data/services/ProductService.jsx"
+import { DELAY_MILLIS } from "../../../utils/Config.jsx"
 
-const VITE_DELAY = import.meta.env.VITE_DELAY
 const InventoryContext = createContext()
 
 function InventoryProvider({children}) {
@@ -37,7 +37,7 @@ function InventoryProvider({children}) {
 
   const handleSearchProductsAsync = debounce(() => {
     handleFetchProductsAsync()
-  }, VITE_DELAY)
+  }, DELAY_MILLIS)
 
   useEffect(() => {
     handleSearchProductsAsync()

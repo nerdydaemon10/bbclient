@@ -13,13 +13,3 @@ export function TDStatus({colSpan, children}) {
     </tr>
   )
 }
-
-/*export function TDStatus({colSpan, message}) {
-  return (
-    <tr>
-      <td className="app-table-td-status" colSpan={colSpan}>
-        {message}
-      </td>
-    </tr>
-  )
-}*/

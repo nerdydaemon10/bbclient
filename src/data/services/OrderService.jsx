@@ -5,7 +5,7 @@ export default class OrderService {}
 
 OrderService.create = async function(order) {
   const response = await client.post("/orders", order)
-  return response
+  return response.data
 }
 
 OrderService.findAll = async function(searchQuery=null) {

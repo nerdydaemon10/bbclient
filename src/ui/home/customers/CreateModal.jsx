@@ -37,7 +37,7 @@ function CreateModal() {
   const handleChange = (e) => {
     setParam({ ...param, [e.target.name]: e.target.value })
   }
-
+  
   useEffect(() => {
     if (createApiResource.isSuccess) {
       dispatch(toggleModal({modalType: ModalType.CREATE, open: false}))
@@ -49,7 +49,7 @@ function CreateModal() {
       setTimeout(() => dispatch(resetStates()), DELAY_MILLIS)
     }
   }, [createApiResource.isSuccess])
-  
+
   return (
     <FormModal  
       title="Create Customer"

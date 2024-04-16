@@ -1,7 +1,7 @@
 import "boxicons"
 
 function BaseButton({
-  variant, size="btn-md", isLoading, 
+  variant, size="btn-md", isLoading=false, 
   isSubmit, isFullWidth, isDisabled, 
   onClick, children
 }) {
@@ -18,7 +18,7 @@ function BaseButton({
         `
       }
       disabled={isDisabled || isLoading}
-      onClick={onClick}
+      onClick={isDisabled ? undefined : onClick}
     >
       {isLoading ? (<LoadingIcon />) : (<></>)}
       <span className="app-button-text">

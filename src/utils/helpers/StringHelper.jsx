@@ -52,10 +52,10 @@ StringHelper.toStocks = function(number) {
 }
 StringHelper.toPcs = function(number) {
   if (number == 1) {
-      return `${number} pc`
+      return `${number}pc`
   }
   if (number > 1) {
-      return `${number} pcs`
+      return `${number}pcs`
   }
   return "No Items"
 }

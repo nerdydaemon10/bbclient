@@ -1,16 +1,7 @@
 <script>
-    const api = "https://baristabroserver-production.up.railway.app/api/v1/products?"
 
-    const filter = {
-        name: null,
-        category_id: null
-    }
+    let isDisabled = true
 
-    const entries = Object.entries(filter)
-    const params = entries
-        .filter(([key, value]) => value != null && value != undefined)
-        .map(([key, value]) => `filter[${key}]=${value}`).join("&")
-
-    console.log(params)
+    console.log(!isDisabled && "clickable")
 
 </script>

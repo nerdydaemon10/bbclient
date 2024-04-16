@@ -1,15 +1,16 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-const BASE_URL = `${import.meta.env.VITE_BASE_URL}/`
-
-export const productsApi = createApi({
-  reducerPath: "productsApi",
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL}),
+// Define a service using a base URL and expected endpoints
+export const pokemonApi = createApi({
+  reducerPath: 'pokemonApi',
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://pokeapi.co/api/v2/' }),
   endpoints: (builder) => ({
-    getAllProducts: builder.query({
-      query: () => "products"
-    })
-  })
+    getPokemonByName: builder.query({
+      query: (name) => `pokemon/${name}`,
+    }),
+  }),
 })
 
-export const { useGetAllProductsQuery } = productsApi
+// Export hooks for usage in functional components, which are
+// auto-generated based on the defined endpoints
+export const { useGetPokemonByNameQuery } = pokemonApi

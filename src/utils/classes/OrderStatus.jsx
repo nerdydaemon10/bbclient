@@ -8,9 +8,7 @@ export default class OrderStatus {
   static toStatus = (id) => {
     const status = orderStatuses.find((status) => status.id == id)
 
-    if (!status) {
-        return "N/A"
-    }
+    if (!status) return "N/A"
     
     return status.name
   }

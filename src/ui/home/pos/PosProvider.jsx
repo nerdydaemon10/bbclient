@@ -1,42 +1,93 @@
-import { createContext, useEffect, useState } from "react"
-import { useSelector } from "react-redux"
-import { posTabs } from "./Util.jsx"
+/* eslint-disable react-hooks/exhaustive-deps */
+import { createContext, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { debounce } from "lodash"
+import { DELAY_MILLIS } from "../../../utils/Config.jsx"
+import { setFetchResponse } from "../../redux/posSlice.jsx"
+import CustomerService from "../../../data/services/CustomerService.jsx"
+import ProductService from "../../../data/services/ProductService.jsx"
+import FetchType from "../../../utils/classes/FetchType.jsx"
 
 const PosContext = createContext()
 
-function PosProvder({children}) {
-  const { checkouts } = useSelector((state) => state.pos)
-  
-  const [tab, setTab] = useState(posTabs[0].value)
-  const [customer, setCustomer] = useState({
-    name: "",
-    contactNumber: "",
-    deliveryAddress: ""
-  })
-  const [paymentMethod, setPaymentMethod] = useState(1)
-  const [proofOfPayment, setProofOfPayment] = useState("")
-  const [isPlaceOrderBtnDisabled, setIsPlaceOrderBtnDisabled] = useState(false)
+function PosProvider({children}) {
+  const dispatch = useDispatch()
+
+  const { products, customers } = useSelector((state) => state.pos)
+
+  const fetchProducts = (searchQuery) => {
+    dispatch(setFetchResponse({
+      type: FetchType.PRODUCTS,
+      isLoading: true, 
+      data: [], 
+      meta: { current_page: 0, last_page: 0 },
+      error: null
+    }))
+    ProductService.findAll(searchQuery).then((response) => {
+      dispatch(setFetchResponse({
+        type: FetchType.PRODUCTS,
+        isLoading: false, 
+        data: response.data, 
+        meta: response.meta,
+        error: null
+      }))
+    })
+    .catch((error) => {
+      dispatch(setFetchResponse({
+        type: FetchType.PRODUCTS,
+        isLoading: false, 
+        data: [], 
+        meta: { current_page: 0, last_page: 0 },
+        error: error
+      }))
+    })
+  }
+  const fetchCustomers = (searchQuery) => {
+    dispatch(setFetchResponse({
+      type: FetchType.CUSTOMERS,
+      isLoading: true, 
+      data: [], 
+      meta: { current_page: 0, last_page: 0 },
+      error: null
+    }))
+    CustomerService.findAll(searchQuery).then((response) => {
+      dispatch(setFetchResponse({
+        type: FetchType.CUSTOMERS,
+        isLoading: false, 
+        data: response.data, 
+        meta: response.meta,
+        error: null
+      }))
+    })
+    .catch((error) => {
+      dispatch(setFetchResponse({
+        type: FetchType.CUSTOMERS,
+        isLoading: false, 
+        data: [], 
+        meta: { current_page: 0, last_page: 0 },
+        error: error
+      }))
+    })
+  }
+
+  const searchProducts = debounce((searchQuery) => {
+    fetchProducts(searchQuery)
+  }, DELAY_MILLIS)
+  const searchCustomers = debounce((searchQuery) => {
+    fetchCustomers(searchQuery)
+  }, DELAY_MILLIS)
 
   useEffect(() => {
-    const checkoutsEmpty = checkouts.length == 0
-    //const someOrderFieldsAreEmpty = Object.entries(customer).some(([, v]) => v.trim().length == 0)
-    //const proofOfPaymentEmpty = paymentMethod == PaymentMethod.SCAN_TO_PAY && StringHelper.isEmpty(proofOfPayment)
-
-    setIsPlaceOrderBtnDisabled(
-      checkoutsEmpty/* || 
-      someOrderFieldsAreEmpty || 
-      proofOfPaymentEmpty*/
-    )
-  }, [checkouts, customer, paymentMethod, proofOfPayment])
+    searchProducts(products.searchQuery)
+  }, [products.searchQuery])
+  useEffect(() => {
+    searchCustomers(customers.searchQuery)
+  }, [customers.searchQuery])
 
   return (
     <PosContext.Provider value={{
-      checkouts, 
-      tab, setTab, 
-      customer, setCustomer, 
-      paymentMethod, setPaymentMethod,
-      proofOfPayment, setProofOfPayment,
-      isPlaceOrderBtnDisabled
+      searchProducts,
+      searchCustomers
     }}>
       {children}
     </PosContext.Provider>
@@ -44,4 +95,4 @@ function PosProvder({children}) {
 }
 
 export { PosContext }
-export default PosProvder
+export default PosProvider

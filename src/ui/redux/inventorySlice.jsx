@@ -102,6 +102,30 @@ const inventorySlice = createSlice({
         error: action.payload
       }
     })
+    // Update Product
+    .addCase(updateProductAsync.pending, (state) => {
+      state.updateApiResource = {
+        isLoading: true,
+        isSuccess: false,
+        data: null,
+        error: null 
+      }
+    })
+    .addCase(updateProductAsync.fulfilled, (state, action) =>  {
+      state.updateApiResource = {
+        ...state.updateApiResource,
+        isLoading: false,
+        isSuccess: true,
+        data: action.payload
+      }
+    })
+    .addCase(updateProductAsync.rejected, (state, action) => {
+      state.updateApiResource = { 
+        ...state.updateApiResource,
+        isLoading: false,
+        error: action.payload
+      }
+    })
     // Remove Product
     .addCase(removeProductAsync.pending, (state) => {
       state.removeApiResource = {

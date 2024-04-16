@@ -10,7 +10,7 @@ function Dashboard({children}) {
   const handleSelectedRouteClick = (id) => {
     setSelectedRoute(id)
   }
-
+  
   return (
     <div className="dashboard">
       <DashboardSidebar 
