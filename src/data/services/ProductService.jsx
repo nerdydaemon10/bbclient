@@ -1,7 +1,5 @@
 import client from "../../utils/client.jsx"
-
 import ObjectHelper from "../../utils/helpers/ObjectHelper.jsx"
-import ProductRoutes from "../../utils/routes/ProductRoutes.jsx"
 
 export default class ProductService {}
 
@@ -18,7 +16,7 @@ ProductService.findAll = async function(searchQuery=null) {
 }
 
 ProductService.update = async function(product) {
-  const response = await client.put(`${ProductRoutes.UPDATE}/${product.id}`, product)
+  const response = await client.put(`/products/${product.id}`, product)
   return response.data
 }
 
