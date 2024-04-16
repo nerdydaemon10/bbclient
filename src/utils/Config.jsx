@@ -31,8 +31,3 @@ export const orderStatuses = [
   { id: 2, name: "Approved" },
   { id: 3, name: "Rejected" }
 ]
-export const _fetchApiResource = {
-  isLoading: true, 
-  data: { data: [], meta: { current_page: 0, last_page: 0 } }, 
-  error: null
-}
