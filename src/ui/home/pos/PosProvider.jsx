@@ -18,7 +18,7 @@ function PosProvider({children}) {
   const fetchProducts = (searchQuery) => {
     dispatch(setFetchResponse({
       type: FetchType.PRODUCTS,
-      isLoading: true, 
+      isLoading: true,
       data: [], 
       meta: { current_page: 0, last_page: 0 },
       error: null
@@ -35,7 +35,7 @@ function PosProvider({children}) {
     .catch((error) => {
       dispatch(setFetchResponse({
         type: FetchType.PRODUCTS,
-        isLoading: false, 
+        isLoading: false,
         data: [], 
         meta: { current_page: 0, last_page: 0 },
         error: error
@@ -80,6 +80,7 @@ function PosProvider({children}) {
   useEffect(() => {
     searchProducts(products.searchQuery)
   }, [products.searchQuery])
+
   useEffect(() => {
     searchCustomers(customers.searchQuery)
   }, [customers.searchQuery])

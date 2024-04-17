@@ -38,7 +38,7 @@ const defaultState = {
       page: 1
     },
     fetchResponse: {
-      isLoading: true, 
+      isLoading: true,
       data: [], 
       meta: { current_page: 0, last_page: 0 },
       error: null

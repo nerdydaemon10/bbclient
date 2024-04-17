@@ -61,7 +61,7 @@ function EmptyItem() {
     <li className="checkout-list-item-empty">
       <div>
         <h6 className="mb-0">Checkouts are empty.</h6>
-        <p>Press &apos;checkout&apos; to add in checkouts.</p>
+        <p>Press &apos;checkout&apos; to some products.</p>
       </div>
     </li>
   )

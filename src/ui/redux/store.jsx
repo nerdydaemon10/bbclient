@@ -5,21 +5,17 @@ import posSlice from "./posSlice.jsx"
 import customersSlice from "./customersSlice.jsx"
 import authSlice from "./authSlice.jsx"
 import ordersSlice from "./ordersSlice.jsx"
-import { pokemonApi } from "./apiSlice.jsx"
 
 const reducer = combineReducers({
   auth: authSlice,
   pos: posSlice,
   inventory: inventorySlice,
   customers: customersSlice,
-  orders: ordersSlice,
-  [pokemonApi.reducerPath]: pokemonApi.reducer
+  orders: ordersSlice
 })
 
 const store = configureStore({
   reducer: reducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(pokemonApi.middleware),
   devTools: true
 })
 

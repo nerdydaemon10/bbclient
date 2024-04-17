@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -6,7 +7,7 @@ import { findErrorByName } from "../../utils/helpers/FormHelper.jsx"
 import LoginStyle from "./LoginStyle.jsx"
 import FormPasswordTextField from "../components/forms/FormPasswordField.jsx"
 import { FormTextFieldInput, PrimaryButton } from "../common/index.jsx"
-import { loginAsync } from "../redux/authSlice.jsx"
+import { login } from "../redux/authSlice.jsx"
 import { findErrorByMessage } from "../../utils/Helper.jsx"
 import StringHelper from "../../utils/helpers/StringHelper.jsx"
 
@@ -23,7 +24,8 @@ function LoginView() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const { loginApiResource } = useSelector((state) => state.auth)
+  const { loginResponse } = useSelector((state) => state.auth)  
+  
   const [credentials, setCredentials] = useState({
     username: "",
     password: ""
@@ -32,7 +34,7 @@ function LoginView() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    dispatch(loginAsync(credentials))
+    dispatch(login(credentials))
   }
 
   // run only once.
@@ -41,10 +43,10 @@ function LoginView() {
   }, [])
 
   useEffect(() => {
-    if (loginApiResource.isSuccess) {
+    if (loginResponse.isSuccess) {
       navigate("/home")
     }
-  }, [loginApiResource.isSuccess])
+  }, [loginResponse.isSuccess])
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
@@ -60,9 +62,9 @@ function LoginView() {
           <h1 className="app-text-title">Login</h1>
           <p className="app-text-title-caption">BARISTA BRO - The Coffee People</p>
           {
-            StringHelper.notEmpty(findErrorByMessage(loginApiResource.error)) ? (
+            StringHelper.notEmpty(findErrorByMessage(loginResponse.error)) ? (
               <div className="alert alert-dismissible alert-danger">
-                <small>{findErrorByMessage(loginApiResource.error)}</small>
+                <small>{findErrorByMessage(loginResponse.error)}</small>
               </div>
             ) : <></>
           }
@@ -73,7 +75,7 @@ function LoginView() {
             name="username" 
             placeholder="Username"
             value={credentials.username}
-            feedback={findErrorByName(loginApiResource.error, "username")}
+            feedback={findErrorByName(loginResponse.error, "username")}
             onChange={handleChange}
             ref={usernameRef}
           />
@@ -82,11 +84,11 @@ function LoginView() {
             name="password"
             placeholder="Password"
             value={credentials.password}
-            feedback={findErrorByName(loginApiResource.error, "password")}
+            feedback={findErrorByName(loginResponse.error, "password")}
             onChange={handleChange}
           />
           <PrimaryButton
-            isLoading={loginApiResource.isLoading}
+            isLoading={loginResponse.isLoading}
             isFullWidth={true}
             isSubmit={true}
           >

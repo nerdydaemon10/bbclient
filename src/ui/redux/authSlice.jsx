@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import AuthService from "../../data/services/AuthService.jsx"
 import AppLocalStorage from "../../utils/AppLocalStorage.jsx"
 
-export const loginAsync = createAsyncThunk(
-  "auth/loginAsync", 
+export const login = createAsyncThunk(
+  "auth/login", 
   async (credentials, thunkAPI) => {
   try {
     const response = await AuthService.login(credentials)
@@ -14,7 +14,7 @@ export const loginAsync = createAsyncThunk(
 })
 
 const initialState = {
-  loginApiResource: { 
+  loginResponse: { 
     isLoading: false, 
     isSuccess: false, 
     data: null, 
@@ -37,21 +37,21 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
 		builder
-    .addCase(loginAsync.pending, (state) => {
-      state.loginApiResource = {
+    .addCase(login.pending, (state) => {
+      state.loginResponse = {
         isLoading: true,
         isSuccess: false,
         data: null,
         error: null 
       }
     })
-    .addCase(loginAsync.fulfilled, (state, action) => {
+    .addCase(login.fulfilled, (state, action) => {
       const { accessToken, user } = action.payload
 
       state.user = user.user
       state.accessToken = accessToken
 
-      state.loginApiResource = {
+      state.loginResponse = {
         isLoading: false,
         isSuccess: true,
         data: action.payload,
@@ -61,8 +61,8 @@ const authSlice = createSlice({
       AppLocalStorage.saveUser(user.user)
       AppLocalStorage.saveAccessToken(accessToken)
     })
-    .addCase(loginAsync.rejected, (state, action) => {
-      state.loginApiResource = {
+    .addCase(login.rejected, (state, action) => {
+      state.loginResponse = {
         isLoading: false,
         isSuccess: false,
         data: null,

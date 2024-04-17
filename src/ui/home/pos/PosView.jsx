@@ -35,7 +35,7 @@ function TitleContainer() {
   return (
     <div className="title-container">
       <h3 className="mb-0">POS System</h3>
-      <p className="mb-0">Hello {user.full_name}, welcome back!</p>
+      <p className="mb-0">Hello {user.full_name}, Welcome Back!</p>
     </div>
   )
 }

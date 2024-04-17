@@ -25,10 +25,13 @@ function Dashboard({children}) {
 
 function DashboardNavbar() {
   return (
-    <div className="dashboard-navbar">
-      <button className="btn btn-secondary">
+    <div className="dashboard-navbar dropdown">
+      <button className="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
         <SlOptionsVertical />
       </button>
+      <div className="dropdown-menu">
+        <a className="dropdown-item">Sign-Out</a>
+      </div>
     </div>
   )
 }
