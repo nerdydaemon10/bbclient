@@ -11,6 +11,7 @@ export default class GenericMessage {
     static PRODUCTS_EMPTY = "Press '+' button to add product in inventory."
     static PRODUCTS_ERROR = "Something went wrong while fetching products."
 
+    static ORDER_ADDED = "Customer was successfully added to the records."
     static ORDERS_FETCHING = "Fetching orders... please wait for a while."
     static ORDERS_NO_MATCH = "No orders match your search criteria. Try refining your search."
     static ORDERS_EMPTY = "No orders yet."

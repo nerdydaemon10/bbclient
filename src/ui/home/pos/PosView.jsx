@@ -6,20 +6,23 @@ import OrderDetails from "./OrderDetails.jsx"
 import { useSelector } from "react-redux"
 import CustomersTable from "./CustomersTable.jsx"
 import ProductsTable from "./ProductsTable.jsx"
+import { isProducts } from "./Util.jsx"
 
 function PosView() {
-  const { isProductsSelected } = useSelector((state) => state.pos)
-  
+  const { table } = useSelector((state) => state.pos)
+
   return (
     <PosProvider>
       <PosStyle />
       <DashboardMain>
         <TitleContainer />
-        {isProductsSelected ? (
-          <ProductsTable />
-        ) : (
-          <CustomersTable />
-        )}
+        {
+          isProducts(table) ? (
+            <ProductsTable />
+          ) : (
+            <CustomersTable />
+          )
+        }
         <OrderDetails />
       </DashboardMain>
     </PosProvider>

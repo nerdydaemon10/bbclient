@@ -166,8 +166,9 @@ const PosStyle = createGlobalStyle`
   font-size: 13px;
   font-weight: 500;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
   text-align: center;
 }
 

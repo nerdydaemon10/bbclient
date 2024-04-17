@@ -1,37 +1,42 @@
-import { useDispatch } from "react-redux"
-import SecondaryButton from "../../common/buttons/SecondaryButton.jsx"
-import { toggleIsProductsSelected } from "../../redux/posSlice.jsx"
-import { FormTextFieldInput } from "../../common/index.jsx"
+import { useDispatch, useSelector } from "react-redux"
+import { setPaymentMethod, toggleTable } from "../../redux/posSlice.jsx"
+import { SecondaryButton, FormOptionInput, FormTextFieldInput } from "../../common"
 import { findErrorByName } from "../../../utils/Helper.jsx"
+import { paymentMethods } from "../../../utils/Config.jsx"
+import { isProducts } from "./Util.jsx"
 
-function CustomerDetails({isProductsSelected, customer}) {
+function CustomerDetails() {
+  const { table, customer, paymentMethod } = useSelector((state) => state.pos)
+
   const dispatch = useDispatch()
 
-  const handleClick = () => {
-    dispatch(toggleIsProductsSelected())  
+  const handleChange = (value) => {
+    dispatch(setPaymentMethod(value))
   }
 
+  const handleClick = () => {
+    dispatch(toggleTable())
+  }
+  
   return (
-    <div className={`customer-details ${customer ? "" : "is-empty"}`}>
+    <div className={`customer-details ${customer ? "app-sy-12" : "is-empty"}`}>
       {
         customer ? (
-          <Customer 
-            isProductsSelected={isProductsSelected} 
+          <CustomerForm 
             customer={customer} 
-            onClick={handleClick}
+            paymentMethod={paymentMethod}
+            handleChange={handleChange}
           />
         ) : (
-          <CustomerEmpty 
-            isProductsSelected={isProductsSelected}
-            onClick={handleClick} 
-          />
+          <CustomerEmpty /> 
         )
       }
+      <ChooseButton table={table} onClick={handleClick} />
     </div>
   )
 }
 
-function Customer({isProductsSelected, customer, onClick}) {
+function CustomerForm({customer, paymentMethod, handleChange}) {
   return (
     <div className="tab-order-info app-sy-12">
       <FormTextFieldInput
@@ -63,35 +68,34 @@ function Customer({isProductsSelected, customer, onClick}) {
         isReadOnly={true}
         feedback={findErrorByName(null, "")}
       />
-      <hr />
-      <ChooseButton 
-        isProductsSelected={isProductsSelected} 
-        onClick={onClick} 
+      <FormOptionInput
+        label="Payment Method"
+        name="payment_method"
+        options={paymentMethods}
+        feedback={findErrorByName(null, "")}
+        value={paymentMethod}
+        onChange={handleChange}
       />
+      <hr />
     </div>
   )
 }
-
-function CustomerEmpty({isProductsSelected, onClick}) {
+function CustomerEmpty() {
   return (
     <div>
       <h6 className="mb-0">No Customer</h6>
       <p>Press &apos;choose&apos; to select a customer.</p>
-      <ChooseButton 
-        isProductsSelected={isProductsSelected} 
-        onClick={onClick}
-      />
     </div>
   )
 }
 
-function ChooseButton({isProductsSelected, onClick}) {
+function ChooseButton({table, onClick}) {
   return (
     <SecondaryButton 
       isFullWidth={true}
       onClick={onClick}
     >
-      {isProductsSelected ? "Choose Customer" : "Cancel Customer" }
+      { isProducts(table) ? "Choose Customer" : "Cancel Customer" }
     </SecondaryButton>
   )
 }

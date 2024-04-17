@@ -86,6 +86,7 @@ function PosProvider({children}) {
 
   return (
     <PosContext.Provider value={{
+      fetchProducts,
       searchProducts,
       searchCustomers
     }}>

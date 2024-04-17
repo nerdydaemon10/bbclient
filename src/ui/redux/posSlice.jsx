@@ -2,7 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 import { tabs } from "../home/pos/Util.jsx"
 import OrderService from "../../data/services/OrderService.jsx"
-import { rowsPerPages } from "../../utils/Config.jsx"
+import { paymentMethods, rowsPerPages } from "../../utils/Config.jsx"
+import { first } from "lodash"
+import TableType from "../../utils/classes/TableType.jsx"
 import FetchType from "../../utils/classes/FetchType.jsx"
 
 const createOrder = createAsyncThunk(
@@ -62,9 +64,10 @@ const defaultState = {
     data: null, 
     error: null 
   },
+  paymentMethod: first(paymentMethods).value,
   customer: null,
-  isProductsSelected: true,
-  tab: tabs[0].value,
+  table: TableType.PRODUCTS,
+  tab: first(tabs).value,
   checkouts: []
 }
 
@@ -74,8 +77,16 @@ const posSlice = createSlice({
   name: "pos",
   initialState,
   reducers: {
+    resetStates: (state) => {
+      state.checkouts = [],
+      //state.paymentMethod = first(paymentMethods).value,
+      /*state.tab = first(tabs).value*/
+      //state.table = TableType.PRODUCTS
+      state.customer = null,
+      state.createOrderResponse = { ...defaultState.createOrderResponse }
+    },
     setSearchQuery: (state, action) => {
-      if (state.isProductsSelected) {
+      if (state.table == TableType.PRODUCTS) {
         state.products.searchQuery = action.payload
       } else {
         state.customers.searchQuery = action.payload
@@ -83,16 +94,13 @@ const posSlice = createSlice({
     },
     setFetchResponse: (state, action) => {
       const { type, ...fetchResponse } = action.payload
-      
+
       if (type == FetchType.PRODUCTS) {
         state.products.fetchResponse = fetchResponse
       }
       if (type == FetchType.CUSTOMERS) {
         state.customers.fetchResponse = fetchResponse
       }
-    },
-    toggleIsProductsSelected: (state) => {
-      state.isProductsSelected = !state.isProductsSelected
     },
     addToCheckout: (state, action) => {
       state.checkouts.push(buildCheckout(action.payload))
@@ -111,11 +119,19 @@ const posSlice = createSlice({
         return checkout
       })
     },
+    toggleTable: (state) => {
+      state.table = state.table == TableType.PRODUCTS 
+        ? TableType.CUSTOMERS 
+        : TableType.PRODUCTS
+    },
     setTab: (state, action) => {
       state.tab = action.payload
     },
     setCustomer: (state, action) => {
       state.customer = action.payload
+    },
+    setPaymentMethod: (state, action) => {
+      state.paymentMethod = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -149,14 +165,16 @@ const posSlice = createSlice({
 })
 
 export const {
-  toggleIsProductsSelected,
   setSearchQuery,
   setFetchResponse,
   addToCheckout,
   incrementQty,
   decrementQty,
+  toggleTable,
   setTab,
-  setCustomer
+  setCustomer,
+  setPaymentMethod,
+  resetStates
 } = posSlice.actions
 export { createOrder }
 export default posSlice.reducer

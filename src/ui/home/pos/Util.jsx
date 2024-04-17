@@ -1,4 +1,5 @@
 import { BiFile, BiPackage } from "react-icons/bi"
+import TableType from "../../../utils/classes/TableType.jsx"
 
 const productCols = ["Name", "Description", "Category", "Stocks", "Price", "Action"]
 const customerCols = ["Full Name", "Address", "Phone Number", "Email Address", "Action"]
@@ -32,6 +33,10 @@ function isCheckedOut(checkouts, id) {
   return !!checkouts.find(checkout => checkout.id == id)
 }
 
+function isProducts(table) {
+  return table == TableType.PRODUCTS
+}
+
 function hasIncompleteDetails(checkouts, customer) {
   return (checkouts.length == 0) || (customer == null)
 }
@@ -44,5 +49,6 @@ export {
   computeProduct,
   computeSum,
   isCheckedOut,
+  isProducts,
   hasIncompleteDetails
 }

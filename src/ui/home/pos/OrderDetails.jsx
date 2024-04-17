@@ -1,26 +1,43 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { OptionInput, PrimaryButton } from "../../common/index.jsx"
 import { computeSum, hasIncompleteDetails, tabs } from "./Util.jsx"
 import CheckoutList from "./CheckoutList.jsx"
 import CustomerDetails from "./CustomerDetails.jsx"
 import { useDispatch, useSelector } from "react-redux"
 import StringHelper from "../../../utils/helpers/StringHelper.jsx"
-import { createOrder, setTab } from "../../redux/posSlice.jsx"
+import { createOrder, resetStates, setTab } from "../../redux/posSlice.jsx"
+import { useContext, useEffect } from "react"
+import { enqueueSnackbar } from "notistack"
+import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
+import { PosContext } from "./PosProvider.jsx"
+import { DELAY_MILLIS } from "../../../utils/Config.jsx"
 
 function OrderDetails() {
   const dispatch = useDispatch()
 
-  const { isProductsSelected, checkouts, tab, customer, createOrderResponse } = useSelector((state) => state.pos)
+  const { checkouts, tab, customer, createOrderResponse, paymentMethod } = useSelector((state) => state.pos)
+  const { fetchProducts } = useContext(PosContext)
 
   const handleTabChange = (tab) => {
     dispatch(setTab(tab))
   }
 
-  const handlePlaceOrderClick  = () => {
+  const handleClick  = () => {
     dispatch(createOrder({
       customer_id: customer.id,
+      payment_method: paymentMethod,
       checkouts: checkouts
     }))
   }
+
+  useEffect(() => {
+    if (createOrderResponse.isSuccess) {
+      enqueueSnackbar(GenericMessage.ORDER_ADDED)
+      fetchProducts()
+      // reset all redux-action-states including success that trigger snackbar
+      setTimeout(() => dispatch(resetStates()), DELAY_MILLIS)
+    }
+  }, [createOrderResponse.isSuccess])
   
   return (
     <>
@@ -29,15 +46,15 @@ function OrderDetails() {
         onTabChange={handleTabChange}
       />
       <TabContainer
-        isProductsSelected={isProductsSelected}
         tab={tab}
         checkouts={checkouts}
         customer={customer}
       />
-      <PlaceOrderButtonContainer
+      <PlaceOrderButton
         isLoading={createOrderResponse.isLoading}
-        isDisabled={hasIncompleteDetails(checkouts, customer)}
-        onPlaceOrderClick={handlePlaceOrderClick} 
+        checkouts={checkouts}
+        customer={customer}
+        onClick={handleClick} 
       />
     </>
   )
@@ -56,7 +73,7 @@ function TabsContainer({tab, onTabChange}) {
   )
 }
 
-function TabContainer({isProductsSelected, tab, checkouts, customer}) {
+function TabContainer({tab, checkouts, customer}) {
   return (
     <div className={`tab-container ${tab}`}>
       {
@@ -67,7 +84,6 @@ function TabContainer({isProductsSelected, tab, checkouts, customer}) {
           </>
         ) : tab === "is-customer" ? (
           <CustomerDetails 
-            isProductsSelected={isProductsSelected}
             customer={customer} 
           />
         ) : <></>
@@ -89,14 +105,14 @@ function CheckoutDetails({checkouts}) {
   )
 }
 
-function PlaceOrderButtonContainer({isLoading, isDisabled, onPlaceOrderClick}) {
+function PlaceOrderButton({isLoading, checkouts, customer, onClick}) {
   return (
     <div className="place-order-btn-container">
       <PrimaryButton 
         isLoading={isLoading}
         isFullWidth={true}
-        isDisabled={isDisabled}
-        onClick={onPlaceOrderClick}
+        isDisabled={hasIncompleteDetails(checkouts, customer)}
+        onClick={onClick}
       > 
         Place Order
       </PrimaryButton>
