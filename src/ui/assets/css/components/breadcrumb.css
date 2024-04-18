@@ -5,7 +5,7 @@
 }
 .app-breadcrumb-item {
   color: #71717A;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   display: contents;
   line-height: 1;
@@ -21,7 +21,7 @@
 .app-breadcrumb-item + .app-breadcrumb-item::before {
   color: #9A9A9A;
   content: '>';
-  padding: 0 var(--app-spacing);
+  padding: 0 calc(var(--app-spacing) * 1.2);
 }
 
 .app-breadcrumb-item.is-active {

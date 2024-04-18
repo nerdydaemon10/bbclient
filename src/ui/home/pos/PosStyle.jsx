@@ -13,8 +13,11 @@ const PosStyle = createGlobalStyle`
 
 /*--BREADCRUMB-CONTAINER--*/
 .breadcrumb-container {
+  box-shadow: none;
+  border-color: transparent;
+  padding: 0;
   grid-area: breadcrumb-container;
-  padding-bottom: calc(var(--app-spacing) / 2);
+  margin-bottom: 14px
 }
 
 /*--TITLE-CONTAINER--*/

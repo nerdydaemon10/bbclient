@@ -83,3 +83,9 @@
     word-break: break-word;
     line-height: 1.2;
 }
+
+.breadcrumb {
+    --bs-breadcrumb-margin-bottom: 0;
+    box-shadow: none;
+    border: none;
+}

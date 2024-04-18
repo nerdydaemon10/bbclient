@@ -5,16 +5,10 @@ const OrdersStyle = createGlobalStyle`
   grid-template-columns: 1fr;
   grid-template-rows: max-content max-content 1fr max-content;
   grid-template-areas: 
-    "breadcrumb-container"
+    "title-container"
     "filtering-container"
     "table-container"
     "pagination-container";
-}
-
-/* --BREADCRUMB-CONTAINER-- */
-.breadcrumb-container {
-  grid-area: breadcrumb-container;
-  padding-bottom: calc(var(--app-spacing) / 2);
 }
 
 /* --TITLE-CONTAINER-- */

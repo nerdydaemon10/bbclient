@@ -8,6 +8,8 @@ import "./ui/assets/css/bootstrap.min.css"
 import "./ui/assets/css/index.css"
 import "./ui/assets/css/bootstrap.min.custom.css"
 import "./ui/assets/css/components/components.css"
+import "./ui/assets/js/popper.min.js"
+import "./ui/assets/js/bootstrap.min.js"
 
 import App from "./App.jsx"
 import { IconContext } from "react-icons"

@@ -9,30 +9,19 @@ function OrdersView() {
     <OrdersProvider>
       <OrdersStyle />
       <DashboardMain>
-        <BreadcrumbContainer />
+        <TitleContainer />
         <OrdersTable />
       </DashboardMain>
     </OrdersProvider>
   )
 }
 
-function BreadcrumbContainer() {
+function TitleContainer() {
   return (
-    <ol className="app-breadcrumb breadcrumb-container">
-      <li className="app-breadcrumb-item">
-        <span className="app-breadcrumb-item-icon">
-          <BiGridAlt className="me-1" />
-        </span>
-        <a href="#">
-          POS System
-        </a>
-      </li>
-      <li className="app-breadcrumb-item is-active">
-        <a href="#">  
-          Orders
-        </a>
-      </li>
-    </ol>
+    <div className="title-container">
+      <h3 className="mb-0">Orders</h3>
+      <p className="mb-0">Please add some description...</p>
+    </div>
   )
 }
 

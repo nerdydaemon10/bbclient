@@ -1,37 +1,42 @@
-import { BiCalculator, BiChart, BiGroup } from "react-icons/bi";
-import { BiCabinet } from "react-icons/bi"
+import { BiCart, BiCoffee, BiHome, BiSolidCart, BiSolidCoffee, BiSolidHome, BiSolidStore, BiSolidUser, BiStore, BiUser } from "react-icons/bi";
 
-export const DashboardSidebarItems = [
+export const sidebarItems = [
   {
-    id: 1,
+    route: "/",
+    label: "Home Dashboard",
+    icon: { active: <BiSolidHome />, inactive: <BiHome />},
+    hasCounter: false
+  },
+  {
     route: "/home",
     label: "POS System",
-    icon: <BiCalculator size={20} />
+    icon: { active: <BiSolidStore />, inactive: <BiStore />},
+    hasCounter: false
   },
   {
-    id: 2,
     route: "/home/inventory",
     label: "Inventory",
-    icon: <BiCabinet size={20} />
+    icon: { active: <BiSolidCoffee />, inactive: <BiCoffee />},
+    hasCounter: true
   },
   {
-    id: 3,
     route: "/home/orders",
     label: "Orders",
-    icon: <BiChart size={20} />
+    icon: { active: <BiSolidCart />, inactive: <BiCart />},
+    hasCounter: true
   },
   {
-    id: 4,
     route: "/home/customers",
     label: "Customers",
-    icon: <BiGroup size={20} />
+    icon: { active: <BiSolidUser />, inactive: <BiUser />},
+    hasCounter: true
   },
 ]
 
-export function isSelected(route, currentRoute) {
-  const lastIndex = currentRoute.lastIndexOf("/")
-  const isLastIndex = (lastIndex === currentRoute.length - 1) && (lastIndex !== 0)
-  const formattedRoute = isLastIndex ? currentRoute.substring(0, lastIndex) : currentRoute
+export function compareRoute(route, current) {
+  const lastIndex = current.lastIndexOf("/")
+  const isLastIndex = (lastIndex === current.length - 1) && (lastIndex !== 0)
+  const formattedRoute = isLastIndex ? current.substring(0, lastIndex) : current
 
-  return formattedRoute === route ? "btn-dark" : "btn-secondary"
+  return formattedRoute === route
 }

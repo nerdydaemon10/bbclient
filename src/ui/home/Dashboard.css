@@ -1,5 +1,5 @@
 :root {
-    --dashboard-sidebar-min-width: 265px;
+    --dashboard-sidebar-min-width: 275px;
     --dashboard-sidebar-top-height: 55px;
     --dashboard-sidebar-padding: 8px;
     --dashboard-sidebar-spacing: 8px;
@@ -7,69 +7,119 @@
 
 /* --DASHBOARD-- */
 .dashboard {
-    display: grid;
-    grid-template-columns: var(--dashboard-sidebar-min-width) 1fr;
-    grid-template-rows: var(--dashboard-sidebar-top-height) 1fr;
-    grid-template-areas:
-        "sidebar navbar"
-        "sidebar main";
-    height: 100vh;
+  display: grid;
+  grid-template-columns: var(--dashboard-sidebar-min-width) 1fr;
+  grid-template-rows: var(--dashboard-sidebar-top-height) 1fr;
+  grid-template-areas:
+      "sidebar navbar"
+      "sidebar main";
+  height: 100vh;
 }
 
 /* --DASHBOARD-SIDEBAR-- */
 .dashboard-sidebar {
-    grid-area: sidebar;
-    border-right: 1px solid var(--app-border-color);
+  grid-area: sidebar;
+  display: grid;
+  grid-template-rows: max-content 1fr max-content;
+  grid-template-areas: 
+    "sidebar-header"
+    "sidebar-body"
+    "sidebar-footer";
+  border-right: 1px solid var(--app-border-color);
 }
 
 .dashboard-sidebar-header {
-    border: 1px solid var(--app-border-color);
-    height: var(--dashboard-sidebar-top-height);
+  height: var(--dashboard-sidebar-top-height);
+  display: flex;
+  grid-area: "sidebar-header";
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--app-padding);
+  border-bottom: 1px solid var(--app-border-color);
+  padding: 0 var(--app-padding);
 }
 
 .dashboard-sidebar-body {
-    padding: var(--dashboard-sidebar-padding);
+  grid-area: "sidebar-body";
+  padding: 0 var(--app-padding);
 }
 
 .dashboard-sidebar-body-items {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.dashboard-sidebar-body-items li.dashboard-sidebar-body-item {
-    margin-bottom: var(--dashboard-sidebar-spacing);
+.dashboard-sidebar-body-item {
+  margin-bottom: var(--app-spacing);
 }
 
-.dashboard-sidebar-body-items .dashboard-sidebar-body-item-btn {
-    text-align: left;
-    justify-content: start;
+.dashboard-sidebar-body-item-btn {
+  position: relative;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500 !important;
 }
 
-.dashboard-sidebar-body-items span.dashboard-sidebar-body-item-icon {
-    margin-right: var(--dashboard-sidebar-spacing);
+.dashboard-sidebar-body-item-icon {
+  margin-right: var(--dashboard-sidebar-spacing);
+  position: relative;
+  top: -0.040em;
+  font-size: 1.2em;
+  line-height: 1;
 }
-
-.dashboard-sidebar-body-items span.dashboard-sidebar-body-item-size {
-    float: right;
+.dashboard-sidebar-body-item-count {
+  position: absolute;
+  top: 50%;
+  right: var(--app-padding);
+  transform: translateY(-50%);
+  font-size: .75em;
+  font-weight: 600;
+  line-height: 1;
 }
-
-/* --DASHBOARD-NAVBAR-- */
+.dashboard-sidebar-footer {
+  grid-area: "sidebar-footer";
+  border-top: 1px solid var(--app-border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--app-padding);
+}
+.dashboard-sidebar-footer-name {
+  color: var(--app-main-color);
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1;
+}
+.dashboard-sidebar-footer-role {
+  color: var(--bs-gray-600);
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0;
+}
+.dashboard-sidebar-footer-sign-out-btn {
+  position: relative;
+  font-size: 28px;
+  top: -0.1em;
+  color: var(--bs-gray-500);
+  text-decoration: none;
+  line-height: 1;
+}
+.dashboard-sidebar-footer-sign-out-btn:hover {
+  color: var(--app-main-color);
+}
+/*--DASHBOARD-NAVBAR--*/
 .dashboard-navbar {
-    grid-area: "navbar";
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    border-bottom: 1px solid var(--app-border-color);
-    padding: 0 var(--dashboard-sidebar-padding);
+  grid-area: "navbar";
 }
 
-/* --DASHBOARD-MAIN-- */
+/*--DASHBOARD-MAIN--*/
 .dashboard-main {
-    grid-area: main;
-    display: grid;
-    row-gap: var(--app-spacing);
-    column-gap: var(--app-spacing);
-    padding: var(--app-padding);
-    overflow: hidden;
+  grid-area: main;
+  display: grid;
+  row-gap: var(--app-spacing);
+  column-gap: var(--app-spacing);
+  padding: var(--app-padding);
+  overflow: hidden;
 }

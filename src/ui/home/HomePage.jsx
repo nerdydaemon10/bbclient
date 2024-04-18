@@ -14,6 +14,7 @@ function HomePage() {
   return (
     <Dashboard>
       <Routes>
+      
         <Route exact path="/" element={<PosView />} />
         <Route path="/inventory" element={<InventoryView />} />
         <Route path="/orders" element={<OrdersView />} />

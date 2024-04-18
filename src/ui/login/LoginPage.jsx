@@ -81,7 +81,7 @@ function LoginView() {
           />
           <FormPasswordTextField
             label="Password"
-            name="password"
+            name="password" 
             placeholder="Password"
             value={credentials.password}
             feedback={findErrorByName(loginResponse.error, "password")}

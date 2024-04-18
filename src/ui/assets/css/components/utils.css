@@ -3,6 +3,31 @@
     border: 1px solid var(--app-border-color);
 }
 
+.app-txt-primary {
+  color: var(--app-main-color);
+  font-weight: 500;
+}
+
+.app-txt-h1 {
+  line-height: 1;
+}
+
+.app-bm {
+  border: 1px solid var(--app-border-color);
+}
+.app-br {
+  border-right: 1px solid var(--app-border-color);
+}
+.app-p {
+  padding: var(--app-padding);
+}
+.app-px {
+  padding: 0 var(--app-padding);
+}
+.app-py {
+  padding: var(--app-padding) 0;
+}
+
 /* -- P -- */
 .app-p-4 {
     padding: 4px;

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux"
 import CustomersTable from "./CustomersTable.jsx"
 import ProductsTable from "./ProductsTable.jsx"
 import { isProducts } from "./Util.jsx"
+import { BiGridAlt } from "react-icons/bi"
 
 function PosView() {
   const { table } = useSelector((state) => state.pos)
