@@ -82,7 +82,7 @@ function DashboardSidebar() {
           </div>
         </div>
         <Link 
-          to="/home/sign-out"
+          to="/sign-out"
           className="dashboard-sidebar-footer-sign-out-btn"
         >
           <BiLogIn />
