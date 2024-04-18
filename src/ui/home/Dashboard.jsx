@@ -2,7 +2,9 @@ import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { SlOptionsVertical } from "react-icons/sl"
 import { compareRoute, sidebarItems } from "./Util.jsx"
-import { BiDownload, BiLogIn, BiLogInCircle, BiLogOut, BiSolidCoffeeBean, BiSolidDownload, BiSolidHome, BiSpreadsheet } from "react-icons/bi"
+import { BiDownload, BiLogIn, BiLogInCircle, BiLogOut, BiShield, BiShieldQuarter, BiSolidCoffeeBean, BiSolidDownload, BiSolidHome, BiSpreadsheet } from "react-icons/bi"
+import { useSelector } from "react-redux"
+import Role from "../../utils/classes/Role.jsx"
 
 function Dashboard({children}) {
   return (
@@ -30,6 +32,7 @@ function DashboardNavbar() {
 }
 function DashboardSidebar() {
   const location = useLocation()
+  const { user } = useSelector((state) => state.auth)
   const [route, setRoute] = useState(location.pathname)
 
   const handleClick = (route) => {
@@ -67,11 +70,16 @@ function DashboardSidebar() {
         </ul>
       </div>
       <div className="dashboard-sidebar-footer">
-        <div>
-          <p className="dashboard-sidebar-footer-name">Keanno Manuel R. Regino</p>
-          <p className="dashboard-sidebar-footer-role">
-            Employee
-          </p>
+        <div className="dashboard-sidebar-footer-side">
+          <div className="dashboard-sidebar-footer-icon">
+            <BiShieldQuarter />
+          </div>
+          <div>
+            <p className="dashboard-sidebar-footer-name">{user.full_name}</p>
+            <p className="dashboard-sidebar-footer-role">
+              {Role.toRole(user.role_id)}
+            </p>
+          </div>
         </div>
         <Link 
           to="/home/sign-out"

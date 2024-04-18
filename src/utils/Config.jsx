@@ -31,3 +31,7 @@ export const orderStatuses = [
   { id: 2, name: "Approved" },
   { id: 3, name: "Rejected" }
 ]
+export const roles = [
+  { id: 1, name: "Admin" },
+  { id: 2, name: "Employee" }
+]
