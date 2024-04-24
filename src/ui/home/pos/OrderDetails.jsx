@@ -4,13 +4,13 @@ import { computeSum, hasIncompleteDetails, tabs } from "./Util.jsx"
 import CheckoutList from "./CheckoutList.jsx"
 import CustomerDetails from "./CustomerDetails.jsx"
 import { useDispatch, useSelector } from "react-redux"
-import StringHelper from "../../../utils/helpers/StringHelper.jsx"
-import { createOrder, resetStates, setTab } from "../../redux/posSlice.jsx"
+import StringHelper from "../../../util/helpers/StringHelper.js"
+import { createOrder, resetStates, setTab } from "../../redux/posSlice.js"
 import { useContext, useEffect } from "react"
 import { enqueueSnackbar } from "notistack"
-import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
+import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { PosContext } from "./PosProvider.jsx"
-import { DELAY_MILLIS } from "../../../utils/Config.jsx"
+import { DELAY_MILLIS } from "../../../util/Config.jsx"
 
 function OrderDetails() {
   const dispatch = useDispatch()

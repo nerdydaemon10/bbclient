@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components"
 
 const LoginStyle = createGlobalStyle`
 .login-wrapper {
@@ -8,9 +8,7 @@ const LoginStyle = createGlobalStyle`
   align-items: center;
   justify-content: center;
 }
-.login-form {
-  width: 23%;
-}
+.login-form { width: 23%; }
 `
 
 export default LoginStyle

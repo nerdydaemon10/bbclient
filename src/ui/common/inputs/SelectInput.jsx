@@ -1,16 +1,21 @@
-import StringHelper from "../../../utils/helpers/StringHelper.jsx"
+import { isUndefined } from "lodash"
+import React from "react"
 
-function SelectInput({name, options, defaultOption, disabled, value, onChange}) {
+function SelectInput({name, options, isDisabled, isAllCategoriesEnabled, value, onChange, onRender}) {
   return (
     <select 
       className="form-select" 
       name={name}
-      disabled={disabled}
+      disabled={isDisabled}
       value={value}
       onChange={onChange}
     >
-      {StringHelper.notEmpty(defaultOption) && <option value={""}>-- All Categories --</option>}
-      {options.map((item, index) => <option key={index} value={item.id}>{item.name}</option>)}
+      {isAllCategoriesEnabled && (<option value="">--All-Categories--</option>)}
+      {options.map((option, index) => (
+        <option key={index} value={option}>
+          {isUndefined(onRender) ? option : onRender(option)}
+        </option>
+      ))}
     </select>
   )
 }

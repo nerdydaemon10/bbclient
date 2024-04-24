@@ -1,6 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
-import store from "./ui/redux/store.jsx"
+import store from "./ui/redux/store.js"
 import { Provider } from "react-redux"
 import { BrowserRouter } from "react-router-dom"
 
@@ -11,7 +11,7 @@ import "./ui/assets/css/components/components.css"
 import "./ui/assets/js/popper.min.js"
 import "./ui/assets/js/bootstrap.min.js"
 
-import App from "./App.jsx"
+import App from "./ui/App.jsx"
 import { IconContext } from "react-icons"
 import { SnackbarProvider } from "notistack"
 

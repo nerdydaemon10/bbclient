@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 
-import UiHelper from "../../../utils/helpers/UiHelper.jsx"
+import UiHelper from "../../../util/helpers/UiHelper.jsx"
 import { PrimaryButton, SecondaryButton } from "../buttons"
 
 function FormModal({title, isLoading, isOpen, onClose, onConfirm, children}) {

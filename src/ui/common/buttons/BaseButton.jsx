@@ -30,7 +30,7 @@ function BaseButton({
 function LoadingIcon() {
   return (
     <span className="app-button-icon">
-      <box-icon name="loader" animation="spin" color="#fff"></box-icon>
+      <box-icon name="loader" animation="spin"></box-icon>
     </span>
   )
 }

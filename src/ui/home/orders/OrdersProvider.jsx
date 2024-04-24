@@ -8,7 +8,7 @@ const VITE_DELAY = import.meta.env.VITE_DELAY
 const OrdersContext = createContext()
 
 function OrdersProvider({children}) {
-  const { searchQuery } = useSelector((state) => state.orders)
+  const { sq } = useSelector((state) => state.orders)
   const [apiResource, setApiResource] = useState({
     isLoading: true,
     data: { data: [], meta: { current_page: 0, last_page: 0 }},
@@ -16,9 +16,9 @@ function OrdersProvider({children}) {
     error: null
   })
   
-  const handleFetchOrdersAsync = () => {
+  const fetchOrders = () => {
     setApiResource({...apiResource, isLoading: true})
-    OrderService.findAll(searchQuery).then((response) => {
+    OrderService.findAll(sq).then((response) => {
       setApiResource({
           isLoading: false,
           data: response,
@@ -34,19 +34,19 @@ function OrdersProvider({children}) {
     })
   }
 
-  const handleSearchOrdersAsync = debounce(() => {
-    handleFetchOrdersAsync()
+  const searchOrders = debounce(() => {
+    fetchOrders()
   }, VITE_DELAY)
 
   useEffect(() => {
-    handleSearchOrdersAsync()
-  }, [searchQuery])
+    fetchOrders()
+  }, [sq])
 
   return (
     <OrdersContext.Provider value={{
       apiResource,
-      handleFetchOrdersAsync, 
-      handleSearchOrdersAsync
+      fetchOrders, 
+      searchOrders
     }}>
       {children}
     </OrdersContext.Provider>

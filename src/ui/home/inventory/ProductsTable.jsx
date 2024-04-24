@@ -1,19 +1,17 @@
 import { useDispatch, useSelector } from "react-redux"
-import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
-import InputSelect from "../../components/inputs/InputSelect.jsx"
+import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { columns, columnsSize } from "./Util.jsx"
-import DateHelper from "../../../utils/helpers/DateHelper.jsx"
-import StringHelper from "../../../utils/helpers/StringHelper.jsx"
-import AppSearchField from "../../components/inputs/AppSearchField.jsx"
-import { productCategories, rowsPerPages } from "../../../utils/Config.jsx"
+import DateHelper from "../../../util/helpers/DateHelper.js"
+import StringHelper from "../../../util/helpers/StringHelper.js"
+import { ProductCategoriesData, productCategories, rowsPerPages } from "../../../util/Config.jsx"
 import { BiPlus } from "react-icons/bi"
-import { isItemsEmpty, isSearchHasEmptyResults } from "../../../utils/Helper.jsx"
-import { PrimaryButton, SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
+import { isItemsEmpty, isSearchResultsEmpty } from "../../../util/helper.jsx"
+import { PrimaryButton, SearchFieldInput, SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
-import ModalType from "../../../utils/classes/ModalType.jsx"
-import ProductCategory from "../../../utils/classes/ProductCategory.jsx"
+import ModalType from "../../../util/classes/ModalType.jsx"
+import ProductCategory from "../../../util/classes/ProductCategory.jsx"
 import { InventoryContext } from "./InventoryProvider.jsx"
-import { resetStates, setProduct, setSearchQuery, toggleModal } from "../../redux/inventorySlice.jsx"
+import { resetStates, setProduct, setSearchQuery, toggleModal } from "../../redux/inventorySlice.js"
 
 const VITE_DELAY = import.meta.VITE_DELAY
 
@@ -76,7 +74,7 @@ function FilteringContainer({name, category, onChange}) {
     <div className="filtering-container">
       <div className="row gx-2">
         <div className="col-6">
-          <AppSearchField
+          <SearchFieldInput
             name="name"
             placeholder="Search by Product..."
             value={name}
@@ -87,9 +85,10 @@ function FilteringContainer({name, category, onChange}) {
           <SelectInput
             name="category_id"
             options={productCategories}
-            defaultOption="-- All Categories --"
+            isAllCategoriesEnabled
             value={category}
             onChange={onChange}
+            onRender={(option) => ProductCategory.toCategory(option)}
           />
         </div>
       </div>
@@ -137,7 +136,7 @@ function TableContainer({isLoading, searchQuery, data, error}) {
               <TDStatus colSpan={columnsSize}>
                 {error.message ? error.message : GenericMessage.PRODUCTS_ERROR}
               </TDStatus>
-            ) : isSearchHasEmptyResults(searchQuery, data) ? (
+            ) : isSearchResultsEmpty(searchQuery, data) ? (
               <TDStatus colSpan={columnsSize}>
                 {GenericMessage.PRODUCTS_NO_MATCH}
               </TDStatus>
@@ -169,7 +168,7 @@ function TDProduct({product, onUpdateClick, onRemoveClick}) {
   const stocks = StringHelper.toStocks(product.quantity)
   const srp = StringHelper.toPesoCurrency(product.srp)
   const memberPrice = StringHelper.toPesoCurrency(product.member_price)
-  const createdBy = StringHelper.truncate(product.employee.full_name)
+  const createdBy = StringHelper.truncate(product.created_by)
   const dateCreated = DateHelper.toIsoStandard(product.created_at)
   const dateModified = DateHelper.toIsoStandard(product.updated_at)
 
@@ -210,12 +209,14 @@ function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onC
     <div className="pagination-container">
       <div className="d-flex align-items-center app-sx-8">
         <label className="app-text-label app-text-nowrap">Rows per page</label>
-        <InputSelect
+        <SelectInput
           name="per_page"
           options={rowsPerPages}
           value={rowsPerPage}
           onChange={onChange}
-        />
+        >
+          {"{{value}} rows"}
+        </SelectInput>
       </div>
       <div className="d-flex align-items-center app-sx-8">
         <label className="app-text-label app-text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>

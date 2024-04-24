@@ -4,7 +4,7 @@ import { useSelector } from "react-redux"
 import { createContext, useEffect, useState } from "react"
 
 import ProductService from "../../../data/services/ProductService.jsx"
-import { DELAY_MILLIS } from "../../../utils/Config.jsx"
+import { DELAY_MILLIS } from "../../../util/Config.jsx"
 
 const InventoryContext = createContext()
 

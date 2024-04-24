@@ -3,13 +3,14 @@ import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { useDispatch, useSelector } from "react-redux"
-import { findErrorByName } from "../../utils/helpers/FormHelper.jsx"
+import { findErrorByName } from "../../util/helpers/FormHelper.jsx"
 import LoginStyle from "./LoginStyle.jsx"
-import FormPasswordTextField from "../components/forms/FormPasswordField.jsx"
-import { FormTextFieldInput, PrimaryButton } from "../common/index.jsx"
-import { login } from "../redux/authSlice.jsx"
-import { findErrorByMessage } from "../../utils/Helper.jsx"
-import StringHelper from "../../utils/helpers/StringHelper.jsx"
+import { FormPasswordFieldInput, FormTextFieldInput, PrimaryButton } from "../common"
+import { login } from "../redux/authSlice.js"
+import { findErrorByMessage } from "../../util/helper.jsx"
+import StringHelper from "../../util/helpers/StringHelper.js"
+import { Role } from "../../util/classes"
+import { local } from "../../util"
 
 function LoginPage() {
   return (
@@ -25,7 +26,8 @@ function LoginView() {
   const navigate = useNavigate()
 
   const { loginResponse } = useSelector((state) => state.auth)  
-  
+  const { isLoading, isSuccess, error } = loginResponse
+
   const [credentials, setCredentials] = useState({
     username: "",
     password: ""
@@ -43,10 +45,19 @@ function LoginView() {
   }, [])
 
   useEffect(() => {
-    if (loginResponse.isSuccess) {
-      navigate("/home")
+    if (!isSuccess) {
+      return
     }
-  }, [loginResponse.isSuccess])
+    const user = local.get("user")
+    if (!user) {
+      return
+    }
+    if (user.role_id == Role.ADMIN) {
+      navigate("/admin")
+    } else {
+      navigate("/employee")
+    }
+  }, [isSuccess])
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
@@ -62,11 +73,11 @@ function LoginView() {
           <h1 className="app-text-title">Login</h1>
           <p className="app-text-title-caption">BARISTA BRO - The Coffee People</p>
           {
-            StringHelper.notEmpty(findErrorByMessage(loginResponse.error)) ? (
+            StringHelper.notEmpty(findErrorByMessage(loginResponse.error)) && (
               <div className="alert alert-dismissible alert-danger">
                 <small>{findErrorByMessage(loginResponse.error)}</small>
               </div>
-            ) : <></>
+            )
           }
         </div>
         <div className="app-sy-12">
@@ -75,20 +86,20 @@ function LoginView() {
             name="username" 
             placeholder="Username"
             value={credentials.username}
-            feedback={findErrorByName(loginResponse.error, "username")}
+            feedback={findErrorByName(error, "username")}
             onChange={handleChange}
             ref={usernameRef}
           />
-          <FormPasswordTextField
+          <FormPasswordFieldInput
             label="Password"
             name="password" 
             placeholder="Password"
             value={credentials.password}
-            feedback={findErrorByName(loginResponse.error, "password")}
+            feedback={findErrorByName(error, "password")}
             onChange={handleChange}
           />
           <PrimaryButton
-            isLoading={loginResponse.isLoading}
+            isLoading={isLoading}
             isFullWidth={true}
             isSubmit={true}
           >

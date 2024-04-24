@@ -1,58 +1,57 @@
 import { useDispatch, useSelector } from "react-redux"
-import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
+import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { columns, columnsSize } from "./Util.jsx"
-import DateHelper from "../../../utils/helpers/DateHelper.jsx"
-import StringHelper from "../../../utils/helpers/StringHelper.jsx"
-import { DELAY_MILLIS, orderStatuses, rowsPerPages } from "../../../utils/Config.jsx"
-import { isItemsEmpty, isSearchHasEmptyResults } from "../../../utils/Helper.jsx"
+import DateHelper from "../../../util/helpers/DateHelper.js"
+import StringHelper from "../../../util/helpers/StringHelper.js"
+import { DELAY_MILLIS, orderStatuses, rowsPerPages } from "../../../util/Config.jsx"
+import { isItemsEmpty, isSearchResultsEmpty } from "../../../util/helper.jsx"
 import { SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
-import ModalType from "../../../utils/classes/ModalType.jsx"
-import { resetStates, setProduct, setSearchQuery, toggleModal } from "../../redux/inventorySlice.jsx"
+import ModalType from "../../../util/classes/ModalType.jsx"
 import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
 import { OrdersContext } from "./OrdersProvider.jsx"
-import OrderStatus from "../../../utils/classes/OrderStatus.jsx"
-import PaymentMethod from "../../../utils/classes/PaymentMethod.jsx"
+import PaymentMethod from "../../../util/classes/PaymentMethod.js"
 import { BiLinkAlt } from "react-icons/bi"
+import OrderStatus from "../../../util/classes/OrderStatus.js"
+import { setSq } from "../../redux/ordersSlice.js"
 
 function OrdersTable() {
   const dispatch = useDispatch()
 
-  const { searchQuery } = useSelector((state) => state.inventory)
-  const { apiResource, handleSearchProductsAsync } = useContext(OrdersContext)
+  const { sq } = useSelector((state) => state.orders)
+  const { apiResource, searchOrders } = useContext(OrdersContext)
   const { data, meta } = apiResource.data
-
+  
   const handleChange = (e) => {
-    dispatch(setSearchQuery({ ...searchQuery, [e.target.name]: e.target.value }))
-    handleSearchProductsAsync.cancel()
+    dispatch(setSq({ ...sq, [e.target.name]: e.target.value }))
+    searchOrders.cancel()
   }
-
   const handlePrevious = () => {
-    let page = searchQuery.page > 1 ? searchQuery.page - 1 : 1
-    dispatch(setSearchQuery({ ...searchQuery, page: page }))
-    handleSearchProductsAsync.cancel()
+    let page = sq.page > 1 ? sq.page - 1 : 1
+    dispatch(setSq({ ...sq, page: page }))
+    searchOrders.cancel()
   }
   const handleNext = () => {
-    let page = searchQuery.page < meta.last_page ? searchQuery.page + 1 : meta.last_page
-    dispatch(setSearchQuery({ ...searchQuery, page: page }))
-    handleSearchProductsAsync.cancel()
+    let page = sq.page < meta.last_page ? sq.page + 1 : meta.last_page
+    dispatch(setSq({ ...sq, page: page }))
+    searchOrders.cancel()
   }
 
   return (
     <>
       <FilteringContainer 
-        name={searchQuery.name}
-        status={searchQuery.status}
+        name={sq.name}
+        status={sq.status}
         onChange={handleChange}
       />
       <TableContainer 
         isLoading={apiResource.isLoading} 
-        searchQuery={searchQuery}
+        sq={sq}
         data={data}
         error={apiResource.error}
       />
       <PaginationContainer
-        rowsPerPage={searchQuery.per_page}
+        rowsPerPage={sq.per_page}
         currentPage={meta.current_page}
         lastPage={meta.last_page}
         isLoading={apiResource.isLoading}
@@ -63,13 +62,7 @@ function OrdersTable() {
     </>
   )
 }
-function FilteringContainer({name, category, onChange}) {
-  const dispatch = useDispatch()
-
-  const handleClick = () => {
-    dispatch(toggleModal({modalType: ModalType.CREATE, open: true}))
-  }
-
+function FilteringContainer({name, status, onChange}) {
   return (
     <div className="filtering-container">
       <div className="row gx-2">
@@ -83,36 +76,19 @@ function FilteringContainer({name, category, onChange}) {
         </div>
         <div className="col-6">
           <SelectInput
-            name="category_id"
+            name="status"
             options={orderStatuses}
-            defaultOption="-- All Statuses --"
-            value={category}
+            isAllCategoriesEnabled
+            value={status}
             onChange={onChange}
+            onRender={(option) => OrderStatus.toStatus(option)}
           />
         </div>
       </div>
     </div>
   )
 }
-function TableContainer({isLoading, searchQuery, data, error}) {
-  const dispatch = useDispatch()
-
-  const handleUpdateClick = (product) => {
-    // reset errors before showing modal
-    dispatch(resetStates())
-    dispatch(setProduct(product))
-    
-    // adding delay to finish the hiding effect of errors
-    setTimeout(() => dispatch(toggleModal({
-      modalType: ModalType.UPDATE, open: true}
-    )), DELAY_MILLIS)
-  }
-
-  const handleRemoveClick = (product) => {
-    dispatch(setProduct(product))
-    dispatch(toggleModal({modalType: ModalType.REMOVE, open: true}))
-  }
-
+function TableContainer({isLoading, sq, data, error}) {
   return (
     <div className="app-table-wrapper table-container">
       <table className="table">
@@ -129,7 +105,7 @@ function TableContainer({isLoading, searchQuery, data, error}) {
               <TDStatus colSpan={columnsSize}>
                 {error.message ? error.message : GenericMessage.PRODUCTS_ERROR}
               </TDStatus>
-            ) : isSearchHasEmptyResults(searchQuery, data) ? (
+            ) : isSearchResultsEmpty(sq, data) ? (
               <TDStatus colSpan={columnsSize}>
                 {GenericMessage.ORDERS_NO_MATCH}
               </TDStatus>
@@ -141,8 +117,6 @@ function TableContainer({isLoading, searchQuery, data, error}) {
               <TDOrder
                 key={index}
                 order={order}
-                onUpdateClick={handleUpdateClick}
-                onRemoveClick={handleRemoveClick}
               />
             )) : (
               <></>
@@ -202,6 +176,7 @@ function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onC
           options={rowsPerPages}
           value={rowsPerPage}
           onChange={onChange}
+          onRender={(option) => `${option} rows`}
         />
       </div>
       <div className="d-flex align-items-center app-sx-8">

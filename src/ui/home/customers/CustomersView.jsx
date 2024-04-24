@@ -1,20 +1,27 @@
-import { BiGridAlt } from "react-icons/bi"
-import { DashboardMain } from "../Dashboard.jsx"
+/* eslint-disable react-hooks/exhaustive-deps */
 import CreateModal from "./CreateModal.jsx"
 import CustomersProvider from "./CustomersProvider.jsx"
 import CustomerStyle from "./CustomersStyle.jsx"
 import CustomersTable from "./CustomersTable.jsx"
 import RemoveModal from "./RemoveModal.jsx"
 import UpdateModal from "./UpdateModal.jsx"
+import { useEffect } from "react"
+import { setBreadcrumb } from "../../redux/dashboardSlice.js"
+import { useDispatch } from "react-redux"
+import { breadcrumbItems } from "./Util.jsx"
 
 function CustomersView() {
+  const dispatch = useDispatch()
+  
+  useEffect(() => {
+    dispatch(setBreadcrumb(breadcrumbItems))
+  }, [])
+  
   return (
     <CustomersProvider>
       <CustomerStyle />
-      <DashboardMain>
-        <TitleContainer />
-        <CustomersTable />
-      </DashboardMain>
+      <TitleContainer />
+      <CustomersTable />
       <CreateModal />
       <UpdateModal />
       <RemoveModal />

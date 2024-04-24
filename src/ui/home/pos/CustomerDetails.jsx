@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux"
-import { setPaymentMethod, toggleTable } from "../../redux/posSlice.jsx"
+import { setPaymentMethod, toggleTable } from "../../redux/posSlice.js"
 import { SecondaryButton, FormOptionInput, FormTextFieldInput } from "../../common"
-import { findErrorByName } from "../../../utils/Helper.jsx"
-import { paymentMethods } from "../../../utils/Config.jsx"
+import { findErrorByName } from "../../../util/helper.jsx"
+import { PaymentMethodsData } from "../../../util/Config.jsx"
 import { isProducts } from "./Util.jsx"
 
 function CustomerDetails() {
@@ -71,7 +71,7 @@ function CustomerForm({customer, paymentMethod, handleChange}) {
       <FormOptionInput
         label="Payment Method"
         name="payment_method"
-        options={paymentMethods}
+        options={PaymentMethodsData}
         feedback={findErrorByName(null, "")}
         value={paymentMethod}
         onChange={handleChange}

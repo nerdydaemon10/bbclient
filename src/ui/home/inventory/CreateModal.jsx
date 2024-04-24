@@ -2,19 +2,19 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useContext, useEffect, useState } from "react"
 
-import { DELAY_MILLIS, productCategories } from "../../../utils/Config.jsx"
-import { findErrorByName } from "../../../utils/helpers/FormHelper.jsx"
-import { createProductAsync, resetStates, toggleModal } from "../../redux/inventorySlice.jsx"
+import { DELAY_MILLIS, ProductCategoriesData } from "../../../util/Config.jsx"
+import { findErrorByName } from "../../../util/helpers/FormHelper.jsx"
+import { createProductAsync, resetStates, toggleModal } from "../../redux/inventorySlice.js"
 import { enqueueSnackbar } from "notistack"
 import { FormModal, FormSelectInput, FormTextFieldInput } from "../../common"
-import ModalType from "../../../utils/classes/ModalType.jsx"
-import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
+import ModalType from "../../../util/classes/ModalType.jsx"
+import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { InventoryContext } from "./InventoryProvider.jsx"
 
 const defaultParam = {
   name: "",
   description: "",
-  category_id: productCategories[0].id,
+  category_id: ProductCategoriesData[0].id,
   quantity: "",
   srp: "",
   member_price: ""
@@ -88,7 +88,7 @@ function CreateModal() {
           <FormSelectInput
             label="Category"
             name="category_id"
-            options={productCategories}
+            options={ProductCategoriesData}
             value={param.category_id}
             feedback={findErrorByName(createApiResource.error, "category_id", "category")}
             onChange={handleChange}

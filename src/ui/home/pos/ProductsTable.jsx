@@ -1,14 +1,13 @@
 import { useDispatch, useSelector } from "react-redux"
-import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
-import InputSelect from "../../components/inputs/InputSelect.jsx"
+import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { isCheckedOut, productCols } from "./Util.jsx"
-import StringHelper from "../../../utils/helpers/StringHelper.jsx"
-import { productCategories, rowsPerPages } from "../../../utils/Config.jsx"
-import { isItemsEmpty, isSearchHasEmptyResults } from "../../../utils/Helper.jsx"
+import StringHelper from "../../../util/helpers/StringHelper.js"
+import { ProductCategoriesData, productCategories, rowsPerPages } from "../../../util/Config.jsx"
+import { isItemsEmpty, isSearchResultsEmpty } from "../../../util/helper.jsx"
 import { PrimaryButton, SearchFieldInput, SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
-import ProductCategory from "../../../utils/classes/ProductCategory.jsx"
-import { addToCheckout, setSearchQuery } from "../../redux/posSlice.jsx"
+import ProductCategory from "../../../util/classes/ProductCategory.jsx"
+import { addToCheckout, setSearchQuery } from "../../redux/posSlice.js"
 import { PosContext } from "./PosProvider.jsx"
 import { size } from "lodash"
 
@@ -77,9 +76,10 @@ function FilteringContainer({name, category, onChange}) {
           <SelectInput
             name="category_id"
             options={productCategories}
-            defaultOption="-- All Categories --"
+            isAllCategoriesEnabled
             value={category}
             onChange={onChange}
+            onRender={(option) => ProductCategory.toCategory(option)}
           />
         </div>
       </div>
@@ -113,7 +113,7 @@ function TableContainer({isLoading, searchQuery, data, error}) {
               <TDStatus colSpan={colSpan}>
                 {error.message ? error.message : GenericMessage.PRODUCTS_ERROR}
               </TDStatus>
-            ) : isSearchHasEmptyResults(searchQuery, data) ? (
+            ) : isSearchResultsEmpty(searchQuery, data) ? (
               <TDStatus colSpan={colSpan}>
                 {GenericMessage.PRODUCTS_NO_MATCH}
               </TDStatus>
@@ -174,11 +174,12 @@ function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onC
     <div className="pagination-container">
       <div className="d-flex align-items-center app-sx-8">
         <label className="app-text-label app-text-nowrap">Rows per page</label>
-        <InputSelect
+        <SelectInput
           name="per_page"
           options={rowsPerPages}
           value={rowsPerPage}
           onChange={onChange}
+          onRender={(option) => `${option} rows`}
         />
       </div>
       <div className="d-flex align-items-center app-sx-8">

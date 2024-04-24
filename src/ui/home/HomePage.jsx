@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useDispatch } from "react-redux"
-import { logout } from "../redux/authSlice.jsx"
+import { logout } from "../redux/authSlice.js"
 import { Route, Routes, useNavigate } from "react-router-dom"
 
 import "./Dashboard.css"
@@ -14,7 +14,6 @@ function HomePage() {
   return (
     <Dashboard>
       <Routes>
-      
         <Route exact path="/" element={<PosView />} />
         <Route path="/inventory" element={<InventoryView />} />
         <Route path="/orders" element={<OrdersView />} />
@@ -23,7 +22,7 @@ function HomePage() {
       </Routes>
     </Dashboard>
   )
-} 
+}
 
 function SignOut() {
   const dispatch = useDispatch()

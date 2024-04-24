@@ -1,13 +1,10 @@
-import client from "../../utils/client.jsx"
+import client from "../../util/client.js"
 
 export default class AuthService {}
 
 AuthService.login = async function(credentials) {
   const response = await client.post("/auth/login", credentials)
+  const { token, user } = response.data
 
-  const authorization = response.headers["authorization"]
-  const accessToken = authorization.split(" ")[1]
-  const user = response.data
-  
-  return { accessToken, user }
+  return { token: token, user: user }
 }

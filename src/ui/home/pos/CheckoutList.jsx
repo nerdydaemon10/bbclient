@@ -1,8 +1,8 @@
 import { computeProduct, hasCheckouts } from "./Util.jsx"
 import { useDispatch } from "react-redux"
-import { decrementQty, incrementQty } from "../../redux/posSlice.jsx"
+import { decrementQty, incrementQty } from "../../redux/posSlice.js"
 import QuantityButton from "./QuantityButton.jsx"
-import StringHelper from "../../../utils/helpers/StringHelper.jsx"
+import StringHelper from "../../../util/helpers/StringHelper.js"
 
 function CheckoutList({checkouts}) {
   const dispatch = useDispatch()

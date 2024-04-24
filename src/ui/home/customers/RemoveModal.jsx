@@ -4,10 +4,10 @@ import { useContext, useEffect } from "react"
 import { FormModal } from "../../common"
 import { CustomersContext } from "./CustomersProvider.jsx"
 import { enqueueSnackbar } from "notistack"
-import { removeCustomerAsync, resetStates, toggleModal } from "../../redux/customersSlice.jsx"
-import ModalType from "../../../utils/classes/ModalType.jsx"
-import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
-import { DELAY_MILLIS } from "../../../utils/Config.jsx"
+import { removeCustomerAsync, resetStates, toggleModal } from "../../redux/customersSlice.js"
+import ModalType from "../../../util/classes/ModalType.jsx"
+import GenericMessage from "../../../util/classes/GenericMessage.js"
+import { DELAY_MILLIS } from "../../../util/Config.jsx"
 
 function RemoveModal() {
   const dispatch = useDispatch()

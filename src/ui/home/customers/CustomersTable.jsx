@@ -1,19 +1,17 @@
 import { useDispatch, useSelector } from "react-redux"
-import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
+import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { columns, columnsSize } from "./Util.jsx"
-import DateHelper from "../../../utils/helpers/DateHelper.jsx"
-import StringHelper from "../../../utils/helpers/StringHelper.jsx"
-import { rowsPerPages } from "../../../utils/Config.jsx"
+import DateHelper from "../../../util/helpers/DateHelper.js"
+import StringHelper from "../../../util/helpers/StringHelper.js"
+import { DELAY_MILLIS, rowsPerPages } from "../../../util/Config.jsx"
 import { BiPlus } from "react-icons/bi"
-import { isItemsEmpty, isSearchHasEmptyResults } from "../../../utils/Helper.jsx"
+import { isItemsEmpty, isSearchResultsEmpty } from "../../../util/helper.jsx"
 import { PrimaryButton, SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
 import { CustomersContext } from "./CustomersProvider.jsx"
-import { resetStates, setCustomer, setSearchQuery, toggleModal } from "../../redux/customersSlice.jsx"
-import ModalType from "../../../utils/classes/ModalType.jsx"
+import { resetStates, setCustomer, setSearchQuery, toggleModal } from "../../redux/customersSlice.js"
+import ModalType from "../../../util/classes/ModalType.jsx"
 import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
-
-const VITE_DELAY = import.meta.VITE_DELAY
 
 function CustomersTable() {
   const dispatch = useDispatch()
@@ -26,7 +24,7 @@ function CustomersTable() {
     dispatch(setSearchQuery({ ...searchQuery, [e.target.name]: e.target.value, page: 1 }))
     handleSearchCustomerAsync.cancel()
   }
-
+  
   const handlePrevious = () => {
     let page = searchQuery.page > 1 ? searchQuery.page - 1 : 1
     dispatch(setSearchQuery({ ...searchQuery, page: page }))
@@ -101,7 +99,7 @@ function TableContainer({isLoading, searchQuery, data, error}) {
     // adding delay to finish the hiding effect of errors
     setTimeout(() => dispatch(toggleModal({
       modalType: ModalType.UPDATE, open: true}
-    )), VITE_DELAY)
+    )), DELAY_MILLIS)
   }
 
   const handleRemoveClick = (customer) => {
@@ -125,7 +123,7 @@ function TableContainer({isLoading, searchQuery, data, error}) {
               <TDStatus colSpan={columnsSize}>
                 {error.message ? error.message : GenericMessage.ITEMS_ERROR.replace("{{items}}", "customers")}
               </TDStatus>
-            ) : isSearchHasEmptyResults(searchQuery, data) ? (
+            ) : isSearchResultsEmpty(searchQuery, data) ? (
               <TDStatus colSpan={columnsSize}>
               {GenericMessage.ITEMS_NO_MATCH.replace("{{items}}", "customers")}
               </TDStatus>
@@ -149,6 +147,7 @@ function TableContainer({isLoading, searchQuery, data, error}) {
     </div>
   )
 }
+
 function TDCustomer({customer, onUpdateClick, onRemoveClick}) {
   const fullName = StringHelper.truncate(customer.full_name)
   const address = StringHelper.truncate(customer.address)
@@ -189,12 +188,14 @@ function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onC
     <div className="pagination-container">
       <div className="d-flex align-items-center app-sx-8">
         <label className="app-text-label app-text-nowrap">Rows per page</label>
-        <SelectInput
+        <SelectInput 
           name="per_page"
           options={rowsPerPages}
           value={rowsPerPage}
           onChange={onChange}
-        />
+        >
+          {"{{value}} rows"}
+        </SelectInput>
       </div>
       <div className="d-flex align-items-center app-sx-8">
         <label className="app-text-label app-text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>

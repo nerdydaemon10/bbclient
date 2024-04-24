@@ -1,15 +1,16 @@
 import { useDispatch, useSelector } from "react-redux"
-import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
+import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { customerCols } from "./Util.jsx"
-import StringHelper from "../../../utils/helpers/StringHelper.jsx"
-import { rowsPerPages } from "../../../utils/Config.jsx"
-import { isItemsEmpty, isSearchHasEmptyResults } from "../../../utils/Helper.jsx"
+import StringHelper from "../../../util/helpers/StringHelper.js"
+import { rowsPerPages } from "../../../util/Config.jsx"
+import { isItemsEmpty, isSearchResultsEmpty } from "../../../util/helper.jsx"
 import { PrimaryButton, SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
-import { setCustomer, setSearchQuery } from "../../redux/posSlice.jsx"
+import { setCustomer, setSearchQuery, unsetCustomer } from "../../redux/posSlice.js"
 import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
 import { size } from "lodash"
 import { PosContext } from "./PosProvider.jsx"
+import BaseButton from "../../common/buttons/BaseButton.jsx"
 
 function CustomersTable() {
   const dispatch = useDispatch()
@@ -83,9 +84,15 @@ function TableContainer({customerId, isLoading, searchQuery, data, error}) {
   const colSpan = size(customerCols)
 
   const handleClick = (customer) => {
-    dispatch(setCustomer(customer))
+    const isSelected = customer.id == customerId
+    
+    if (isSelected) {
+      dispatch(unsetCustomer())
+    } else {
+      dispatch(setCustomer(customer))
+    }
   }
-
+  
   return (
     <div className="app-table-wrapper table-container">
       <table className="table">
@@ -102,7 +109,7 @@ function TableContainer({customerId, isLoading, searchQuery, data, error}) {
               <TDStatus colSpan={colSpan}>
                 {error.message ? error.message : GenericMessage.CUSTOMERS_ERROR}
               </TDStatus>
-            ) : isSearchHasEmptyResults(searchQuery, data) ? (
+            ) : isSearchResultsEmpty(searchQuery, data) ? (
               <TDStatus colSpan={colSpan}>
                 {GenericMessage.CUSTOMERS_NO_MATCH}
               </TDStatus>
@@ -113,8 +120,8 @@ function TableContainer({customerId, isLoading, searchQuery, data, error}) {
             ) : data ? data.map((customer, index) => (
               <TDCustomer
                 key={index}
-                isSelected={customer.id == customerId}
                 customer={customer}
+                isSelected={customer.id == customerId}
                 onClick={() => handleClick(customer)}
               />
             )) : (
@@ -126,12 +133,12 @@ function TableContainer({customerId, isLoading, searchQuery, data, error}) {
     </div>
   )
 }
-function TDCustomer({isSelected, customer, onClick}) {
+function TDCustomer({customer, isSelected, onClick}) {
   const fullName = StringHelper.truncate(customer.full_name)
   const address = StringHelper.truncate(customer.address)
   const phoneNumber = StringHelper.truncate(customer.phone_number)
   const emailAddress = StringHelper.truncate(customer.email_address)
-  
+
   return (
     <tr key={customer.id}>
       <td>{fullName}</td>
@@ -139,13 +146,13 @@ function TDCustomer({isSelected, customer, onClick}) {
       <td>{phoneNumber}</td>
       <td>{emailAddress}</td>
       <td>
-        <PrimaryButton 
+        <BaseButton
+          variant={isSelected ? "btn-secondary" : "btn-dark"}
           size="btn-sm"
-          isDisabled={isSelected}
           onClick={onClick}
         >
-          Choose
-        </PrimaryButton>
+          {isSelected ? "Remove" : "Choose" }
+        </BaseButton>
       </td>
     </tr>
   )

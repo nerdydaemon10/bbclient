@@ -23,12 +23,15 @@ dist-ssr
 *.sln
 *.sw?
 
-#/public
+public
 README.md
 vite.config.jsx
+vite.config.js
+package.json
 package-lock.json
-
-
 .eslintrc.cjs
+index.js
 
 # Custom
+
+index.html

@@ -3,14 +3,14 @@ import { enqueueSnackbar } from "notistack"
 import { useContext, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
-import { DELAY_MILLIS, productCategories } from "../../../utils/Config.jsx"
-import { findErrorByName } from "../../../utils/helpers/FormHelper.jsx"
-import { resetStates, setProduct, toggleModal, updateProductAsync } from "../../redux/inventorySlice.jsx"
+import { DELAY_MILLIS, ProductCategoriesData } from "../../../util/Config.jsx"
+import { findErrorByName } from "../../../util/helpers/FormHelper.jsx"
+import { resetStates, setProduct, toggleModal, updateProductAsync } from "../../redux/inventorySlice.js"
 
 import { FormModal, FormSelectInput, FormTextFieldInput } from "../../common"
 import { InventoryContext } from "./InventoryProvider.jsx"
-import ModalType from "../../../utils/classes/ModalType.jsx"
-import GenericMessage from "../../../utils/classes/GenericMessage.jsx"
+import ModalType from "../../../util/classes/ModalType.jsx"
+import GenericMessage from "../../../util/classes/GenericMessage.js"
 
 function UpdateModal() {
   const dispatch = useDispatch()
@@ -76,7 +76,7 @@ function UpdateModal() {
           <FormSelectInput
             label="Category"
             name="category_id"
-            options={productCategories}
+            options={ProductCategoriesData}
             value={product.category_id}
             feedback={findErrorByName(updateApiResource.error, "category_id", "category")}
             onChange={handleChange}

@@ -2,11 +2,11 @@
 import { createContext, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { debounce } from "lodash"
-import { DELAY_MILLIS } from "../../../utils/Config.jsx"
-import { setFetchResponse } from "../../redux/posSlice.jsx"
+import { DELAY_MILLIS } from "../../../util/Config.jsx"
+import { setFetchResponse } from "../../redux/posSlice.js"
 import CustomerService from "../../../data/services/CustomerService.jsx"
 import ProductService from "../../../data/services/ProductService.jsx"
-import FetchType from "../../../utils/classes/FetchType.jsx"
+import FetchType from "../../../util/classes/FetchType.jsx"
 
 const PosContext = createContext()
 

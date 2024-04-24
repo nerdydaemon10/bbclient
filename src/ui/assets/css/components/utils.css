@@ -12,12 +12,6 @@
   line-height: 1;
 }
 
-.app-bm {
-  border: 1px solid var(--app-border-color);
-}
-.app-br {
-  border-right: 1px solid var(--app-border-color);
-}
 .app-p {
   padding: var(--app-padding);
 }
@@ -85,4 +79,9 @@
 
 [class*="app-sy-"] > *:last-child {
     margin-bottom: 0;
+}
+
+.app-opacity-0 {
+  filter: opacity(0);
+  pointer-events: none;
 }

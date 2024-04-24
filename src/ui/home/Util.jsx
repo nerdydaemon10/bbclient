@@ -1,4 +1,4 @@
-import { BiCart, BiCoffee, BiHome, BiSolidCart, BiSolidCoffee, BiSolidHome, BiSolidStore, BiSolidUser, BiStore, BiUser } from "react-icons/bi";
+import { BiCart, BiCoffee, BiHome, BiSolidCart, BiSolidCoffee, BiSolidHome, BiSolidStore, BiSolidUser, BiStore, BiUser } from "react-icons/bi"
 
 export const sidebarItems = [
   {
@@ -30,7 +30,7 @@ export const sidebarItems = [
     label: "Customers",
     icon: { active: <BiSolidUser />, inactive: <BiUser />},
     hasCounter: true
-  },
+  }
 ]
 
 export function compareRoute(route, current) {

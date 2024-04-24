@@ -1,0 +1,12 @@
+.app-br {
+  border-right: 1px solid var(--app-border-color);
+}
+.app-bm {
+  border-bottom: 1px solid var(--app-border-color);
+}
+.app-bl {
+  border-left: 1px solid var(--app-border-color);
+}
+.app-bt {
+  border-top: 1px solid var(--app-border-color);
+}

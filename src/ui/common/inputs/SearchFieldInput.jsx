@@ -1,10 +1,10 @@
 import { BiSearch } from "react-icons/bi"
 
-function SearchFieldInput({name, placeholder, isDisabled, value, onChange}) {
+function SearchFieldInput({className, name, placeholder, isDisabled, value, onChange}) {
   return (
     <div className="app-input-text-search">
       <input 
-        className={`form-control app-input-text-search-input`}
+        className={`form-control app-input-text-search-input ${className}`}
         type="text" 
         name={name}
         placeholder={placeholder} 

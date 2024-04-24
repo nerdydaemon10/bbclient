@@ -4,7 +4,7 @@ import { SlOptionsVertical } from "react-icons/sl"
 import { compareRoute, sidebarItems } from "./Util.jsx"
 import { BiDownload, BiLogIn, BiLogInCircle, BiLogOut, BiShield, BiShieldQuarter, BiSolidCoffeeBean, BiSolidDownload, BiSolidHome, BiSpreadsheet } from "react-icons/bi"
 import { useSelector } from "react-redux"
-import Role from "../../utils/classes/Role.jsx"
+import Role from "../../util/classes/Role.js"
 
 function Dashboard({children}) {
   return (

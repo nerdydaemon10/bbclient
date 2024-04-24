@@ -1,5 +1,5 @@
-import client from "../../utils/client.jsx"
-import ObjectHelper from "../../utils/helpers/ObjectHelper.jsx"
+import client from "../../util/client.js"
+import ObjectHelper from "../../util/helpers/ObjectHelper.jsx"
 
 export default class CustomerService {}
 
