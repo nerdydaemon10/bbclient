@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { removeProductAsync, resetStates, toggleModal } from "../../redux/inventorySlice.js"
 import { useContext, useEffect } from "react"
 import { enqueueSnackbar } from "notistack"
-import { FormModal } from "../../common/index.jsx"
+import { Modal } from "../../common/index.jsx"
 import { InventoryContext } from "./InventoryProvider.jsx"
 import ModalType from "../../../util/classes/ModalType.jsx"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
@@ -35,17 +35,17 @@ function RemoveModal() {
   }, [removeApiResource.isSuccess])
   
   return (
-    <FormModal  
+    <Modal  
       title="Remove Product"
       isLoading={removeApiResource.isLoading}
       isOpen={isRemoveModalOpen} 
       onClose={handleClose}
       onConfirm={handleConfirm}
     >
-      <p className="app-modal-body-text">
-        Do you want to remove <b>{product.name}</b> from the records?
-      </p>
-    </FormModal>
+      <span className="text-body-secondary fs-7">
+        Do you want to remove <b>&apos;{product.name}&apos;</b> from the records?
+      </span>
+    </Modal>
   )
 }
 

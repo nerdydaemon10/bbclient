@@ -1,0 +1,48 @@
+/*--FONT-SIZE--*/
+.fs-7 {
+  font-size: 0.95rem !important;
+}
+/*--BOX--*/
+.box {
+  width: 1.5rem;
+  aspect-ratio: 1;
+}
+/*--TABLE--*/
+.table {
+  display: table;
+  box-shadow: none;
+  margin: 0;
+}
+.table thead {
+  position: sticky;
+  z-index: 777;
+  top: 0;
+}
+.table th {
+  color: var(--bs-gray-600) !important;
+  font-size: 0.90rem;
+  font-weight: 500 !important;
+  text-transform: none;
+  padding: 8px 12px;
+} 
+.table tbody > tr:hover {
+  background-color: #F9F9FA !important;
+}
+.table td {
+  background-color: transparent;
+  color: #09090B;
+  font-size: 0.90rem;
+  font-weight: 500;
+  vertical-align: middle;
+  padding: 8px 12px;
+}
+.table tbody tr:last-child {
+  border-color: transparent;
+}
+/* --FORM-SELECT-- */
+.form-select.is-valid {
+  background-image: var(--bs-form-select-bg-img, none);
+}
+.form-select.is-invalid {
+  background-image: var(--bs-form-select-bg-img, none);
+}

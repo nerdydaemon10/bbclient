@@ -4,7 +4,7 @@ import TableType from "../../../util/classes/TableType.jsx"
 const productCols = ["Name", "Description", "Category", "Stocks", "Price/SRP", "Action"]
 const customerCols = ["Full Name", "Address", "Phone Number", "Email Address", "Action"]
 
-const tabs = [
+const Tabs = [
   {
     name: "Checkouts",
     icon: <BiPackage className="me-1" size={18} />,
@@ -44,7 +44,7 @@ function hasIncompleteDetails(checkouts, customer) {
 export {
   productCols,
   customerCols,
-  tabs,
+  Tabs,
   hasCheckouts,
   computeProduct,
   computeSum,

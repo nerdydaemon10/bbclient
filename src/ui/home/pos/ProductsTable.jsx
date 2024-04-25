@@ -1,15 +1,15 @@
 import { useDispatch, useSelector } from "react-redux"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
-import { isCheckedOut, productCols } from "./Util.jsx"
+import { Tabs, isCheckedOut, productCols } from "./Util.jsx"
 import StringHelper from "../../../util/helpers/StringHelper.js"
-import { ProductCategoriesData, productCategories, rowsPerPages } from "../../../util/Config.jsx"
+import { productCategories, rowsPerPages } from "../../../util/Config.jsx"
 import { isItemsEmpty, isSearchResultsEmpty } from "../../../util/helper.jsx"
-import { PrimaryButton, SearchFieldInput, SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
+import { Button, SearchFieldInput, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
 import ProductCategory from "../../../util/classes/ProductCategory.jsx"
-import { addToCheckout, setSearchQuery } from "../../redux/posSlice.js"
+import { addToCheckout, setSearchQuery, setTab } from "../../redux/posSlice.js"
 import { PosContext } from "./PosProvider.jsx"
-import { size } from "lodash"
+import { first, size } from "lodash"
 
 function ProductsTable() {
   const dispatch = useDispatch()
@@ -87,18 +87,22 @@ function FilteringContainer({name, category, onChange}) {
   )
 }
 function TableContainer({isLoading, searchQuery, data, error}) {
+  const { tab, checkouts } = useSelector(state => state.pos)
+
   const dispatch = useDispatch()
-
-  const { checkouts } = useSelector(state => state.pos)
-
+  
+  const firstTab = first(Tabs).value
   const colSpan = size(productCols)
 
   const handleClick = (product) => {
     dispatch(addToCheckout(product))
+
+    if (tab != firstTab)
+      dispatch(setTab(firstTab))
   }
 
   return (
-    <div className="app-table-wrapper table-container">
+    <div className="table-wrapper table-container">
       <table className="table">
         <thead>
           <THeaders columns={productCols}/>
@@ -144,36 +148,35 @@ function TDProduct({product, isCheckedOut, onClick}) {
   const category = ProductCategory.toCategory(product.category_id)
   const stocks = StringHelper.toStocks(product.quantity)
   const price = StringHelper.toPesoCurrency(product.srp)
-
+  
   return (
     <tr key={product.id}>
       <td>{name}</td>
       <td>{description}</td>
       <td>
-        <span className="badge bg-light">
+        <span className="badge text-bg-light">
           {category}
         </span>
       </td>
       <td>{stocks}</td>
       <td>{price}</td>
-      <td className="app-sx-8">
-        <PrimaryButton 
-          size="btn-sm"
+      <td>
+        <Button
+          size="sm"
           isDisabled={isCheckedOut}
           onClick={onClick}
         >
           Checkout
-        </PrimaryButton>
+        </Button>
       </td>
     </tr>
   )
 }
-
 function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onChange, onPrevious, onNext}) {
   return (
     <div className="pagination-container">
-      <div className="d-flex align-items-center app-sx-8">
-        <label className="app-text-label app-text-nowrap">Rows per page</label>
+      <div className="d-flex flex-row align-items-center gap-2">
+        <label className="fw-medium fs-7 text-nowrap">Rows per page</label>
         <SelectInput
           name="per_page"
           options={rowsPerPages}
@@ -182,11 +185,23 @@ function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onC
           onRender={(option) => `${option} rows`}
         />
       </div>
-      <div className="d-flex align-items-center app-sx-8">
-        <label className="app-text-label app-text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>
+      <div className="d-flex flex-row align-items-center gap-2">
+        <label className="fw-medium fs-7 text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>
         <div className="btn-group">
-          <SecondaryButton isDisabled={isLoading || currentPage <= 1} onClick={onPrevious}>Prev</SecondaryButton>
-          <SecondaryButton isDisabled={isLoading || currentPage >= lastPage } onClick={onNext}>Next</SecondaryButton>
+          <Button
+            variant="light" 
+            isDisabled={isLoading || currentPage <= 1}
+            onClick={onPrevious}
+          >
+            Prev
+          </Button>
+          <Button 
+            variant="light" 
+            isDisabled={isLoading || currentPage >= lastPage} 
+            onClick={onNext}
+          >
+            Next
+          </Button>
         </div>
       </div>
     </div>

@@ -4,9 +4,9 @@ import { columns, columnsSize } from "./Util.jsx"
 import DateHelper from "../../../util/helpers/DateHelper.js"
 import StringHelper from "../../../util/helpers/StringHelper.js"
 import { DELAY_MILLIS, rowsPerPages } from "../../../util/Config.jsx"
-import { BiPlus } from "react-icons/bi"
+import { BiPlusCircle } from "react-icons/bi"
 import { isItemsEmpty, isSearchResultsEmpty } from "../../../util/helper.jsx"
-import { PrimaryButton, SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
+import { Button, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
 import { CustomersContext } from "./CustomersProvider.jsx"
 import { resetStates, setCustomer, setSearchQuery, toggleModal } from "../../redux/customersSlice.js"
@@ -79,10 +79,10 @@ function FilteringContainer({fullName, onChange}) {
           />
         </div>
         <div className="col-6">
-          <SecondaryButton onClick={handleClick}>
-            <BiPlus className="me-1" />
+          <Button variant="light" onClick={handleClick}>
+            <BiPlusCircle className="me-1" />
             Create Customer
-          </SecondaryButton>
+          </Button>
         </div>
       </div>
     </div>
@@ -108,7 +108,7 @@ function TableContainer({isLoading, searchQuery, data, error}) {
   }
   
   return (
-    <div className="app-table-wrapper table-container">
+    <div className="table-wrapper table-container">
       <table className="table">
         <thead>
           <THeaders columns={columns}/>
@@ -166,19 +166,21 @@ function TDCustomer({customer, onUpdateClick, onRemoveClick}) {
       <td>{createdBy}</td>
       <td>{dateCreated}</td>
       <td>{dateModified}</td>
-      <td className="app-sx-8">
-        <PrimaryButton 
-          size="btn-sm"
+      <td className="hstack gap-1">
+        <Button 
+          variant="dark"
+          size="sm"
           onClick={() => onUpdateClick(customer)}
         >
           Update
-        </PrimaryButton>
-        <SecondaryButton 
-          size="btn-sm"
+        </Button>
+        <Button 
+          variant="light"
+          size="sm"
           onClick={() => onRemoveClick(customer)}
         >
           Remove
-        </SecondaryButton>
+        </Button>
       </td>
     </tr>
   )
@@ -186,22 +188,33 @@ function TDCustomer({customer, onUpdateClick, onRemoveClick}) {
 function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onChange, onPrevious, onNext}) {
   return (
     <div className="pagination-container">
-      <div className="d-flex align-items-center app-sx-8">
-        <label className="app-text-label app-text-nowrap">Rows per page</label>
-        <SelectInput 
+      <div className="d-flex flex-row align-items-center gap-2">
+        <label className="fw-medium fs-7 text-nowrap">Rows per page</label>
+        <SelectInput
           name="per_page"
           options={rowsPerPages}
           value={rowsPerPage}
           onChange={onChange}
-        >
-          {"{{value}} rows"}
-        </SelectInput>
+          onRender={(option) => `${option} rows`}
+        />
       </div>
-      <div className="d-flex align-items-center app-sx-8">
-        <label className="app-text-label app-text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>
+      <div className="d-flex flex-row align-items-center gap-2">
+        <label className="fw-medium fs-7 text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>
         <div className="btn-group">
-          <SecondaryButton isDisabled={isLoading || currentPage <= 1} onClick={onPrevious}>Prev</SecondaryButton>
-          <SecondaryButton isDisabled={isLoading || currentPage >= lastPage } onClick={onNext}>Next</SecondaryButton>
+          <Button
+            variant="light" 
+            isDisabled={isLoading || currentPage <= 1}
+            onClick={onPrevious}
+          >
+            Prev
+          </Button>
+          <Button 
+            variant="light" 
+            isDisabled={isLoading || currentPage >= lastPage} 
+            onClick={onNext}
+          >
+            Next
+          </Button>
         </div>
       </div>
     </div>

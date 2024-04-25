@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
-import { tabs } from "../home/pos/Util.jsx"
+import { Tabs } from "../home/pos/Util.jsx"
 import OrderService from "../../data/services/OrderService.jsx"
 import { PaymentMethodsData, rowsPerPages } from "../../util/Config.jsx"
 import { first } from "lodash"
@@ -69,7 +69,7 @@ const defaultState = {
   paymentMethod: first(PaymentMethodsData).value,
   customer: null,
   table: TableType.PRODUCTS,
-  tab: first(tabs).value,
+  tab: first(Tabs).value,
   checkouts: []
 }
 

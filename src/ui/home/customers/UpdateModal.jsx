@@ -2,7 +2,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { findErrorByName } from "../../../util/helpers/FormHelper.jsx"
 import { useContext, useEffect } from "react"
-import { FormModal, FormTextFieldInput } from "../../common"
+import { FormModal, FormTextFieldInput, Modal, TextFieldInput } from "../../common"
 import { CustomersContext } from "./CustomersProvider.jsx"
 import { enqueueSnackbar } from "notistack"
 import { resetStates, setCustomer, toggleModal, updateCustomerAsync } from "../../redux/customersSlice.js"
@@ -41,7 +41,7 @@ function UpdateModal() {
   }, [updateApiResource.isSuccess])
 
   return (
-    <FormModal  
+    <Modal  
       title="Create Customer"
       isLoading={updateApiResource.isLoading}
       isOpen={isUpdateModalOpen} 
@@ -50,49 +50,49 @@ function UpdateModal() {
     >
       <div className="row mb-2">
         <div className="col-6">
-          <FormTextFieldInput 
-            name="full_name"
+          <TextFieldInput
             label="Full Name"
+            name="full_name"
             placeholder="e.g., Juan Dela Cruz"
-            value={customer.full_name}
             feedback={findErrorByName(updateApiResource.error, "full_name")}
+            value={customer.full_name}
             onChange={handleChange}
           />
         </div>
         <div className="col-6">
-          <FormTextFieldInput 
-            name="address"
+          <TextFieldInput 
             label="Address"
+            name="address"
             placeholder="e.g., Brgy. 143, Quezon City"
-            value={customer.address}
             feedback={findErrorByName(updateApiResource.error, "address")}
+            value={customer.address}
             onChange={handleChange}
           />
         </div>
       </div>
       <div className="row mb-2">
         <div className="col-6">
-          <FormTextFieldInput
+          <TextFieldInput
             label="Phone Number"
             name="phone_number"
             placeholder="e.g., 0945665634943"
-            value={customer.phone_number}
             feedback={findErrorByName(updateApiResource.error, "phone_number")}
+            value={customer.phone_number}
             onChange={handleChange}
           />
         </div>
         <div className="col-6">
-          <FormTextFieldInput 
+          <TextFieldInput 
             label="Email Address"
             name="email_address"
             placeholder="e.g., juandelacruz@gmail.com"
-            value={customer.email_address}
             feedback={findErrorByName(updateApiResource.error, "email_address")}
+            value={customer.email_address}
             onChange={handleChange}
           />
         </div>
       </div>
-    </FormModal>
+    </Modal>
   )
 }
 

@@ -1,4 +1,4 @@
-import { Navigate, Outlet, Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes } from "react-router-dom"
 
 import LoginPage from "./login/LoginPage.jsx"
 import AdminPage from "./admin/AdminPage.jsx"

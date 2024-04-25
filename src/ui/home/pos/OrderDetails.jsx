@@ -1,11 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { OptionInput, PrimaryButton } from "../../common/index.jsx"
-import { computeSum, hasIncompleteDetails, tabs } from "./Util.jsx"
-import CheckoutList from "./CheckoutList.jsx"
+import { Button, CheckoutList, OptionInput, ReceiptList } from "../../common/index.jsx"
+import { Tabs, computeSum, hasIncompleteDetails } from "./Util.jsx"
 import CustomerDetails from "./CustomerDetails.jsx"
 import { useDispatch, useSelector } from "react-redux"
-import StringHelper from "../../../util/helpers/StringHelper.js"
-import { createOrder, resetStates, setTab } from "../../redux/posSlice.js"
+import { createOrder, decrementQty, incrementQty, resetStates, setTab } from "../../redux/posSlice.js"
 import { useContext, useEffect } from "react"
 import { enqueueSnackbar } from "notistack"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
@@ -65,7 +63,7 @@ function TabsContainer({tab, onTabChange}) {
     <div className="tabs-container">
       <OptionInput
         name="tab"
-        options={tabs}
+        options={Tabs}
         value={tab}
         onChange={(value) => onTabChange(value)}
       />
@@ -74,13 +72,30 @@ function TabsContainer({tab, onTabChange}) {
 }
 
 function TabContainer({tab, checkouts, customer}) {
+  const dispatch = useDispatch()
+
+  const handleDecrement = (id) => {
+    dispatch(decrementQty(id))
+  }
+  const handleIncrement = (id) => {
+    dispatch(incrementQty(id))
+  }
+
   return (
-    <div className={`tab-container ${tab}`}>
+    <div className={`tab-container border rounded ${tab}`}>
       {
         tab === "is-checkouts" ? (
           <>
-            <CheckoutList checkouts={checkouts} />
-            <CheckoutDetails checkouts={checkouts} />
+            <CheckoutList
+              className="checkout-list" 
+              checkouts={checkouts} 
+              onDecrement={handleDecrement} 
+              onIncrement={handleIncrement}
+            />
+            <ReceiptList 
+              className="receipt-list" 
+              receipts={[{name: "Total", value: computeSum(checkouts)}]
+            } />
           </>
         ) : tab === "is-customer" ? (
           <CustomerDetails 
@@ -92,30 +107,17 @@ function TabContainer({tab, checkouts, customer}) {
   )
 }
 
-function CheckoutDetails({checkouts}) {  
-  const total = StringHelper.toPesoCurrency(computeSum(checkouts))
-
-  return (
-    <div className="checkout-details">
-      <div className="checkout-details-item">
-        <h6 className="checkout-details-item-name">Total</h6>
-        <p className="checkout-details-item-value">{total}</p>
-      </div>
-    </div>
-  )
-}
-
 function PlaceOrderButton({isLoading, checkouts, customer, onClick}) {
   return (
     <div className="place-order-btn-container">
-      <PrimaryButton 
+      <Button
         isLoading={isLoading}
         isFullWidth={true}
         isDisabled={hasIncompleteDetails(checkouts, customer)}
         onClick={onClick}
-      > 
+      >
         Place Order
-      </PrimaryButton>
+      </Button>
     </div>
   )
 }

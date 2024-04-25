@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 
 import ProductService from "../../data/services/ProductService.jsx"
-import { ProductCategoriesData, rowsPerPages } from "../../util/Config.jsx"
+import { ProductCategoriesData, productCategories, rowsPerPages } from "../../util/Config.jsx"
 import ModalType from "../../util/classes/ModalType.jsx"
+import { first } from "lodash"
 
 const createProductAsync = createAsyncThunk(
   "inventory/createProductAsync", 
@@ -31,6 +32,7 @@ const updateProductAsync = createAsyncThunk(
         const response = await ProductService.update(product)
         return response
     } catch (error) {
+      console.log(error)
       return thunkAPI.rejectWithValue(error.response.data)
     }
 })
@@ -40,7 +42,7 @@ const defaultState = {
   isUpdateModalOpen: false,
   isRemoveModalOpen: false,
   searchQuery: { name: "", category_id: "", per_page: rowsPerPages[0].id, page: 1 },
-  product: { name: "", description: "", category_id: ProductCategoriesData[0].id, quantity: "", srp: "", member_price: "" },
+  product: { name: "", description: "", category_id: first(productCategories), quantity: "", srp: "", member_price: "" },
   createApiResource: { isLoading: false, isSuccess: false, data: null, error: null},
   updateApiResource: { isLoading: false, isSuccess: false, data: null, error: null},
   removeApiResource: { isLoading: false, isSuccess: false, data: null, error: null}

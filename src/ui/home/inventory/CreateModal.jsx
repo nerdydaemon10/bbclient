@@ -2,19 +2,21 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useContext, useEffect, useState } from "react"
 
-import { DELAY_MILLIS, ProductCategoriesData } from "../../../util/Config.jsx"
+import { DELAY_MILLIS, productCategories } from "../../../util/Config.jsx"
 import { findErrorByName } from "../../../util/helpers/FormHelper.jsx"
 import { createProductAsync, resetStates, toggleModal } from "../../redux/inventorySlice.js"
 import { enqueueSnackbar } from "notistack"
-import { FormModal, FormSelectInput, FormTextFieldInput } from "../../common"
+import { Modal, SelectInput, TextFieldInput } from "../../common"
 import ModalType from "../../../util/classes/ModalType.jsx"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { InventoryContext } from "./InventoryProvider.jsx"
+import ProductCategory from "../../../util/classes/ProductCategory.jsx"
+import { first } from "lodash"
 
 const defaultParam = {
   name: "",
   description: "",
-  category_id: ProductCategoriesData[0].id,
+  category_id: first(productCategories),
   quantity: "",
   srp: "",
   member_price: ""
@@ -54,7 +56,7 @@ function CreateModal() {
   }, [createApiResource.isSuccess])
   
   return (
-    <FormModal 
+    <Modal 
       title="Create Product"
       isLoading={createApiResource.isLoading}
       isOpen={isCreateModalOpen} 
@@ -63,71 +65,72 @@ function CreateModal() {
     >
       <div className="row mb-2">
         <div className="col-6">
-          <FormTextFieldInput
+          <TextFieldInput
             label="Name"
             name="name"
             placeholder="e.g., Coffee Power"
-            value={param.name}
             feedback={findErrorByName(createApiResource.error, "name")}
+            value={param.name}
             onChange={handleChange}
           />
         </div>
         <div className="col-6">
-          <FormTextFieldInput 
+          <TextFieldInput 
             label="Description"
             name="description"
             placeholder="e.g., 100 grams, with free spoon"
-            value={param.description}
             feedback={findErrorByName(createApiResource.error, "description")}
+            value={param.description}
             onChange={handleChange}
           />
         </div>
       </div>
       <div className="row mb-2">
         <div className="col-6">
-          <FormSelectInput
+          <SelectInput
             label="Category"
             name="category_id"
-            options={ProductCategoriesData}
-            value={param.category_id}
+            options={productCategories}
             feedback={findErrorByName(createApiResource.error, "category_id", "category")}
+            value={param.category_id}
             onChange={handleChange}
+            onRender={(option) => ProductCategory.toCategory(option)}
           />
         </div>
         <div className="col-6">
-          <FormTextFieldInput 
+          <TextFieldInput 
             label="Quantity"
             name="quantity"
             placeholder="e.g., 75"
-            value={param.quantity}
             feedback={findErrorByName(createApiResource.error,"quantity")}
+            value={param.quantity}
             onChange={handleChange}
             />
         </div>
       </div>
       <div className="row mb-2">
         <div className="col-6">
-          <FormTextFieldInput 
-            name="srp"
+          <TextFieldInput 
             label="SRP"
+            name="srp"
             placeholder="e.g., 80.00"
-            value={param.srp}
             feedback={findErrorByName(createApiResource.error, "srp")}
+            value={param.srp}
             onChange={handleChange}
           />
         </div>
         <div className="col-6">
-          <FormTextFieldInput
-            label="Member Price" 
+          <TextFieldInput
+            label="Member Price"
             name="member_price"
             placeholder="e.g., 90.00"
-            value={param.member_price}
             feedback={findErrorByName(createApiResource.error, "member_price")}
+            value={param.member_price}
             onChange={handleChange}
           />
         </div>
       </div>
-    </FormModal>
+    </Modal>
   )
 }
 

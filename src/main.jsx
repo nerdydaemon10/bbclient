@@ -4,12 +4,12 @@ import store from "./ui/redux/store.js"
 import { Provider } from "react-redux"
 import { BrowserRouter } from "react-router-dom"
 
-import "./ui/assets/css/bootstrap.min.css"
-import "./ui/assets/css/index.css"
-import "./ui/assets/css/bootstrap.min.custom.css"
-import "./ui/assets/css/components/components.css"
-import "./ui/assets/js/popper.min.js"
-import "./ui/assets/js/bootstrap.min.js"
+import './ui/assets/index.css'
+import "./ui/assets/vendor/bootstrap-5.3.3/css/bootstrap.css"
+import "./ui/assets/vendor/popperjs-2.11.8/popper.min.js"
+import "./ui/assets/vendor/bootstrap-5.3.3/js/bootstrap.js"
+import './ui/assets/custom.css'
+import './ui/assets/app.css'
 
 import App from "./ui/App.jsx"
 import { IconContext } from "react-icons"
@@ -19,7 +19,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <IconContext.Provider value={{ className: "react-icons" }}>
+        <IconContext.Provider value={{ className: "react-icon" }}>
           <SnackbarProvider
             anchorOrigin={{
               vertical: "bottom",

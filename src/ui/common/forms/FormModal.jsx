@@ -9,15 +9,18 @@ function FormModal({title, isLoading, isOpen, onClose, onConfirm, children}) {
   }, [isOpen])
 
   return (
-    <div className={`app-modal-container ${UiHelper.isOpen(isOpen)}`}>
-      <form className="app-modal" onSubmit={onConfirm}>
-        <div className="app-modal-header">
+    <div className={`x-modal-container ${UiHelper.isOpen(isOpen)}`}>
+      <form 
+        className="x-modal" 
+        onSubmit={onConfirm}
+      >
+        <div className="x-modal-header">
           <h6 className="mb-0">{title}</h6>
         </div>
-        <div className="app-modal-body">
+        <div className="x-modal-body">
           {children}
         </div>
-        <div className="app-modal-footer">
+        <div className="x-modal-footer">
           <SecondaryButton 
             onClick={onClose}
           >

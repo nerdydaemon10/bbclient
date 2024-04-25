@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import { useContext, useEffect } from "react"
-import { FormModal } from "../../common"
+import { FormModal, Modal } from "../../common"
 import { CustomersContext } from "./CustomersProvider.jsx"
 import { enqueueSnackbar } from "notistack"
 import { removeCustomerAsync, resetStates, toggleModal } from "../../redux/customersSlice.js"
@@ -35,17 +35,17 @@ function RemoveModal() {
   }, [removeApiResource.isSuccess])
 
   return (
-    <FormModal  
+    <Modal  
       title="Remove Customer"
       isLoading={removeApiResource.isLoading}
       isOpen={isRemoveModalOpen} 
       onClose={handleClose}
       onConfirm={handleConfirm}
     >
-      <p className="app-modal-body-text">
-        Do you want to remove <b>{customer.full_name}</b> from the records?
-      </p>
-    </FormModal>
+      <span className="text-body-secondary fs-7">
+        Do you want to remove <b>&apos;{customer.full_name}&apos;</b> from the records?
+      </span>
+    </Modal>
   )
 }
 

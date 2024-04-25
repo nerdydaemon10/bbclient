@@ -1,4 +1,5 @@
 import "boxicons"
+import { BiLoader, BiLoaderAlt } from "react-icons/bi"
 
 function BaseButton({
   variant, size="btn-md", isLoading=false, 
@@ -20,7 +21,7 @@ function BaseButton({
       disabled={isDisabled || isLoading}
       onClick={isDisabled ? undefined : onClick}
     >
-      {isLoading ? (<LoadingIcon />) : (<></>)}
+      {isLoading && <LoadingIcon />}
       <span className="app-button-text">
         {children}
       </span>
@@ -30,7 +31,7 @@ function BaseButton({
 function LoadingIcon() {
   return (
     <span className="app-button-icon">
-      <box-icon name="loader" animation="spin"></box-icon>
+      <BiLoaderAlt size={20} className="react-icons-spin" />
     </span>
   )
 }

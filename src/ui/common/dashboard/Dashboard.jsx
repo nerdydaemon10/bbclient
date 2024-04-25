@@ -3,9 +3,7 @@ import { Link, useLocation } from "react-router-dom"
 import { 
 	BiDownload,
 	BiLogIn, BiShieldQuarter, 
-	BiSolidCoffeeBean, BiSolidHome, 
-	BiSpreadsheet,
-	BiUpload
+	BiSolidCoffeeBean, BiSolidHome
 } from "react-icons/bi"
 
 import "./Dashboard.css"
@@ -14,6 +12,7 @@ import local from "../../../util/local.js"
 import Role from "../../../util/classes/Role.js"
 import SecondaryButton from "../buttons/SecondaryButton.jsx"
 import { exportToExcel } from "../../redux/salesSlice.js"
+import { Flex, LinkButton } from "../index"
 
 function Dashboard({sidebarItems, breadcrumbItems, children}) {
 	return (
@@ -41,15 +40,21 @@ function DashboardSidebar({items}) {
 	}, [location.pathname])
 
 	return (
-		<div className="dashboard-sidebar d-grid app-br">
-			<div className="dashboard-sidebar-header d-flex align-items-center justify-content-center gap-2 app-bm">
+		<div className="dashboard-sidebar d-grid border-end">
+			<Flex 
+				className="dashboard-sidebar-header border-bottom" 
+				direction="row"
+				justifyContent="center"
+				alignItems="center"
+				gap="2"
+			>
 				<span className="badge bg-dark">
 					<BiSolidCoffeeBean size={16} />
 				</span>
-				<h5 className="mb-0">BARISTA BRO.</h5>
-			</div>
+				<span className="mb-0 fs-4 fw-bold">BARISTA BRO.</span>
+			</Flex>
 			<div className="dashboard-sidebar-body p-2">
-				<ul className="app-ls-none d-flex flex-column gap-2 m-0 p-0">
+				<ul className="list-unstyled d-flex flex-column gap-2 m-0 p-0">
 				{
 					items.map((item, index) => (
 						<SidebarItem 
@@ -63,46 +68,46 @@ function DashboardSidebar({items}) {
 				}
 				</ul>
 			</div>
-			<div className="dashboard-sidebar-footer d-flex flex-column gap-2 p-2">
+			<div className="dashboard-sidebar-footer d-flex flex-column gap-2 p-2 border-top">
         <div className="d-flex align-items-center gap-2">
 					<div className="dashboard-sidebar-role-icon">
 						<BiShieldQuarter />
 					</div>
 					<div>
-						<p className="app-txt-primary app-txt-fs-14 app-txt-fw-500 app-txt-lh-1 mb-1">{user.full_name}</p>
-						<p className="app-txt-secondary app-txt-fs-14 app-txt-fw-500 app-txt-lh-1 mb-0">{Role.toRole(user.role_id)}</p>
+						<p className="text-body-primary fw-medium mb-0">{user.full_name}</p>
+						<p className="text-body-secondary fs-7 mb-0 lh-1">{Role.toRole(user.role_id)}</p>
 					</div>
         </div>
-				<Link 
+				<LinkButton
+					variant="outline-dark"
 					to="sign-out"
-					className="btn btn-sm btn-block btn-outline-dark"
 				>
 					<BiLogIn className="me-1"/>
 					Sign Out
-				</Link>
+				</LinkButton>
       </div>
 		</div>
 	)
 }
 
 function SidebarItem({item, isSelected, onClick}) {
-	const variant = isSelected ? 'btn-dark' : 'btn-secondary'
+	const variant = isSelected ? 'dark' : 'light'
 	const icon = isSelected ? item.icon.active : item.icon.inactive
 
 	return (
 		<li>
-			<Link
-				role="button"
-				className={`btn btn-block app-relative app-txt-left app-txt-fs-14 app-txt-fw-500 ${variant}`}
-				to={item.route} 
+			<LinkButton
+				to={item.route}
+				variant={variant}
+				isFullWidth={true}
 				onClick={onClick}
 			>
-				<span className="dashboard-sidebar-list-item-icon">
+				<div className="d-flex flex-row align-items-center justify-content-start fs-7 fw-medium gap-1">
 					{icon}
-				</span>
-				{item.label}	
-				{item.hasCounter && (<p className="dashboard-sidebar-list-item-count-txt">99+</p>)}
-			</Link>
+					{item.label}
+					{item.hasCounter && (<span className={`badge rounded-pill text-bg-${isSelected ? "light" : "dark"} ms-auto`}>99+</span>)}
+				</div>
+			</LinkButton>
 		</li>
 	)
 }
@@ -116,11 +121,11 @@ function DashboardNavbar() {
 	}
 
 	return (
-    <div className="dashboard-navbar d-flex align-items-center justify-content-between p-2 app-bm">
-      <ol className="app-breadcrumb">
+    <div className="dashboard-navbar d-flex flex-row align-items-center justify-content-between p-2 border-bottom">
+      <ol className="breadcrumb m-0 p-0">
 				<Link 
 					to=""
-					className="app-breadcrumb-item"
+					className="breadcrumb-item"
 				>
           <span className="app-breadcrumb-item-icon">
             <BiSolidHome className="me-1" />
@@ -129,7 +134,7 @@ function DashboardNavbar() {
 				</Link>
 				{
 					breadcrumbItems.map((item, index) => (
-						<Link key={index} to={item.route} className="app-breadcrumb-item">{item.name}</Link>
+						<Link key={index} to={item.route} className="breadcrumb-item">{item.name}</Link>
 					))
 				}
       </ol>
@@ -146,7 +151,7 @@ function DashboardNavbar() {
 
 function DashboardMain({children}) {
 	return (
-		<div className="dashboard-main p-2">
+		<div className="dashboard-main p-2 gap-2">
 			{children}
 		</div>
 	)

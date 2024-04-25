@@ -7,6 +7,7 @@ import SalesTable from "./SalesTable.jsx"
 import { useDispatch } from "react-redux"
 import { setBreadcrumb } from "../redux/dashboardSlice.js"
 import TotalContainer from "./TotalContainer.jsx"
+import { ReceiptList } from "../common/index.jsx"
 
 function SalesView() {
   const dispatch = useDispatch()
@@ -23,16 +24,21 @@ function SalesView() {
       <TitleContainer />
       <SalesTable />
       <FilteringContainer />
-      <TotalContainer />
+      <ReceiptList 
+        receipts={[
+          { name: "Commission", value: 50},
+          { name: "Total", value: 50},
+        ]}
+      />
     </SalesProvider>  
   )
 }
 
 function TitleContainer() {
-  return (
+   return (
     <div className="title-container">
-      <h3 className="mb-0">Sales Report</h3>
-      <p className="mb-0">Please add some descriptions...</p>
+      <h3 className="text-body-primary fw-bold mb-0">Sales Report</h3>
+      <p className="text-body-secondary fw-normal mb-0">Please add some descriptions...</p>
     </div>
   )
 }

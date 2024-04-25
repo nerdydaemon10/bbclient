@@ -33,3 +33,10 @@ package-lock.json
 index.js
 
 # Custom
+
+src/ui/common/checkoutlist
+src/ui/common/buttons
+src/ui/common/modal
+src/ui/common/receipt
+src/ui/common/TableUtils.jsx
+src/ui/common/dashboard

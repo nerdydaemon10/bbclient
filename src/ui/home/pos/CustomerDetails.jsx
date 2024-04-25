@@ -1,9 +1,10 @@
 import { useDispatch, useSelector } from "react-redux"
 import { setPaymentMethod, toggleTable } from "../../redux/posSlice.js"
-import { SecondaryButton, FormOptionInput, FormTextFieldInput } from "../../common"
+import { Button, FormOptionInput, FormTextFieldInput, OptionInput, TextFieldInput } from "../../common"
 import { findErrorByName } from "../../../util/helper.jsx"
 import { PaymentMethodsData } from "../../../util/Config.jsx"
 import { isProducts } from "./Util.jsx"
+import { BiHide, BiShow, BiSolidHandUp, BiSolidHide, BiUser } from "react-icons/bi"
 
 function CustomerDetails() {
   const { table, customer, paymentMethod } = useSelector((state) => state.pos)
@@ -17,86 +18,110 @@ function CustomerDetails() {
   const handleClick = () => {
     dispatch(toggleTable())
   }
-  
+
   return (
-    <div className={`customer-details ${customer ? "app-sy-12" : "is-empty"}`}>
+    <div className={`customer-details p-2`}>
       {
         customer ? (
           <CustomerForm 
+            table={table}
             customer={customer} 
             paymentMethod={paymentMethod}
-            handleChange={handleChange}
+            onClick={handleClick}
+            onChange={handleChange}
           />
         ) : (
-          <CustomerEmpty /> 
+          <CustomerEmpty table={table} onClick={handleClick} /> 
         )
       }
-      <ChooseButton table={table} onClick={handleClick} />
     </div>
   )
 }
 
-function CustomerForm({customer, paymentMethod, handleChange}) {
+function CustomerForm({table, customer, paymentMethod, onChange, onClick}) {
   return (
-    <div className="tab-order-info app-sy-12">
-      <FormTextFieldInput
+    <div className="d-flex flex-column gap-2">
+      <TextFieldInput 
         label="Full Name"
         placeholder="Full Name..."
-        value={customer.full_name}
         isReadOnly={true}
-        feedback={findErrorByName(null, "")}
+        value={customer.full_name}
       />
-      <FormTextFieldInput
+      <TextFieldInput
         label="Phone number"
         placeholder="Phone Number..."
-        value={customer.phone_number}
         isReadOnly={true}
-        feedback={findErrorByName(null, "")}
+        value={customer.phone_number}
       />
-      <FormTextFieldInput
+      <TextFieldInput
         label="Email Address"
         placeholder="Email Address..."
-        value={customer.phone_number}
         isReadOnly={true}
-        feedback={findErrorByName(null, "")}
+        value={customer.phone_number}
       />
-      <FormTextFieldInput
+      <TextFieldInput
         label="Address"
         name="address" 
         placeholder="Address..."
-        value={customer.address}
         isReadOnly={true}
-        feedback={findErrorByName(null, "")}
+        value={customer.address}
       />
-      <FormOptionInput
+      <OptionInput
         label="Payment Method"
         name="payment_method"
-        options={PaymentMethodsData}
-        feedback={findErrorByName(null, "")}
+        options={PaymentMethodsData}  
         value={paymentMethod}
-        onChange={handleChange}
+        onChange={onChange}
       />
-      <hr />
+      <hr className="my-2" />
+      <ChooseButton table={table} onClick={onClick} />
     </div>
   )
 }
-function CustomerEmpty() {
+function CustomerEmpty({table, onClick}) {
   return (
-    <div>
-      <h6 className="mb-0">No Customer</h6>
-      <p>Press &apos;choose&apos; to select a customer.</p>
+    <div className="w-100 h-100 d-flex align-items-center justify-content-center">
+      <div className="text-center">
+        <h6 className="text-body-primary mb-0">No Customer.</h6>
+        <p className="text-body-secondary fs-7">
+          {
+            isProducts(table) ? (
+              <>
+                Press <em>&apos;Show Customers&apos;</em> to switch table.
+              </>
+            ) : (
+              <>
+                Press <em>&apos;choose&apos;</em> to select a customer.
+              </>
+            )
+          }
+        </p>
+        <ChooseButton table={table} onClick={onClick} />
+      </div>
     </div>
   )
 }
-
 function ChooseButton({table, onClick}) {
   return (
-    <SecondaryButton 
-      isFullWidth={true}
+    <Button
+      variant="outline-dark"
+      isFullWidth={false}
       onClick={onClick}
     >
-      { isProducts(table) ? "Choose Customer" : "Cancel Customer" }
-    </SecondaryButton>
+    { 
+      isProducts(table) ? (
+        <>
+          <BiShow className="me-1" />
+          Show Customers
+        </>
+      ) : (
+        <>
+          <BiHide className="me-1" />
+          Hide Customers
+        </>
+      )
+    }
+    </Button>
   )
 }
 

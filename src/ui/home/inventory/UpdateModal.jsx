@@ -3,14 +3,15 @@ import { enqueueSnackbar } from "notistack"
 import { useContext, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
-import { DELAY_MILLIS, ProductCategoriesData } from "../../../util/Config.jsx"
+import { DELAY_MILLIS, productCategories } from "../../../util/Config.jsx"
 import { findErrorByName } from "../../../util/helpers/FormHelper.jsx"
 import { resetStates, setProduct, toggleModal, updateProductAsync } from "../../redux/inventorySlice.js"
 
-import { FormModal, FormSelectInput, FormTextFieldInput } from "../../common"
+import { Modal, SelectInput, TextFieldInput } from "../../common"
 import { InventoryContext } from "./InventoryProvider.jsx"
 import ModalType from "../../../util/classes/ModalType.jsx"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
+import ProductCategory from "../../../util/classes/ProductCategory.jsx"
 
 function UpdateModal() {
   const dispatch = useDispatch()
@@ -42,7 +43,7 @@ function UpdateModal() {
   }, [updateApiResource.isSuccess])
   
   return (
-    <FormModal 
+    <Modal 
       title="Update Product"
       isLoading={updateApiResource.isLoading}
       isOpen={isUpdateModalOpen} 
@@ -51,71 +52,72 @@ function UpdateModal() {
     >
       <div className="row mb-2">
         <div className="col-6">
-          <FormTextFieldInput 
+          <TextFieldInput 
             label="Name"
             name="name"
             placeholder="e.g., Coffee Power"
-            value={product.name}
             feedback={findErrorByName(updateApiResource.error, "name")}
+            value={product.name}
             onChange={handleChange}
           />
         </div>
         <div className="col-6">
-          <FormTextFieldInput 
+          <TextFieldInput 
             label="Description"
             name="description"
             placeholder="e.g., 100 grams, with free spoon"
-            value={product.description}
             feedback={findErrorByName(updateApiResource.error, "description")}
+            value={product.description}
             onChange={handleChange}
           />
         </div>
       </div>
       <div className="row mb-2">
         <div className="col-6">
-          <FormSelectInput
+          <SelectInput
             label="Category"
             name="category_id"
-            options={ProductCategoriesData}
-            value={product.category_id}
+            options={productCategories}
             feedback={findErrorByName(updateApiResource.error, "category_id", "category")}
+            value={product.category_id}
             onChange={handleChange}
+            onRender={(option) => ProductCategory.toCategory(option)}
           />
         </div>
         <div className="col-6">
-          <FormTextFieldInput 
-              label="Quantity"
-              name="quantity"
-              placeholder="e.g., 75"
-              value={product.quantity}
-              feedback={findErrorByName(updateApiResource.error, "quantity")}
-              onChange={handleChange}
-            />
+          <TextFieldInput 
+            label="Quantity"
+            name="quantity"
+            placeholder="e.g., 75"
+            feedback={findErrorByName(updateApiResource.error, "quantity")}
+            value={product.quantity}
+            onChange={handleChange}
+          />
         </div>
       </div>
       <div className="row mb-2">
         <div className="col-6">
-          <FormTextFieldInput 
+          <TextFieldInput 
             label="SRP"
             name="srp"
             placeholder="e.g., 80.00"
-            value={product.srp}
             feedback={findErrorByName(updateApiResource.error, "srp")}
+            value={product.srp}
             onChange={handleChange}
           />
         </div>
         <div className="col-6">
-          <FormTextFieldInput 
+          <TextFieldInput 
             label="Member Price"
             name="member_price"
             placeholder="e.g., 90.00"
-            value={product.member_price}
             feedback={findErrorByName(updateApiResource.error, "member_price")}
+            value={product.member_price}
             onChange={handleChange}
           />
         </div>
       </div>
-    </FormModal>
+    </Modal>
   )
 }
 

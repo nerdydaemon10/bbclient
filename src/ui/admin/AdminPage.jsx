@@ -9,12 +9,13 @@ import { useDispatch } from "react-redux"
 import { useEffect } from "react"
 import { logout } from "../redux/authSlice.js"
 import SalesView from "../sales/SalesView.jsx"
+import HomeView from "../hom/HomeView.jsx"
 
 function AdminPage() {
 	return (
 		<Dashboard sidebarItems={SidebarItems}>
 			<Routes>
-        <Route exact path="/" element={<h1>hello</h1>} />
+        <Route exact path="/" element={<HomeView />} />
 				<Route path="pos" element={<PosView />} />
         <Route path="sales" element={<SalesView />} />
         <Route path="inventory" element={<InventoryView />} />

@@ -8,7 +8,7 @@ const SalesStyle = createGlobalStyle`
     "title-container title-container"
     "table-container filtering-container"
     "table-container filtering-container"
-    "pagination-container total-container";
+    "pagination-container receipt-list";
 }
 
 .title-container {
@@ -27,31 +27,8 @@ const SalesStyle = createGlobalStyle`
   align-items: center;
   justify-content: space-between;
 }
-.total-container {
-  grid-area: total-container;
-  border: 1px dashed var(--app-main-color);
-  border-radius: var(--bs-border-radius);
-  background-color: #F9FAFA;
-}
-.total-item {
-  font-size: 1rem;
-  border-bottom: 1px dashed var(--app-main-color);
-}
-.total-item:last-child {
-  border-bottom: none;
-}
-.total-item-name {
-  color: var(--app-main-color);
-  font-size: inherit;
-  font-weight: 400;
-  margin: 0;
-  line-height: 1;
-}
-.total-item-value {
-  font-size: inherit;
-  font-weight: inherit;
-  margin: 0;
-  line-height: 1;
+.receipt-list {
+  grid-area: receipt-list;
 }
 `
 

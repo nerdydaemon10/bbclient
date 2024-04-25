@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { findErrorByName } from "../../util/helpers/FormHelper.jsx"
 import LoginStyle from "./LoginStyle.jsx"
-import { FormPasswordFieldInput, FormTextFieldInput, PrimaryButton } from "../common"
+import { Button, FormPasswordFieldInput, FormTextFieldInput, PrimaryButton } from "../common"
 import { login } from "../redux/authSlice.js"
 import { findErrorByMessage } from "../../util/helper.jsx"
 import StringHelper from "../../util/helpers/StringHelper.js"
@@ -65,22 +65,20 @@ function LoginView() {
 
   return (
     <div className="login-wrapper">
-      <form 
-        className="login-form app-sy-16" 
-        onSubmit={handleSubmit}
+      <form  className="login-form d-flex flex-column gap-2" onSubmit={handleSubmit}
       > 
         <div>
-          <h1 className="app-text-title">Login</h1>
-          <p className="app-text-title-caption">BARISTA BRO - The Coffee People</p>
+          <h1 className="text-body-primary fs-2 fw-semibold mb-1">Login</h1>
+          <p className="text-body-secondary fs-6 mb-2">BARISTA BRO - The Coffee People</p>
           {
             StringHelper.notEmpty(findErrorByMessage(loginResponse.error)) && (
-              <div className="alert alert-dismissible alert-danger">
+              <div className="alert alert-danger mb-1">
                 <small>{findErrorByMessage(loginResponse.error)}</small>
               </div>
             )
           }
         </div>
-        <div className="app-sy-12">
+        <div className="d-flex flex-column gap-3">
           <FormTextFieldInput
             label="Username"
             name="username" 
@@ -98,16 +96,16 @@ function LoginView() {
             feedback={findErrorByName(error, "password")}
             onChange={handleChange}
           />
-          <PrimaryButton
+          <Button
             isLoading={isLoading}
             isFullWidth={true}
             isSubmit={true}
           >
             Login
-          </PrimaryButton>
+          </Button>
         </div>
         <div className="text-center">
-          <p className="app-text-footer">&copy; Diamond Tech I.T. Solutions</p>
+          <p className="text-muted fs-6">&copy; Diamond Tech I.T. Solutions</p>
         </div>
       </form>
     </div>

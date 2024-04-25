@@ -25,8 +25,8 @@ function OrdersView() {
 function TitleContainer() {
   return (
     <div className="title-container">
-      <h3 className="mb-0">Orders</h3>
-      <p className="mb-0">Please add some description...</p>
+      <h3 className="text-body-primary fw-bold mb-0">Orders</h3>
+      <p className="text-body-secondary mb-0">Please add some descriptions...</p>
     </div>
   )
 }

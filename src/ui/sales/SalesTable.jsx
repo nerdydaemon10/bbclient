@@ -1,7 +1,7 @@
 import "boxicons"
 import { BiLinkAlt } from "react-icons/bi"
 import { GenericMessage } from "../../util/classes"
-import { SecondaryButton, SelectInput, TDStatus, THeaders } from "../common"
+import { Button, SecondaryButton, SelectInput, TDStatus, THeaders } from "../common"
 import { columns } from "./Util.jsx"
 import { isSearchResultsEmpty } from "../../util/helper.jsx"
 import { isEmpty, size } from "lodash"
@@ -63,7 +63,7 @@ function TableContainer({isLoading, sq, data, error}) {
   const colSpan = size(columns)
 
   return (
-    <div className="table-container app-table-wrapper">
+    <div className="table-wrapper table-container">
       <table className="table">
         <thead>
           <THeaders columns={columns} />
@@ -128,7 +128,7 @@ function TDSale({sale}) {
         </span>
       </td>
       <td>
-        <span className="badge bg-light">
+        <span className="badge text-bg-light">
           {paymentMethod}
         </span>
       </td>
@@ -139,12 +139,12 @@ function TDSale({sale}) {
     </tr>
   )
 }
-function PaginationContainer({isLoading, rowsPerPage, currentPage, lastPage, onChange, onPrevious, onNext}) {
+function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onChange, onPrevious, onNext}) {
   return (
     <div className="pagination-container">
-      <div className="d-flex align-items-center app-sx-8">
-        <label className="app-text-label app-text-nowrap">Rows per page</label>
-        <SelectInput 
+      <div className="d-flex flex-row align-items-center gap-2">
+        <label className="fw-medium fs-7 text-nowrap">Rows per page</label>
+        <SelectInput
           name="per_page"
           options={rowsPerPages}
           value={rowsPerPage}
@@ -152,11 +152,23 @@ function PaginationContainer({isLoading, rowsPerPage, currentPage, lastPage, onC
           onRender={(option) => `${option} rows`}
         />
       </div>
-      <div className="d-flex align-items-center app-sx-8">
-        <label className="app-text-label app-text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>
+      <div className="d-flex flex-row align-items-center gap-2">
+        <label className="fw-medium fs-7 text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>
         <div className="btn-group">
-          <SecondaryButton isDisabled={isLoading || currentPage <= 1} onClick={onPrevious}>Prev</SecondaryButton>
-          <SecondaryButton isDisabled={isLoading || currentPage >= lastPage } onClick={onNext}>Next</SecondaryButton>
+          <Button
+            variant="light" 
+            isDisabled={isLoading || currentPage <= 1}
+            onClick={onPrevious}
+          >
+            Prev
+          </Button>
+          <Button 
+            variant="light" 
+            isDisabled={isLoading || currentPage >= lastPage} 
+            onClick={onNext}
+          >
+            Next
+          </Button>
         </div>
       </div>
     </div>

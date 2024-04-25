@@ -5,7 +5,7 @@ import DateHelper from "../../../util/helpers/DateHelper.js"
 import StringHelper from "../../../util/helpers/StringHelper.js"
 import { DELAY_MILLIS, orderStatuses, rowsPerPages } from "../../../util/Config.jsx"
 import { isItemsEmpty, isSearchResultsEmpty } from "../../../util/helper.jsx"
-import { SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
+import { Button, SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
 import ModalType from "../../../util/classes/ModalType.jsx"
 import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
@@ -90,7 +90,7 @@ function FilteringContainer({name, status, onChange}) {
 }
 function TableContainer({isLoading, sq, data, error}) {
   return (
-    <div className="app-table-wrapper table-container">
+    <div className="table-wrapper table-container">
       <table className="table">
         <thead>
           <THeaders columns={columns}/>
@@ -133,7 +133,7 @@ function TDOrder({order}) {
   const customer = StringHelper.truncate(order.customer.full_name)
   const amountDue = StringHelper.toPesoCurrency(Number(order.amount_due))
   const totalItems = StringHelper.toPcs(order.number_of_items)
-  const status = StringHelper.truncate(order.status)
+  const status = OrderStatus.toObject(order.status)
   const paymentMethod = PaymentMethod.toMethod(order.payment_method)
   const creator = StringHelper.truncate(order.employee.full_name)
   const dateCreated = DateHelper.toIsoStandard(order.created_at)
@@ -151,12 +151,13 @@ function TDOrder({order}) {
       <td>{amountDue}</td>
       <td>{totalItems}</td>
       <td>
-        <span className="badge bg-light">
-          {status}
+        <span className={`badge ${status.badge}`}>
+          {status.icon}
+          {status.name}
         </span>
       </td>
       <td>
-        <span className="badge bg-light">
+        <span className="badge text-bg-light">
           {paymentMethod}
         </span>
       </td>
@@ -169,8 +170,8 @@ function TDOrder({order}) {
 function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onChange, onPrevious, onNext}) {
   return (
     <div className="pagination-container">
-      <div className="d-flex align-items-center app-sx-8">
-        <label className="app-text-label app-text-nowrap">Rows per page</label>
+      <div className="d-flex flex-row align-items-center gap-2">
+        <label className="fw-medium fs-7 text-nowrap">Rows per page</label>
         <SelectInput
           name="per_page"
           options={rowsPerPages}
@@ -179,11 +180,23 @@ function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onC
           onRender={(option) => `${option} rows`}
         />
       </div>
-      <div className="d-flex align-items-center app-sx-8">
-        <label className="app-text-label app-text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>
+      <div className="d-flex flex-row align-items-center gap-2">
+        <label className="fw-medium fs-7 text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>
         <div className="btn-group">
-          <SecondaryButton isDisabled={isLoading || currentPage <= 1} onClick={onPrevious}>Prev</SecondaryButton>
-          <SecondaryButton isDisabled={isLoading || currentPage >= lastPage } onClick={onNext}>Next</SecondaryButton>
+          <Button
+            variant="light" 
+            isDisabled={isLoading || currentPage <= 1}
+            onClick={onPrevious}
+          >
+            Prev
+          </Button>
+          <Button 
+            variant="light" 
+            isDisabled={isLoading || currentPage >= lastPage} 
+            onClick={onNext}
+          >
+            Next
+          </Button>
         </div>
       </div>
     </div>

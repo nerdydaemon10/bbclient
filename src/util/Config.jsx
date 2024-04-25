@@ -1,4 +1,4 @@
-import { BiQr, BiWallet } from "react-icons/bi"
+import { BiCheck, BiDotsHorizontal, BiDotsVertical, BiHourglass, BiQr, BiWallet, BiX } from "react-icons/bi"
 
 export const DELAY_MILLIS = 500
 
@@ -23,9 +23,9 @@ export const PaymentMethodsData = [
   }
 ]
 export const OrderStatusesData = [
-  { key: "pending", name: "Pending", badge: "bg-secondary" },
-  { key: "approved", name: "Approved", badge: "bg-success" },
-  { key: "rejected", name: "Rejected", badge: "bg-danger" }
+  { key: "pending", name: "Pending", badge: "text-bg-light", icon: <BiHourglass /> },
+  { key: "approved", name: "Approved", badge: "text-bg-dark", icon: <BiCheck /> },
+  { key: "rejected", name: "Rejected", badge: "text-bg-secondary", icon: <BiX /> }
 ]
 export const RolesData = [
   { id: 1, name: "Admin" },

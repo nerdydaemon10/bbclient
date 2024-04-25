@@ -4,7 +4,7 @@ import { customerCols } from "./Util.jsx"
 import StringHelper from "../../../util/helpers/StringHelper.js"
 import { rowsPerPages } from "../../../util/Config.jsx"
 import { isItemsEmpty, isSearchResultsEmpty } from "../../../util/helper.jsx"
-import { PrimaryButton, SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
+import { Button, PrimaryButton, SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
 import { setCustomer, setSearchQuery, unsetCustomer } from "../../redux/posSlice.js"
 import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
@@ -94,7 +94,7 @@ function TableContainer({customerId, isLoading, searchQuery, data, error}) {
   }
   
   return (
-    <div className="app-table-wrapper table-container">
+    <div className="table-wrapper table-container">
       <table className="table">
         <thead>
           <THeaders columns={customerCols}/>
@@ -146,13 +146,13 @@ function TDCustomer({customer, isSelected, onClick}) {
       <td>{phoneNumber}</td>
       <td>{emailAddress}</td>
       <td>
-        <BaseButton
-          variant={isSelected ? "btn-secondary" : "btn-dark"}
-          size="btn-sm"
+        <Button
+          variant={isSelected ? "outline-dark" : "dark"}
+          size="sm"
           onClick={onClick}
         >
           {isSelected ? "Remove" : "Choose" }
-        </BaseButton>
+        </Button>
       </td>
     </tr>
   )
@@ -160,24 +160,38 @@ function TDCustomer({customer, isSelected, onClick}) {
 function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onChange, onPrevious, onNext}) {
   return (
     <div className="pagination-container">
-      <div className="d-flex align-items-center app-sx-8">
-        <label className="app-text-label app-text-nowrap">Rows per page</label>
+      <div className="d-flex flex-row align-items-center gap-2">
+        <label className="fw-medium fs-7 text-nowrap">Rows per page</label>
         <SelectInput
           name="per_page"
           options={rowsPerPages}
           value={rowsPerPage}
           onChange={onChange}
+          onRender={(option) => `${option} rows`}
         />
       </div>
-      <div className="d-flex align-items-center app-sx-8">
-        <label className="app-text-label app-text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>
+      <div className="d-flex flex-row align-items-center gap-2">
+        <label className="fw-medium fs-7 text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>
         <div className="btn-group">
-          <SecondaryButton isDisabled={isLoading || currentPage <= 1} onClick={onPrevious}>Prev</SecondaryButton>
-          <SecondaryButton isDisabled={isLoading || currentPage >= lastPage } onClick={onNext}>Next</SecondaryButton>
+          <Button
+            variant="light" 
+            isDisabled={isLoading || currentPage <= 1}
+            onClick={onPrevious}
+          >
+            Prev
+          </Button>
+          <Button 
+            variant="light" 
+            isDisabled={isLoading || currentPage >= lastPage} 
+            onClick={onNext}
+          >
+            Next
+          </Button>
         </div>
       </div>
     </div>
   )
 }
+
 
 export default CustomersTable
