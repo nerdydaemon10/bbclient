@@ -20,7 +20,6 @@ const TextFieldInput = forwardRef(function TextFieldInput(props, ref) {
         ref={ref}
         value={value} 
         onChange={onChange}
-        maxLength={11}
       />
       <div className={`${variant}-feedback`}>
         {message}
