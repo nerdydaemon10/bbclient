@@ -69,7 +69,7 @@ const authSlice = createSlice({
 
     .addCase(logout.pending, (state) => {
       state.loginResponse = {
-        isLoading: true,
+        isLoading: false,
         isSuccess: false,
         error: null 
       }
@@ -87,7 +87,7 @@ const authSlice = createSlice({
     .addCase(logout.rejected, (state, action) => {
       state.logoutResponse = {
         isLoading: false,
-        isSuccess: true,
+        isSuccess: false,
         error: action.payload,
       }
     })
