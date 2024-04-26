@@ -85,7 +85,7 @@ function CreateModal() {
           <TextFieldInput
             label="Phone Number"
             name="phone_number"
-            placeholder="e.g., 0945665634943"
+            placeholder="e.g., 09456563494"
             feedback={findErrorByName(createApiResource.error, "phone_number")}
             value={param.phone_number}
             onChange={handleChange}
