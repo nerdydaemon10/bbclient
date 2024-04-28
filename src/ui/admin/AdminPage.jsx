@@ -8,8 +8,8 @@ import CustomersView from "../home/customers/CustomersView.jsx"
 import { useDispatch } from "react-redux"
 import { useEffect } from "react"
 import { logout } from "../redux/authSlice.js"
-import SalesView from "../sales/SalesView.jsx"
-import HomeView from "../hom/HomeView.jsx"
+import SalesView from "../home/sales/SalesView.jsx"
+import HomeView from "../home/default/HomeView.jsx"
 
 function AdminPage() {
 	return (

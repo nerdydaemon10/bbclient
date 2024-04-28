@@ -20,9 +20,9 @@
 }
 .table th {
   color: var(--bs-gray-600) !important;
-  font-size: 0.90rem;
+  font-size: 0.85rem;
   font-weight: 500 !important;
-  text-transform: none;
+  text-transform: uppercase;
   padding: 8px 12px;
 } 
 .table tbody > tr:hover {

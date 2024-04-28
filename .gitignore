@@ -30,7 +30,7 @@ vite.config.js
 package.json
 package-lock.json
 .eslintrc.cjs
-index.js
+#index.js
 
 # Custom
 # src/ui/common/checkoutlist

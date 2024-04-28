@@ -1,10 +1,9 @@
 import { useDispatch, useSelector } from "react-redux"
 import { setPaymentMethod, toggleTable } from "../../redux/posSlice.js"
-import { Button, FormOptionInput, FormTextFieldInput, OptionInput, TextFieldInput } from "../../common"
-import { findErrorByName } from "../../../util/helper.jsx"
+import { Button, OptionInput, TextFieldInput } from "../../common"
 import { PaymentMethodsData } from "../../../util/Config.jsx"
 import { isProducts } from "./Util.jsx"
-import { BiHide, BiShow, BiSolidHandUp, BiSolidHide, BiUser } from "react-icons/bi"
+import { BiHide, BiShow } from "react-icons/bi"
 
 function CustomerDetails() {
   const { table, customer, paymentMethod } = useSelector((state) => state.pos)

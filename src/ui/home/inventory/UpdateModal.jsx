@@ -4,14 +4,13 @@ import { useContext, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
 import { DELAY_MILLIS, productCategories } from "../../../util/Config.jsx"
-import { findErrorByName } from "../../../util/helpers/FormHelper.jsx"
 import { resetStates, setProduct, toggleModal, updateProductAsync } from "../../redux/inventorySlice.js"
-
 import { Modal, SelectInput, TextFieldInput } from "../../common"
 import { InventoryContext } from "./InventoryProvider.jsx"
-import ModalType from "../../../util/classes/ModalType.jsx"
+import ModalType from "../../../util/classes/ModalType.js"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
-import ProductCategory from "../../../util/classes/ProductCategory.jsx"
+import ProductCategory from "../../../util/classes/ProductCategory.js"
+import { findErrorByName } from "../../../util/helper.jsx"
 
 function UpdateModal() {
   const dispatch = useDispatch()

@@ -3,13 +3,13 @@ import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { Tabs, isCheckedOut, productCols } from "./Util.jsx"
 import StringHelper from "../../../util/helpers/StringHelper.js"
 import { productCategories, rowsPerPages } from "../../../util/Config.jsx"
-import { isItemsEmpty, isSearchResultsEmpty } from "../../../util/helper.jsx"
+import { noSearchResults } from "../../../util/helper.jsx"
 import { Button, SearchFieldInput, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
-import ProductCategory from "../../../util/classes/ProductCategory.jsx"
+import ProductCategory from "../../../util/classes/ProductCategory.js"
 import { addToCheckout, setSearchQuery, setTab } from "../../redux/posSlice.js"
 import { PosContext } from "./PosProvider.jsx"
-import { first, size } from "lodash"
+import { first, isEmpty, size } from "lodash"
 
 function ProductsTable() {
   const dispatch = useDispatch()
@@ -117,11 +117,11 @@ function TableContainer({isLoading, searchQuery, data, error}) {
               <TDStatus colSpan={colSpan}>
                 {error.message ? error.message : GenericMessage.PRODUCTS_ERROR}
               </TDStatus>
-            ) : isSearchResultsEmpty(searchQuery, data) ? (
+            ) : noSearchResults(searchQuery, data) ? (
               <TDStatus colSpan={colSpan}>
                 {GenericMessage.PRODUCTS_NO_MATCH}
               </TDStatus>
-            ) : isItemsEmpty(data) ? (
+            ) : isEmpty(data) ? (
               <TDStatus colSpan={colSpan}>
                 {GenericMessage.PRODUCTS_EMPTY}
               </TDStatus>

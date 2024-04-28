@@ -9,10 +9,9 @@ import {
 import "./Dashboard.css"
 import { useDispatch, useSelector } from "react-redux"
 import local from "../../../util/local.js"
-import Role from "../../../util/classes/Role.js"
-import SecondaryButton from "../buttons/SecondaryButton.jsx"
+import { Role } from "../../../util/classes"
 import { exportToExcel } from "../../redux/salesSlice.js"
-import { Flex, LinkButton } from "../index"
+import { Button, Flex, LinkButton } from "../index"
 
 function Dashboard({sidebarItems, breadcrumbItems, children}) {
 	return (
@@ -138,13 +137,13 @@ function DashboardNavbar() {
 					))
 				}
       </ol>
-			<SecondaryButton 
+			<Button
 				isLoading={exportToExcelRes.isLoading}
 				onClick={handleClick}
 			>
 				<BiDownload className="me-1" />
 				Export to Excel
-			</SecondaryButton>
+			</Button>
     </div>
 	)
 }

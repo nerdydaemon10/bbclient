@@ -11,10 +11,15 @@
 :root {
   --font-geist-sans: "Geist-Sans";
   --font-geist-mono: "Geist-Mono";
-  font-size: 15px;
-  user-select: none;
-}
 
+  font-size: 15px;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  user-select: none;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 .react-icon {
   vertical-align: middle;
   position: relative;

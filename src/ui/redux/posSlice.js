@@ -1,11 +1,10 @@
+import { first } from "lodash"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 import { Tabs } from "../home/pos/Util.jsx"
-import OrderService from "../../data/services/OrderService.jsx"
+import { OrderService } from "../../data/services"
 import { PaymentMethodsData, rowsPerPages } from "../../util/Config.jsx"
-import { first } from "lodash"
-import TableType from "../../util/classes/TableType.jsx"
-import FetchType from "../../util/classes/FetchType.jsx"
+import { TableType, FetchType } from "../../util/classes"
 
 const createOrder = createAsyncThunk(
   "pos/createOrder", 
@@ -14,7 +13,6 @@ const createOrder = createAsyncThunk(
     const response = await OrderService.create(order)
     return response
   } catch (error) {
-    console.log(error)
     return thunkAPI.rejectWithValue(error.response.data)
   }
 })
@@ -35,7 +33,7 @@ const defaultState = {
   products: {
     searchQuery: {
       name: "", 
-      category_id: "", 
+      category_id: "",
       per_page: rowsPerPages[0].id, 
       page: 1
     },

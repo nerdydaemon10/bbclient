@@ -5,6 +5,8 @@ import OrdersTable from "./OrdersTable.jsx"
 import { useEffect } from "react"
 import { setBreadcrumb } from "../../redux/dashboardSlice.js"
 import { breadcrumbItems } from "./Util.jsx"
+import ApproveModal from "./ApproveModal.jsx"
+import RejectModal from "./RejectModal.jsx"
 
 function OrdersView() {
   const dispatch = useDispatch()
@@ -18,6 +20,8 @@ function OrdersView() {
       <OrdersStyle />
       <TitleContainer />
       <OrdersTable />
+      <ApproveModal />
+      <RejectModal />
     </OrdersProvider>
   )
 }

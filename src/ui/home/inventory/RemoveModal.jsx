@@ -5,7 +5,7 @@ import { useContext, useEffect } from "react"
 import { enqueueSnackbar } from "notistack"
 import { Modal } from "../../common/index.jsx"
 import { InventoryContext } from "./InventoryProvider.jsx"
-import ModalType from "../../../util/classes/ModalType.jsx"
+import ModalType from "../../../util/classes/ModalType.js"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { DELAY_MILLIS } from "../../../util/Config.jsx"
 

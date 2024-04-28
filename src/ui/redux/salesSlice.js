@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { rowsPerPages } from "../../util/Config.jsx"
+import { buildColResponse, rowsPerPages } from "../../util/Config.jsx"
 import { first } from "lodash"
-import SaleService from "../../data/services/SaleService.js"
+import { SaleService } from "../../data/services"
 
 const exportToExcel = createAsyncThunk(
   "sales/exportToExcel", 
@@ -25,6 +25,9 @@ const defaultState = {
     per_page: first(rowsPerPages), 
     page: 1
   },
+  fetch: {
+    response: buildColResponse()
+  },
   fetchSalesRes: {
     isLoading: false,
     data: [],
@@ -45,6 +48,15 @@ const salesSlice = createSlice({
   reducers: {
     setSq: (state, action) => {
       state.sq = action.payload
+    },
+    setPending: (state) => {
+      state.fetch.response = buildColResponse("pending")
+    },
+    setFulfilled: (state, action) => {
+      state.fetch.response = buildColResponse("fulfilled", action.payload)
+    },
+    setRejected: (state, action) => {
+      state.fetch.response = buildColResponse("rejected", action.payload)
     },
     setResLoading: (state) => {
       state.fetchSalesRes = {
@@ -100,6 +112,9 @@ const salesSlice = createSlice({
 
 export const { 
   setSq,
+  setPending,
+  setFulfilled,
+  setRejected,
   setResLoading,
   setResSuccess,
   setResError

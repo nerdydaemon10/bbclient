@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 
-import ProductService from "../../data/services/ProductService.jsx"
-import { ProductCategoriesData, productCategories, rowsPerPages } from "../../util/Config.jsx"
-import ModalType from "../../util/classes/ModalType.jsx"
+import ProductService from "../../data/services/ProductService.js"
+import { productCategories, rowsPerPages } from "../../util/Config.jsx"
+import ModalType from "../../util/classes/ModalType.js"
 import { first } from "lodash"
 
 const createProductAsync = createAsyncThunk(

@@ -1,42 +1,35 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-import { useDispatch, useSelector } from "react-redux"
-import { findErrorByName } from "../../util/helpers/FormHelper.jsx"
-import LoginStyle from "./LoginStyle.jsx"
-import { Button, FormPasswordFieldInput, FormTextFieldInput, PrimaryButton } from "../common"
+import { TextFieldInput, PasswordFieldInput, Button } from "../common"
 import { login } from "../redux/authSlice.js"
-import { findErrorByMessage } from "../../util/helper.jsx"
-import StringHelper from "../../util/helpers/StringHelper.js"
+import { findErrorByMessage, findErrorByName } from "../../util/helper.jsx"
 import { Role } from "../../util/classes"
 import { local } from "../../util"
+import { isEmpty } from "lodash"
 
 function LoginPage() {
-  return (
-    <>
-      <LoginStyle />
-      <LoginView />
-    </>
-  )
-}
-
-function LoginView() {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-
-  const { loginResponse } = useSelector((state) => state.auth)  
-  const { isLoading, isSuccess, error } = loginResponse
-
   const [credentials, setCredentials] = useState({
     username: "",
     password: ""
   })
+
+  const { loginResponse } = useSelector((state) => state.auth)
+  const { isLoading, isSuccess, error } = loginResponse
   const usernameRef = useRef(null)
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(login(credentials))
+  }
+
+  const handleChange = (e) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value })
   }
 
   // run only once.
@@ -45,41 +38,24 @@ function LoginView() {
   }, [])
 
   useEffect(() => {
-    if (!isSuccess) {
-      return
-    }
-    const user = local.get("user")
-    if (!user) {
-      return
-    }
-    if (user.role_id == Role.ADMIN) {
-      navigate("/admin")
-    } else {
-      navigate("/employee")
+    if (isSuccess) {
+      const user = local.get("user")
+      const _enum = Role.toEnum(user.role_id)
+
+      navigate(`/${_enum}`)
     }
   }, [isSuccess])
 
-  const handleChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value })
-  }
-
   return (
-    <div className="login-wrapper">
-      <form  className="login-form d-flex flex-column gap-2" onSubmit={handleSubmit}
-      > 
+    <div className="w-100 vh-100 d-flex align-items-center justify-content-center">
+      <form className="d-flex flex-column gap-2" onSubmit={handleSubmit}> 
         <div>
           <h1 className="text-body-primary fs-2 fw-semibold mb-1">Login</h1>
-          <p className="text-body-secondary fs-6 mb-2">BARISTA BRO - The Coffee People</p>
-          {
-            StringHelper.notEmpty(findErrorByMessage(loginResponse.error)) && (
-              <div className="alert alert-danger mb-1">
-                <small>{findErrorByMessage(loginResponse.error)}</small>
-              </div>
-            )
-          }
+          <p className="text-body-secondary fs-7 mb-2">BARISTA BRO - The Coffee People</p>
+          <ErrorAlert error={error} />
         </div>
         <div className="d-flex flex-column gap-3">
-          <FormTextFieldInput
+          <TextFieldInput
             label="Username"
             name="username" 
             placeholder="Username"
@@ -88,7 +64,7 @@ function LoginView() {
             onChange={handleChange}
             ref={usernameRef}
           />
-          <FormPasswordFieldInput
+          <PasswordFieldInput
             label="Password"
             name="password" 
             placeholder="Password"
@@ -109,6 +85,16 @@ function LoginView() {
         </div>
       </form>
     </div>
+  )
+}
+
+function ErrorAlert({error}) {
+  return (
+    !isEmpty(findErrorByMessage(error)) && (
+      <div className="alert alert-danger mb-1">
+        <small>{findErrorByMessage(error)}</small>
+      </div>
+    )
   )
 }
 

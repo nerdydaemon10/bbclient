@@ -3,14 +3,13 @@ import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { customerCols } from "./Util.jsx"
 import StringHelper from "../../../util/helpers/StringHelper.js"
 import { rowsPerPages } from "../../../util/Config.jsx"
-import { isItemsEmpty, isSearchResultsEmpty } from "../../../util/helper.jsx"
-import { Button, PrimaryButton, SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
+import { noSearchResults } from "../../../util/helper.jsx"
+import { Button, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
 import { setCustomer, setSearchQuery, unsetCustomer } from "../../redux/posSlice.js"
 import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
-import { size } from "lodash"
+import { isEmpty, size } from "lodash"
 import { PosContext } from "./PosProvider.jsx"
-import BaseButton from "../../common/buttons/BaseButton.jsx"
 
 function CustomersTable() {
   const dispatch = useDispatch()
@@ -109,11 +108,11 @@ function TableContainer({customerId, isLoading, searchQuery, data, error}) {
               <TDStatus colSpan={colSpan}>
                 {error.message ? error.message : GenericMessage.CUSTOMERS_ERROR}
               </TDStatus>
-            ) : isSearchResultsEmpty(searchQuery, data) ? (
+            ) : noSearchResults(searchQuery, data) ? (
               <TDStatus colSpan={colSpan}>
                 {GenericMessage.CUSTOMERS_NO_MATCH}
               </TDStatus>
-            ) : isItemsEmpty(data) ? (
+            ) : isEmpty(data) ? (
               <TDStatus colSpan={colSpan}>
                 {GenericMessage.CUSTOMERS_EMPTY}
               </TDStatus>

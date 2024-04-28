@@ -1,60 +1,61 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import { findErrorByName } from "../../../util/helpers/FormHelper.jsx"
 import { useContext, useEffect, useState } from "react"
 import { Modal, TextFieldInput } from "../../common"
 import { CustomersContext } from "./CustomersProvider.jsx"
 import { enqueueSnackbar } from "notistack"
-import { createCustomerAsync, resetStates, toggleModal } from "../../redux/customersSlice.js"
-import ModalType from "../../../util/classes/ModalType.jsx"
-import GenericMessage from "../../../util/classes/GenericMessage.js"
+import { closeModal, createCustomer, resetStates } from "../../redux/customersSlice.js"
+import { ModalType, GenericMessage } from "../../../util/classes"
 import { DELAY_MILLIS } from "../../../util/Config.jsx"
+import { findErrorByName } from "../../../util/helper.jsx"
+import { delay } from "lodash"
 
-const defaultParam = {
-  full_name: "",
-  address: "",
-  phone_number: "",
-  email_address: ""
+const buildParam = () => {
+  return {
+    full_name: "",
+    address: "",
+    phone_number: "",
+    email_address: ""
+  }
 }
 
 function CreateModal() {
   const dispatch = useDispatch()
-
-  const { isCreateModalOpen, createApiResource } = useSelector((state) => state.customers)
-  const { handleFetchCustomersAsync } = useContext(CustomersContext)
-
-  const [param, setParam] = useState({ ...defaultParam })
+  
+  const { create } = useSelector((state) => state.customers)
+  const { isOpen, response } = create
+  const { fetchCustomers } = useContext(CustomersContext)
+  
+  const [param, setParam] = useState(buildParam())
 
   const handleClose = () => {
-    dispatch(toggleModal({modalType: ModalType.CREATE, open: false}))
+    dispatch(closeModal(ModalType.CREATE))
   }
 
   const handleConfirm = (e) => {
     e.preventDefault()
-    dispatch(createCustomerAsync(param))
+    dispatch(createCustomer(param))
   }
 
   const handleChange = (e) => {
     setParam({ ...param, [e.target.name]: e.target.value })
   }
-  
-  useEffect(() => {
-    if (createApiResource.isSuccess) {
-      dispatch(toggleModal({modalType: ModalType.CREATE, open: false}))
-      enqueueSnackbar(GenericMessage.CUSTOMER_ADDED)
-      handleFetchCustomersAsync()
-      // reset param-state
-      setParam({ ...defaultParam })
-      // reset all redux-action-states including success that trigger snackbar
-      setTimeout(() => dispatch(resetStates()), DELAY_MILLIS)
-    }
-  }, [createApiResource.isSuccess])
 
+  useEffect(() => {
+    if (response.isSuccess) {
+      dispatch(closeModal(ModalType.CREATE))
+      enqueueSnackbar(GenericMessage.CUSTOMER_ADDED)
+      fetchCustomers()
+      setParam(buildParam())
+      delay(() => dispatch(resetStates()), DELAY_MILLIS)
+    }
+  }, [response.isSuccess])
+  
   return (
     <Modal  
       title="Create Customer"
-      isLoading={createApiResource.isLoading}
-      isOpen={isCreateModalOpen} 
+      isLoading={response.isLoading}
+      isOpen={isOpen} 
       onClose={handleClose}
       onConfirm={handleConfirm}
     >
@@ -64,7 +65,7 @@ function CreateModal() {
             label="Full Name"
             name="full_name"
             placeholder="e.g., Juan Dela Cruz"
-            feedback={findErrorByName(createApiResource.error, "full_name")}
+            feedback={findErrorByName(response.error, "full_name")}
             value={param.full_name}
             onChange={handleChange}
           />
@@ -74,7 +75,7 @@ function CreateModal() {
             label="Address"
             name="address"
             placeholder="e.g., Brgy. 143, Quezon City"
-            feedback={findErrorByName(createApiResource.error, "address")}
+            feedback={findErrorByName(response.error, "address")}
             value={param.address}
             onChange={handleChange}
           />
@@ -86,7 +87,7 @@ function CreateModal() {
             label="Phone Number"
             name="phone_number"
             placeholder="e.g., 0945665634943"
-            feedback={findErrorByName(createApiResource.error, "phone_number")}
+            feedback={findErrorByName(response.error, "phone_number")}
             value={param.phone_number}
             onChange={handleChange}
           />
@@ -96,7 +97,7 @@ function CreateModal() {
             label="Email Address"
             name="email_address"
             placeholder="e.g., juandelacruz@gmail.com"
-            feedback={findErrorByName(createApiResource.error, "email_address")}
+            feedback={findErrorByName(response.error, "email_address")}
             value={param.email_address}
             onChange={handleChange}
           />

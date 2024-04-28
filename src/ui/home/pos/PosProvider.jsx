@@ -4,9 +4,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { debounce } from "lodash"
 import { DELAY_MILLIS } from "../../../util/Config.jsx"
 import { setFetchResponse } from "../../redux/posSlice.js"
-import CustomerService from "../../../data/services/CustomerService.jsx"
-import ProductService from "../../../data/services/ProductService.jsx"
-import FetchType from "../../../util/classes/FetchType.jsx"
+import { CustomerService, ProductService } from "../../../data/services"
+import FetchType from "../../../util/classes/FetchType.js"
 
 const PosContext = createContext()
 

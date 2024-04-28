@@ -1,28 +1,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import { findErrorByName } from "../../../util/helpers/FormHelper.jsx"
 import { useContext, useEffect } from "react"
-import { FormModal, FormTextFieldInput, Modal, TextFieldInput } from "../../common"
+import { Modal, TextFieldInput } from "../../common"
 import { CustomersContext } from "./CustomersProvider.jsx"
 import { enqueueSnackbar } from "notistack"
-import { resetStates, setCustomer, toggleModal, updateCustomerAsync } from "../../redux/customersSlice.js"
-import ModalType from "../../../util/classes/ModalType.jsx"
+import { closeModal, resetStates, setCustomer, updateCustomer } from "../../redux/customersSlice.js"
+import ModalType from "../../../util/classes/ModalType.js"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { DELAY_MILLIS } from "../../../util/Config.jsx"
+import { findErrorByName } from "../../../util/helper.jsx"
 
 function UpdateModal() {
   const dispatch = useDispatch()
 
-  const { isUpdateModalOpen, customer, updateApiResource } = useSelector((state) => state.customers)
-  const { handleFetchCustomersAsync } = useContext(CustomersContext)
+  const { customer, update } = useSelector((state) => state.customers)
+  const { isOpen, response } = update
+  const { fetchCustomers } = useContext(CustomersContext)
 
   const handleClose = () => {
-    dispatch(toggleModal({modalType: ModalType.UPDATE, open: false}))
+    dispatch(closeModal(ModalType.UPDATE))
   }
 
   const handleConfirm = (e) => {
     e.preventDefault()
-    dispatch(updateCustomerAsync(customer))
+    dispatch(updateCustomer(customer))
   }
 
   const handleChange = (e) => {
@@ -31,20 +32,19 @@ function UpdateModal() {
   
   // success 
   useEffect(() => {
-    if (updateApiResource.isSuccess) {
-      dispatch(toggleModal({modalType: ModalType.UPDATE, open: false}))
+    if (response.isSuccess) {
+      dispatch(closeModal(ModalType.UPDATE))
       enqueueSnackbar(GenericMessage.CUSTOMER_UPDATED)
-      handleFetchCustomersAsync()
-      // reset all redux-action-states including success that trigger snackbar
+      fetchCustomers()
       setTimeout(() => dispatch(resetStates()), DELAY_MILLIS)
     }
-  }, [updateApiResource.isSuccess])
+  }, [response.isSuccess])
 
   return (
     <Modal  
       title="Create Customer"
-      isLoading={updateApiResource.isLoading}
-      isOpen={isUpdateModalOpen} 
+      isLoading={response.isLoading}
+      isOpen={isOpen} 
       onClose={handleClose}
       onConfirm={handleConfirm}
     >
@@ -54,7 +54,7 @@ function UpdateModal() {
             label="Full Name"
             name="full_name"
             placeholder="e.g., Juan Dela Cruz"
-            feedback={findErrorByName(updateApiResource.error, "full_name")}
+            feedback={findErrorByName(response.error, "full_name")}
             value={customer.full_name}
             onChange={handleChange}
           />
@@ -64,7 +64,7 @@ function UpdateModal() {
             label="Address"
             name="address"
             placeholder="e.g., Brgy. 143, Quezon City"
-            feedback={findErrorByName(updateApiResource.error, "address")}
+            feedback={findErrorByName(response.error, "address")}
             value={customer.address}
             onChange={handleChange}
           />
@@ -76,7 +76,7 @@ function UpdateModal() {
             label="Phone Number"
             name="phone_number"
             placeholder="e.g., 0945665634943"
-            feedback={findErrorByName(updateApiResource.error, "phone_number")}
+            feedback={findErrorByName(response.error, "phone_number")}
             value={customer.phone_number}
             onChange={handleChange}
           />
@@ -86,7 +86,7 @@ function UpdateModal() {
             label="Email Address"
             name="email_address"
             placeholder="e.g., juandelacruz@gmail.com"
-            feedback={findErrorByName(updateApiResource.error, "email_address")}
+            feedback={findErrorByName(response.error, "email_address")}
             value={customer.email_address}
             onChange={handleChange}
           />

@@ -3,7 +3,7 @@ import { debounce } from "lodash"
 import { useSelector } from "react-redux"
 import { createContext, useEffect, useState } from "react"
 
-import ProductService from "../../../data/services/ProductService.jsx"
+import { ProductService } from "../../../data/services"
 import { DELAY_MILLIS } from "../../../util/Config.jsx"
 
 const InventoryContext = createContext()

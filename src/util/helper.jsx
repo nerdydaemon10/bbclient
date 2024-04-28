@@ -1,65 +1,53 @@
+import { isEmpty } from "lodash"
 import StringHelper from "./helpers/StringHelper.js"
 
 export function findErrorByMessage(error) {
-  if (!error) {
-      return ""
-  }
-  if (!error.message) {
-      return ""
-  }
-
+  if (!error) 
+    return ""
+  if (!error.message)
+    return ""
+  
   return error.message
 }
 
 export function findErrorByName(error, name, alter="") {
-  const capitalize = StringHelper.isEmpty(alter) 
+  const capitalize = isEmpty(alter) 
     ? name.replace("_", " ") 
     : alter
-    
-  if (!error) {
-      return ""
-  }
-  if (!error.errors) {
-      return ""
-  }
+  
+  if (!error)
+    return ""
+  if (!error.errors)
+    return ""
 
   const entries = Object.entries(error.errors)
   const hasErrors = entries.some(([, messages]) => messages.length > 0)
 
-  if (hasErrors && !error.errors[name]) {
-      return { state: "is-valid", message: `The ${capitalize} looks good!`}
-  }
+  if (hasErrors && !error.errors[name])
+    return { state: "is-valid", message: `The ${capitalize} looks good!`}
 
-  if (!error.errors[name]) {
-      return ""
-  }
+  if (!error.errors[name])
+    return ""
   
   return { state: "is-invalid", message: error.errors[name]}
 }
 
-function isSearchResultsEmpty(sq, data) {
+function noSearchResults(sq, data) {
   const entries = Object.entries(sq)
 
-  if (!data) {
+  if (!data)
     return false
-  }
 
-  if (data.length > 0) {
+  if (data.length > 0)
     return false
-  }
   
-  const hasValues = entries.some((_, value) => {
-    if ((typeof value) == "string") {
-      return StringHelper.notEmpty(value)
+  const hasValues = entries.some((_, value) => {    
+    if (!isEmpty(value)) {
+      return true
     }
-    return true
   })
 
-  return hasValues
+  return hasValues ? hasValues : false
 }
 
-function isItemsEmpty(items) {
-  return !items || items.length == 0
-}
-
-export { isSearchResultsEmpty, isItemsEmpty }
+export { noSearchResults }

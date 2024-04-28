@@ -5,54 +5,54 @@ import DateHelper from "../../../util/helpers/DateHelper.js"
 import StringHelper from "../../../util/helpers/StringHelper.js"
 import { DELAY_MILLIS, rowsPerPages } from "../../../util/Config.jsx"
 import { BiPlusCircle } from "react-icons/bi"
-import { isItemsEmpty, isSearchResultsEmpty } from "../../../util/helper.jsx"
+import { noSearchResults } from "../../../util/helper.jsx"
 import { Button, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
 import { CustomersContext } from "./CustomersProvider.jsx"
-import { resetStates, setCustomer, setSearchQuery, toggleModal } from "../../redux/customersSlice.js"
-import ModalType from "../../../util/classes/ModalType.jsx"
+import { openModal, resetStates, setCustomer, setSq } from "../../redux/customersSlice.js"
+import ModalType from "../../../util/classes/ModalType.js"
 import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
+import { delay, isEmpty } from "lodash"
 
 function CustomersTable() {
   const dispatch = useDispatch()
 
-  const { searchQuery } = useSelector((state) => state.customers)
-  const { apiResource, handleSearchCustomerAsync } = useContext(CustomersContext)
-  const { data, meta } = apiResource.data
+  const { sq, fetch } = useSelector((state) => state.customers)
+  const { isLoading, data, meta, error } = fetch.response
+  const { searchCustomers } = useContext(CustomersContext)
 
   const handleChange = (e) => {
-    dispatch(setSearchQuery({ ...searchQuery, [e.target.name]: e.target.value, page: 1 }))
-    handleSearchCustomerAsync.cancel()
+    dispatch(setSq({ ...sq, [e.target.name]: e.target.value }))
+    searchCustomers.cancel()
   }
-  
   const handlePrevious = () => {
-    let page = searchQuery.page > 1 ? searchQuery.page - 1 : 1
-    dispatch(setSearchQuery({ ...searchQuery, page: page }))
-    handleSearchCustomerAsync.cancel()
+    let page = sq.page > 1 ? sq.page - 1 : 1
+    dispatch(setSq({ ...sq, page: page }))
+    searchCustomers.cancel()
   }
   const handleNext = () => {
-    let page = searchQuery.page < meta.last_page ? searchQuery.page + 1 : meta.last_page
-    dispatch(setSearchQuery({ ...searchQuery, page: page }))
-    handleSearchCustomerAsync.cancel()
+    let page = sq.page < meta.last_page ? sq.page + 1 : meta.last_page
+    dispatch(setSq({ ...sq, page: page }))
+    searchCustomers.cancel()
   }
 
   return (
     <>
       <FilteringContainer 
-        fullName={searchQuery.full_name}
+        fullName={sq.full_name}
         onChange={handleChange}
       />
       <TableContainer 
-        isLoading={apiResource.isLoading}
-        searchQuery={searchQuery}
+        isLoading={isLoading}
+        searchQuery={sq}
         data={data}
-        error={apiResource.error}
+        error={error}
       />
       <PaginationContainer
-        rowsPerPage={searchQuery.per_page}
+        rowsPerPage={sq.per_page}
         currentPage={meta.current_page}
         lastPage={meta.last_page}
-        isLoading={apiResource.isLoading}
+        isLoading={isLoading}
         onChange={handleChange} 
         onPrevious={handlePrevious}
         onNext={handleNext}
@@ -64,7 +64,7 @@ function FilteringContainer({fullName, onChange}) {
   const dispatch = useDispatch()
 
   const handleClick = () => {
-    dispatch(toggleModal({modalType: ModalType.CREATE, open: true}))
+    dispatch(openModal(ModalType.CREATE))
   }
 
   return (
@@ -91,27 +91,22 @@ function FilteringContainer({fullName, onChange}) {
 function TableContainer({isLoading, searchQuery, data, error}) {
   const dispatch = useDispatch()
 
-  const handleUpdateClick = (customer) => {
-    // reset errors before showing modal
+  const handleUpdate = (customer) => {
     dispatch(resetStates())
     dispatch(setCustomer(customer))
-
-    // adding delay to finish the hiding effect of errors
-    setTimeout(() => dispatch(toggleModal({
-      modalType: ModalType.UPDATE, open: true}
-    )), DELAY_MILLIS)
+    delay(() => dispatch(openModal(ModalType.UPDATE)), DELAY_MILLIS)
   }
 
-  const handleRemoveClick = (customer) => {
+  const handleRemove = (customer) => {
     dispatch(setCustomer(customer))
-    dispatch(toggleModal({modalType: ModalType.REMOVE, open: true}))
+    delay(() => dispatch(openModal(ModalType.REMOVE)), DELAY_MILLIS)
   }
   
   return (
     <div className="table-wrapper table-container">
       <table className="table">
         <thead>
-          <THeaders columns={columns}/>
+          <THeaders columns={columns} />
         </thead>
         <tbody>
           {
@@ -123,11 +118,11 @@ function TableContainer({isLoading, searchQuery, data, error}) {
               <TDStatus colSpan={columnsSize}>
                 {error.message ? error.message : GenericMessage.ITEMS_ERROR.replace("{{items}}", "customers")}
               </TDStatus>
-            ) : isSearchResultsEmpty(searchQuery, data) ? (
+            ) : noSearchResults(searchQuery, data) ? (
               <TDStatus colSpan={columnsSize}>
               {GenericMessage.ITEMS_NO_MATCH.replace("{{items}}", "customers")}
               </TDStatus>
-            ) : isItemsEmpty(data) ? (
+            ) : isEmpty(data) ? (
               <TDStatus colSpan={columnsSize}>
                 {GenericMessage.ITEMS_EMPTY.replace("{{items}}", "customers")}
               </TDStatus>
@@ -135,8 +130,8 @@ function TableContainer({isLoading, searchQuery, data, error}) {
               <TDCustomer
                 key={index}
                 customer={customer}
-                onUpdateClick={handleUpdateClick}
-                onRemoveClick={handleRemoveClick}
+                onUpdate={() => handleUpdate(customer)}
+                onRemove={() => handleRemove(customer)}
               />
             )) : (
               <></>
@@ -148,7 +143,7 @@ function TableContainer({isLoading, searchQuery, data, error}) {
   )
 }
 
-function TDCustomer({customer, onUpdateClick, onRemoveClick}) {
+function TDCustomer({customer, onUpdate, onRemove}) {
   const fullName = StringHelper.truncate(customer.full_name)
   const address = StringHelper.truncate(customer.address)
   const phoneNumber = StringHelper.truncate(customer.phone_number)
@@ -170,14 +165,14 @@ function TDCustomer({customer, onUpdateClick, onRemoveClick}) {
         <Button 
           variant="dark"
           size="sm"
-          onClick={() => onUpdateClick(customer)}
+          onClick={onUpdate}
         >
           Update
         </Button>
         <Button 
           variant="light"
           size="sm"
-          onClick={() => onRemoveClick(customer)}
+          onClick={onRemove}
         >
           Remove
         </Button>

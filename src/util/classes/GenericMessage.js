@@ -12,6 +12,8 @@ export default class GenericMessage {
     static PRODUCTS_ERROR = "Something went wrong while fetching products."
 
     static ORDER_ADDED = "Order was successfully added to the records."
+    static ORDER_APPROVED = "Order was successfully aproved."
+    static ORDER_REJECTED = "Order was successfully rejected."
     static ORDERS_FETCHING = "Fetching orders... please wait for a while."
     static ORDERS_NO_MATCH = "No orders match your search criteria. Try refining your search."
     static ORDERS_EMPTY = "No orders yet."

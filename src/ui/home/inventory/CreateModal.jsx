@@ -3,15 +3,15 @@ import { useDispatch, useSelector } from "react-redux"
 import { useContext, useEffect, useState } from "react"
 
 import { DELAY_MILLIS, productCategories } from "../../../util/Config.jsx"
-import { findErrorByName } from "../../../util/helpers/FormHelper.jsx"
 import { createProductAsync, resetStates, toggleModal } from "../../redux/inventorySlice.js"
 import { enqueueSnackbar } from "notistack"
 import { Modal, SelectInput, TextFieldInput } from "../../common"
-import ModalType from "../../../util/classes/ModalType.jsx"
+import ModalType from "../../../util/classes/ModalType.js"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { InventoryContext } from "./InventoryProvider.jsx"
-import ProductCategory from "../../../util/classes/ProductCategory.jsx"
+import ProductCategory from "../../../util/classes/ProductCategory.js"
 import { first } from "lodash"
+import { findErrorByName } from "../../../util/helper.jsx"
 
 const defaultParam = {
   name: "",

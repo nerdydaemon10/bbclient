@@ -1,52 +1,39 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { debounce } from "lodash"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { createContext, useEffect, useState } from "react"
-import CustomerService from "../../../data/services/CustomerService.jsx"
+import { CustomerService } from "../../../data/services"
+import { setFulfilled, setPending, setRejected } from "../../redux/customersSlice.js"
 
 const VITE_DELAY = import.meta.env.VITE_DELAY
 const CustomersContext = createContext()
 
 function CustomersProvider({children}) {
-  const { searchQuery } = useSelector((state) => state.customers)
-  const [apiResource, setApiResource] = useState({
-    isLoading: true,
-    data: { data: [], meta: { current_page: 0, last_page: 0 }},
-    meta: null,
-    error: null
-  })
-  
-  const handleFetchCustomersAsync = () => {
-    setApiResource({...apiResource, isLoading: true})
-    CustomerService.findAll(searchQuery).then((response) => {
-      setApiResource({
-          isLoading: false,
-          data: response,
-          error: null
-        })
-      })
-    .catch((error) => {
-      setApiResource({
-        isLoading: false,
-        data: { data: [], meta: { current_page: 0, last_page: 0 }},
-        error: error
-      })
-    })
+  const dispatch = useDispatch()
+
+  const { sq } = useSelector((state) => state.customers)
+
+  const fetchCustomers = (sq) => {
+    dispatch(setPending())
+
+    CustomerService
+    .findAll(sq)
+    .then((response) => dispatch(setFulfilled(response)))
+    .catch((error) => dispatch(setRejected(error)))
   }
 
-  const handleSearchCustomerAsync = debounce(() => {
-    handleFetchCustomersAsync()
+  const searchCustomers = debounce((sq) => {
+    fetchCustomers(sq)
   }, VITE_DELAY)
 
   useEffect(() => {
-    handleSearchCustomerAsync()
-  }, [searchQuery])
+    searchCustomers(sq)
+  }, [sq])
 
   return (
     <CustomersContext.Provider value={{
-      apiResource,
-      handleFetchCustomersAsync, 
-      handleSearchCustomerAsync
+      fetchCustomers,
+      searchCustomers
     }}>
       {children}
     </CustomersContext.Provider>

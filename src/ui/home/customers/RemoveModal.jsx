@@ -1,44 +1,45 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import { useContext, useEffect } from "react"
-import { FormModal, Modal } from "../../common"
+import { Modal } from "../../common"
 import { CustomersContext } from "./CustomersProvider.jsx"
 import { enqueueSnackbar } from "notistack"
-import { removeCustomerAsync, resetStates, toggleModal } from "../../redux/customersSlice.js"
-import ModalType from "../../../util/classes/ModalType.jsx"
+import { closeModal, removeCustomer, resetStates } from "../../redux/customersSlice.js"
+import ModalType from "../../../util/classes/ModalType.js"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { DELAY_MILLIS } from "../../../util/Config.jsx"
+import { delay } from "lodash"
 
 function RemoveModal() {
   const dispatch = useDispatch()
-
-  const { isRemoveModalOpen, customer, removeApiResource } = useSelector((state) => state.customers)
-  const { handleFetchCustomersAsync } = useContext(CustomersContext)
+  
+  const { remove, customer } = useSelector((state) => state.customers)
+  const { isOpen, response } = remove
+  const { fetchCustomers } = useContext(CustomersContext)
   
   const handleClose = () => {
-    dispatch(toggleModal({modalType: ModalType.REMOVE, open: false}))
+    dispatch(closeModal(ModalType.REMOVE))
   }
 
   const handleConfirm = (e) => {
     e.preventDefault()
-    dispatch(removeCustomerAsync(customer.id))
+    dispatch(removeCustomer(customer.id))
   }
-  
+
   useEffect(() => {
-    if (removeApiResource.isSuccess) {
-      dispatch(toggleModal({modalType: ModalType.REMOVE, open: false}))
+    if (response.isSuccess) {
+      dispatch(closeModal(ModalType.REMOVE))
       enqueueSnackbar(GenericMessage.CUSTOMER_REMOVED)
-      handleFetchCustomersAsync()
-      // reset all redux-action-states including success that trigger snackbar
-      setTimeout(() => dispatch(resetStates()), DELAY_MILLIS)
+      fetchCustomers()
+      delay(() => dispatch(resetStates()), DELAY_MILLIS)
     }
-  }, [removeApiResource.isSuccess])
+  }, [response.isSuccess])
 
   return (
     <Modal  
       title="Remove Customer"
-      isLoading={removeApiResource.isLoading}
-      isOpen={isRemoveModalOpen} 
+      isLoading={response.isLoading}
+      isOpen={isOpen} 
       onClose={handleClose}
       onConfirm={handleConfirm}
     >

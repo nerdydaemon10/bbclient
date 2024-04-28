@@ -1,15 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { AuthService } from "../../data/services"
 import { local } from "../../util"
+import { isEmpty } from "lodash"
 
 export const login = createAsyncThunk(
   "auth/login", async (credentials, thunkAPI) => {
-    try {
-      const response = await AuthService.login(credentials)
-      return response
-    } catch(error) {
-      return thunkAPI.rejectWithValue(error.response.data)
-    }
+  try {
+    const response = await AuthService.login(credentials)
+    return response
+  } catch(error) {
+    if (isEmpty(error.response)) return thunkAPI.rejectWithValue(error)
+    return thunkAPI.rejectWithValue(error.response.data)
+  }
 })
 
 const initialState = {

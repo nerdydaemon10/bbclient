@@ -4,23 +4,24 @@ import { columns, columnsSize } from "./Util.jsx"
 import DateHelper from "../../../util/helpers/DateHelper.js"
 import StringHelper from "../../../util/helpers/StringHelper.js"
 import { DELAY_MILLIS, orderStatuses, rowsPerPages } from "../../../util/Config.jsx"
-import { isItemsEmpty, isSearchResultsEmpty } from "../../../util/helper.jsx"
-import { Button, SecondaryButton, SelectInput, TDStatus, THeaders } from "../../common"
+import { noSearchResults } from "../../../util/helper.jsx"
+import { Button, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
-import ModalType from "../../../util/classes/ModalType.jsx"
 import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
 import { OrdersContext } from "./OrdersProvider.jsx"
 import PaymentMethod from "../../../util/classes/PaymentMethod.js"
-import { BiLinkAlt } from "react-icons/bi"
+import { BiBlock, BiCheck, BiLinkAlt } from "react-icons/bi"
 import OrderStatus from "../../../util/classes/OrderStatus.js"
-import { setSq } from "../../redux/ordersSlice.js"
+import { openModal, setOrder, setSq } from "../../redux/ordersSlice.js"
+import { delay, isEmpty } from "lodash"
+import ModalType from "../../../util/classes/ModalType.js"
 
 function OrdersTable() {
   const dispatch = useDispatch()
 
-  const { sq } = useSelector((state) => state.orders)
-  const { apiResource, searchOrders } = useContext(OrdersContext)
-  const { data, meta } = apiResource.data
+  const { sq, fetch } = useSelector((state) => state.orders)
+  const { isLoading, data, meta, error } = fetch.response
+  const { searchOrders } = useContext(OrdersContext)
   
   const handleChange = (e) => {
     dispatch(setSq({ ...sq, [e.target.name]: e.target.value }))
@@ -45,16 +46,16 @@ function OrdersTable() {
         onChange={handleChange}
       />
       <TableContainer 
-        isLoading={apiResource.isLoading} 
+        isLoading={isLoading} 
         sq={sq}
         data={data}
-        error={apiResource.error}
+        error={error}
       />
       <PaginationContainer
         rowsPerPage={sq.per_page}
         currentPage={meta.current_page}
         lastPage={meta.last_page}
-        isLoading={apiResource.isLoading}
+        isLoading={isLoading}
         onChange={handleChange} 
         onPrevious={handlePrevious}
         onNext={handleNext}
@@ -89,6 +90,18 @@ function FilteringContainer({name, status, onChange}) {
   )
 }
 function TableContainer({isLoading, sq, data, error}) {
+  const dispatch = useDispatch()
+
+  const handleApprove = (order) => {
+    dispatch(setOrder(order))
+    delay(() => dispatch(openModal(ModalType.APPROVE)), DELAY_MILLIS)
+  }
+
+  const handleReject = (order) => {
+    dispatch(setOrder(order))
+    delay(() => dispatch(openModal(ModalType.REJECT)), DELAY_MILLIS)
+  }
+
   return (
     <div className="table-wrapper table-container">
       <table className="table">
@@ -105,11 +118,11 @@ function TableContainer({isLoading, sq, data, error}) {
               <TDStatus colSpan={columnsSize}>
                 {error.message ? error.message : GenericMessage.PRODUCTS_ERROR}
               </TDStatus>
-            ) : isSearchResultsEmpty(sq, data) ? (
+            ) : noSearchResults(sq, data) ? (
               <TDStatus colSpan={columnsSize}>
                 {GenericMessage.ORDERS_NO_MATCH}
               </TDStatus>
-            ) : isItemsEmpty(data) ? (
+            ) : isEmpty(data) ? (
               <TDStatus colSpan={columnsSize}>
                 {GenericMessage.ORDERS_EMPTY}
               </TDStatus>
@@ -117,6 +130,8 @@ function TableContainer({isLoading, sq, data, error}) {
               <TDOrder
                 key={index}
                 order={order}
+                onApprove={() => handleApprove(order)}
+                onReject={() => handleReject(order)}
               />
             )) : (
               <></>
@@ -128,17 +143,16 @@ function TableContainer({isLoading, sq, data, error}) {
   )
 }
 
-function TDOrder({order}) {
+function TDOrder({order, onApprove, onReject}) {
   const referenceNumber = StringHelper.truncate(order.reference_number)
   const customer = StringHelper.truncate(order.customer.full_name)
   const amountDue = StringHelper.toPesoCurrency(Number(order.amount_due))
   const totalItems = StringHelper.toPcs(order.number_of_items)
   const status = OrderStatus.toObject(order.status)
   const paymentMethod = PaymentMethod.toMethod(order.payment_method)
-  const creator = StringHelper.truncate(order.employee.full_name)
+  const salesperson = StringHelper.truncate(order.employee.full_name)
   const dateCreated = DateHelper.toIsoStandard(order.created_at)
-  const dateModified = DateHelper.toIsoStandard(order.updated_at)
-
+  
   return (
     <tr key={order.id}>
       <td>
@@ -147,7 +161,6 @@ function TDOrder({order}) {
           {referenceNumber}
         </a>
       </td>
-      <td>{customer}</td>
       <td>{amountDue}</td>
       <td>{totalItems}</td>
       <td>
@@ -161,9 +174,29 @@ function TDOrder({order}) {
           {paymentMethod}
         </span>
       </td>
-      <td>{creator}</td>
+      <td>{customer}</td>
+      <td>{salesperson}</td>
       <td>{dateCreated}</td>
-      <td>{dateModified}</td>
+      <td className="hstack gap-1">
+        <Button
+          variant="dark" 
+          size="sm"
+          onClick={onApprove}
+        >
+          <BiCheck 
+            className="me-1" 
+          />
+          Approve
+        </Button>
+        <Button
+          variant="light" 
+          size="sm"
+          onClick={onReject}
+        >
+          <BiBlock className="me-1" />
+          Reject
+        </Button>
+      </td>
     </tr>
   )
 }

@@ -1,5 +1,3 @@
-import { ProductCategoriesData } from "../Config.jsx"
-
 export default class StringHelper {}
 
 StringHelper.truncate = function (text, max=24) {
@@ -35,29 +33,4 @@ StringHelper.toPcs = function(number) {
 }
 StringHelper.toPesoCurrency = function(number) {
     return number.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })
-}
-StringHelper.toPeso = function(number) {
-    return number.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })
-}
-StringHelper.isEmpty = function(arg) {
-  if (!arg) {
-    return true
-  }
-
-  const str = arg.toString()
-  const length = str.replace(" ", "").length
-  
-  return length == 0
-}
-
-StringHelper.notEmpty = function(arg) {
-  return !StringHelper.isEmpty(arg)
-}
-
-StringHelper.capitalize = function(string) {
-  if (!string) {
-    return ""
-  }
-  
-  return string[0].toUpperCase() + string.slice(1)
 }

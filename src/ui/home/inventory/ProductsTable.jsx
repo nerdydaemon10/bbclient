@@ -5,13 +5,14 @@ import DateHelper from "../../../util/helpers/DateHelper.js"
 import StringHelper from "../../../util/helpers/StringHelper.js"
 import { productCategories, rowsPerPages } from "../../../util/Config.jsx"
 import { BiPlusCircle } from "react-icons/bi"
-import { isItemsEmpty, isSearchResultsEmpty } from "../../../util/helper.jsx"
+import { noSearchResults } from "../../../util/helper.jsx"
 import { Button, SearchFieldInput, SelectInput, TDStatus, THeaders } from "../../common"
 import { useContext } from "react"
-import ModalType from "../../../util/classes/ModalType.jsx"
-import ProductCategory from "../../../util/classes/ProductCategory.jsx"
+import ModalType from "../../../util/classes/ModalType.js"
+import ProductCategory from "../../../util/classes/ProductCategory.js"
 import { InventoryContext } from "./InventoryProvider.jsx"
 import { resetStates, setProduct, setSearchQuery, toggleModal } from "../../redux/inventorySlice.js"
+import { isEmpty } from "lodash"
 
 const VITE_DELAY = import.meta.VITE_DELAY
 
@@ -136,11 +137,11 @@ function TableContainer({isLoading, searchQuery, data, error}) {
               <TDStatus colSpan={columnsSize}>
                 {error.message ? error.message : GenericMessage.PRODUCTS_ERROR}
               </TDStatus>
-            ) : isSearchResultsEmpty(searchQuery, data) ? (
+            ) : noSearchResults(searchQuery, data) ? (
               <TDStatus colSpan={columnsSize}>
                 {GenericMessage.PRODUCTS_NO_MATCH}
               </TDStatus>
-            ) : isItemsEmpty(data) ? (
+            ) : isEmpty(data) ? (
               <TDStatus colSpan={columnsSize}>
                 {GenericMessage.PRODUCTS_EMPTY}
               </TDStatus>
