@@ -8,3 +8,8 @@ AuthService.login = async function(credentials) {
 
   return { token: token, user: user }
 }
+
+AuthService.logout = async function() {
+  const response = await client.post("/auth/logout")
+  return response.data
+}
