@@ -21,6 +21,6 @@ SaleService.findAll = async function(sq=null) {
   
   const params = ObjectHelper.toUriParams(customSq) 
   const response = await client.get(`/admin/sales?${params}`)
-
+  
   return response.data
 }

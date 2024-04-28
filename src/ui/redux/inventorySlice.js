@@ -32,7 +32,6 @@ const updateProductAsync = createAsyncThunk(
         const response = await ProductService.update(product)
         return response
     } catch (error) {
-      console.log(error)
       return thunkAPI.rejectWithValue(error.response.data)
     }
 })

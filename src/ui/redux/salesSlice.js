@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { buildColResponse, rowsPerPages } from "../../util/Config.jsx"
 import { first } from "lodash"
 import { SaleService } from "../../data/services"
+import ResponseStatus from "../../util/classes/ResponseStatus.js"
 
 const exportToExcel = createAsyncThunk(
   "sales/exportToExcel", 
@@ -50,13 +51,13 @@ const salesSlice = createSlice({
       state.sq = action.payload
     },
     setPending: (state) => {
-      state.fetch.response = buildColResponse("pending")
+      state.fetch.response = buildColResponse(ResponseStatus.PENDING)
     },
     setFulfilled: (state, action) => {
-      state.fetch.response = buildColResponse("fulfilled", action.payload)
+      state.fetch.response = buildColResponse(ResponseStatus.FULFILLED, action.payload)
     },
     setRejected: (state, action) => {
-      state.fetch.response = buildColResponse("rejected", action.payload)
+      state.fetch.response = buildColResponse(ResponseStatus.REJECTED, action.payload)
     },
     setResLoading: (state) => {
       state.fetchSalesRes = {
