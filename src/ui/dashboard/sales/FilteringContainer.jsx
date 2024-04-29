@@ -23,7 +23,7 @@ function FilteringContainer() {
   }
 
   const handleClick = () => {
-    dispatch(exportAsExcel())
+    dispatch(exportAsExcel(sq))
   }
 
   useEffect(() => {
@@ -88,7 +88,7 @@ function FilteringContainer() {
         onChange={handleChange}
         onRender={(option) => `${PaymentMethod.toMethod(option)}`}
       />
-      <hr className="mb-2"/>
+      <hr className="mt-2 mb-2"/>
       <Button 
         variant="outline-dark"
         isLoading={isLoading}

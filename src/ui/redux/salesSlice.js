@@ -6,9 +6,9 @@ import ResponseStatus from "../../util/classes/ResponseStatus.js"
 
 const exportAsExcel = createAsyncThunk(
   "sales/exportAsExcel", 
-  async (thunkAPI) => {
+  async (sq, thunkAPI) => {
   try {
-    const response = await SaleService.exportAsExcel()
+    const response = await SaleService.exportAsExcel(sq)
     return response
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data)

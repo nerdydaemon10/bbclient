@@ -32,18 +32,18 @@ export function findErrorByName(error, name, alter="") {
 }
 
 function noSearchResults(sq, data) {
-  const entries = Object.entries(sq)
-
+  const excludes = ["per_page", "page"]
+  const entries = Object
+    .entries(sq)
+    .filter((entry) => !excludes.includes(entry[0]))
+    
   if (!data)
     return false
 
   if (data.length > 0)
     return false
-  
-  const hasValues = entries.some((_, value) => {
-    return isEmpty(value)
-  })
 
+  const hasValues = entries.some((item) => !isEmpty(item[1]))
   return (data.length == 0) && hasValues
 }
 
