@@ -1,14 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { buildColResponse, rowsPerPages } from "../../util/Config.jsx"
+import { buildColResponse, buildResponse, rowsPerPages } from "../../util/Config.jsx"
 import { first } from "lodash"
 import { SaleService } from "../../data/services"
 import ResponseStatus from "../../util/classes/ResponseStatus.js"
 
-const exportToExcel = createAsyncThunk(
-  "sales/exportToExcel", 
+const exportAsExcel = createAsyncThunk(
+  "sales/exportAsExcel", 
   async (thunkAPI) => {
   try {
-    const response = await SaleService.exportToExcel()
+    const response = await SaleService.exportAsExcel()
     return response
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data)
@@ -26,20 +26,8 @@ const defaultState = {
     per_page: first(rowsPerPages), 
     page: 1
   },
-  fetch: {
-    response: buildColResponse()
-  },
-  fetchSalesRes: {
-    isLoading: false,
-    data: [],
-    meta: { current_page: 0, last_page: 0 },
-    error: null
-  },
-  exportToExcelRes: {
-    isLoading: false,
-    isSuccess: false,
-    error: null
-  },
+  fetch: { response: buildColResponse() },
+  exportAsExcelResponse: buildResponse()
 }
 const initialState = { ...defaultState }
 
@@ -58,55 +46,19 @@ const salesSlice = createSlice({
     },
     setRejected: (state, action) => {
       state.fetch.response = buildColResponse(ResponseStatus.REJECTED, action.payload)
-    },
-    setResLoading: (state) => {
-      state.fetchSalesRes = {
-        isLoading: true,
-        data: [],
-        meta: { current_page: 0, last_page: 0 },
-        error: null
-      }
-    },
-    setResSuccess: (state, action) => {
-      state.fetchSalesRes = {
-        isLoading: false,
-        data: action.payload.data,
-        meta: action.payload.meta,
-        error: null
-      }
-    },
-    setResError: (state, action) => {
-      state.fetchSalesRes = {
-        isLoading: false,
-        data: [],
-        meta: { current_page: 0, last_page: 0},
-        error: action.payload
-      }
     }
   },
   extraReducers: (builder) => {
     builder
     // Export to excel
-    .addCase(exportToExcel.pending, (state) => {
-      state.exportToExcelRes = {
-        isLoading: true,
-        isSuccess: false,
-        error: null
-      }
+    .addCase(exportAsExcel.pending, (state) => {
+      state.exportAsExcelResponse = buildResponse(ResponseStatus.PENDING)
     })
-    .addCase(exportToExcel.fulfilled, (state) => {
-      state.exportToExcelRes = {
-        isLoading: false,
-        isSuccess: true,
-        error: null
-      }
+    .addCase(exportAsExcel.fulfilled, (state, action) => {
+      state.exportAsExcelResponse = buildResponse(ResponseStatus.FULFILLED, action.payload)
     })
-    .addCase(exportToExcel.rejected, (state, action) => {
-      state.exportToExcelRes = {
-        isLoading: false,
-        isSuccess: false,
-        error: action.payload
-      }
+    .addCase(exportAsExcel.rejected, (state, action) => {
+      state.exportAsExcelResponse = buildResponse(ResponseStatus.REJECTED, action.payload)
     })
   }
 })
@@ -115,10 +67,7 @@ export const {
   setSq,
   setPending,
   setFulfilled,
-  setRejected,
-  setResLoading,
-  setResSuccess,
-  setResError
+  setRejected
 } = salesSlice.actions
-export { exportToExcel }
+export { exportAsExcel }
 export default salesSlice.reducer

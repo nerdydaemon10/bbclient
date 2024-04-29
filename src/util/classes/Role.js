@@ -17,7 +17,7 @@ export default class Role {
     const role = RolesData.find((role) => role.key == key)
     
     if (!role) {
-        return "N/A"
+      return ""
     }
 
     return role.enum

@@ -46,3 +46,7 @@
 .form-select.is-invalid {
   background-image: var(--bs-form-select-bg-img, none);
 }
+/*--BREADCRUMB--*/
+.breadcrumb {
+  --bs-breadcrumb-divider: '>';
+}

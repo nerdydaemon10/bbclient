@@ -1,22 +1,46 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux";
 import { paymentMethods, orderStatuses } from "../../../util/Config.jsx";
 import OrderStatus from "../../../util/classes/OrderStatus.js";
 import PaymentMethod from "../../../util/classes/PaymentMethod.js";
-import { DateInput, SearchFieldInput, SelectInput } from "../../common";
-import { setSq } from "../../redux/salesSlice.js";
-import { useContext } from "react";
+import { Button, DateInput, SearchFieldInput, SelectInput } from "../../common";
+import { exportAsExcel, setSq } from "../../redux/salesSlice.js";
+import { useContext, useEffect } from "react";
 import { SalesContext } from "./SalesProvider.jsx";
+import { BiDownload } from "react-icons/bi";
+import moment from "moment";
 
 function FilteringContainer() {
-  const { sq } = useSelector((state) => state.sales)
-  const { searchSales } = useContext(SalesContext)
-
   const dispatch = useDispatch()
+
+  const { sq, exportAsExcelResponse } = useSelector((state) => state.sales)
+  const { isLoading, isSuccess, data } = exportAsExcelResponse
+  const { searchSales } = useContext(SalesContext)
 
   const handleChange = (e) => {
     dispatch(setSq({ ...sq, [e.target.name]: e.target.value }))
     searchSales.cancel()
   }
+
+  const handleClick = () => {
+    dispatch(exportAsExcel())
+  }
+
+  useEffect(() => {
+    if (!isSuccess) return
+
+    const url = URL.createObjectURL(data)
+
+    const link = document.createElement('a')
+
+    link.href = url
+    link.setAttribute("download", `SALES_REPORT_${moment.now()}.xlsx`)
+    
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }, [isSuccess])
   
   return (
     <div className="filtering-container d-flex flex-column border rounded p-2 gap-2">
@@ -64,6 +88,15 @@ function FilteringContainer() {
         onChange={handleChange}
         onRender={(option) => `${PaymentMethod.toMethod(option)}`}
       />
+      <hr className="mb-2"/>
+      <Button 
+        variant="outline-dark"
+        isLoading={isLoading}
+        onClick={handleClick}
+      >
+        <BiDownload className="me-1" />
+        Export as Excel
+      </Button>
     </div>
   )
 }

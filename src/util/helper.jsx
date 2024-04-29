@@ -1,5 +1,4 @@
 import { isEmpty } from "lodash"
-import StringHelper from "./helpers/StringHelper.js"
 
 export function findErrorByMessage(error) {
   if (!error) 
@@ -41,13 +40,11 @@ function noSearchResults(sq, data) {
   if (data.length > 0)
     return false
   
-  const hasValues = entries.some((_, value) => {    
-    if (!isEmpty(value)) {
-      return true
-    }
+  const hasValues = entries.some((_, value) => {
+    return isEmpty(value)
   })
 
-  return hasValues ? hasValues : false
+  return (data.length == 0) && hasValues
 }
 
 export { noSearchResults }

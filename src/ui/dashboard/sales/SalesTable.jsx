@@ -96,7 +96,7 @@ function TableContainer({isLoading, sq, data, error}) {
   )
 }
 function TDSale({sale}) {
-  const refNumber = StringHelper.truncate(sale.reference_number)
+  const refNumber = StringHelper.truncate(sale.reference_number, 15)
   const amountDue = StringHelper.toPesoCurrency(Number(sale.amount_due))
   const totalItems = StringHelper.toPcs(sale.number_of_items)
   const status = OrderStatus.toObject(sale.status)

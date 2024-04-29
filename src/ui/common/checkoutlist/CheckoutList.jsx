@@ -32,6 +32,7 @@ function CheckoutItem({checkout,  onDecrement, onIncrement}) {
   const description = StringHelper.truncate(checkout.description)
   const total = StringHelper.toPesoCurrency(checkout.srp * checkout.quantity)
   const quantity = StringHelper.toPcs(checkout.quantity)
+  
   return (
     <li className="checkout-list-item d-flex flex-row justify-content-between border rounded p-2">
       <div className="d-flex flex-column justify-content-between">

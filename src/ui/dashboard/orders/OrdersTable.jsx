@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
-import { columns, columnsSize } from "./Util.jsx"
+import { columns, getColumnsByRole } from "./Util.jsx"
 import DateHelper from "../../../util/helpers/DateHelper.js"
 import StringHelper from "../../../util/helpers/StringHelper.js"
 import { DELAY_MILLIS, orderStatuses, rowsPerPages } from "../../../util/Config.jsx"
@@ -13,8 +13,10 @@ import PaymentMethod from "../../../util/classes/PaymentMethod.js"
 import { BiBlock, BiCheck, BiLinkAlt } from "react-icons/bi"
 import OrderStatus from "../../../util/classes/OrderStatus.js"
 import { openModal, setOrder, setSq } from "../../redux/ordersSlice.js"
-import { delay, isEmpty } from "lodash"
+import { delay, isEmpty, size } from "lodash"
 import ModalType from "../../../util/classes/ModalType.js"
+import local from "../../../util/local.js"
+import Role from "../../../util/classes/Role.js"
 
 function OrdersTable() {
   const dispatch = useDispatch()
@@ -91,6 +93,8 @@ function FilteringContainer({name, status, onChange}) {
 }
 function TableContainer({isLoading, sq, data, error}) {
   const dispatch = useDispatch()
+  
+  const colSpan = size(columnsByRole)
 
   const handleApprove = (order) => {
     dispatch(setOrder(order))
@@ -106,24 +110,24 @@ function TableContainer({isLoading, sq, data, error}) {
     <div className="table-wrapper table-container">
       <table className="table">
         <thead>
-          <THeaders columns={columns}/>
+          <THeaders columns={columnsByRole}/>
         </thead>
         <tbody>
           {
             isLoading ? (
-              <TDStatus colSpan={columnsSize}>
+              <TDStatus colSpan={colSpan}>
                 {GenericMessage.ORDERS_FETCHING}
               </TDStatus>
             ) : error ? (
-              <TDStatus colSpan={columnsSize}>
+              <TDStatus colSpan={colSpan}>
                 {error.message ? error.message : GenericMessage.PRODUCTS_ERROR}
               </TDStatus>
             ) : noSearchResults(sq, data) ? (
-              <TDStatus colSpan={columnsSize}>
+              <TDStatus colSpan={colSpan}>
                 {GenericMessage.ORDERS_NO_MATCH}
               </TDStatus>
             ) : isEmpty(data) ? (
-              <TDStatus colSpan={columnsSize}>
+              <TDStatus colSpan={colSpan}>
                 {GenericMessage.ORDERS_EMPTY}
               </TDStatus>
             ) : data ? data.map((order, index) => (

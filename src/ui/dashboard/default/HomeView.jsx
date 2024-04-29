@@ -17,7 +17,7 @@ function TitleContainer() {
 
   return (
     <div className="title-container">
-      <h3 className="text-body-primary fw-bold mb-0">POS System</h3>
+      <h3 className="text-body-primary fw-bold mb-0">Home Dashboard</h3>
       <p className="text-body-secondary fw-normal mb-0">Hello {user.full_name}, Welcome Back!</p>
     </div>
   )

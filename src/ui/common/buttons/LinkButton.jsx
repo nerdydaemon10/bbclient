@@ -2,11 +2,14 @@ import { Link } from "react-router-dom"
 
 function LinkButton({
   to,
+  target,
   variant="dark",
   size="md",
   isLoading,
-  isDisabled, 
-  isFullWidth, 
+  isDisabled,
+  isDownload,
+  isFullWidth,
+  isReplace,
   onClick,
   className,
   style,
@@ -15,6 +18,9 @@ function LinkButton({
   return (
     <Link
       to={to}
+      target={target}
+      download={isDownload}
+      replace={isReplace}
       role="button"
       type="button"
       disabled={isDisabled || isLoading}

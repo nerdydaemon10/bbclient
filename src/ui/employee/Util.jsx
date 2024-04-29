@@ -1,13 +1,12 @@
 import {
-  BiBarChartAlt2, BiBox, BiCartAlt, BiGroup, BiHome, 
-  BiShoppingBag, BiSolidBarChartAlt2, BiSolidBox, 
-  BiSolidCartAlt, BiSolidGroup, BiSolidHome, 
-  BiSolidShoppingBag, BiSolidUserCircle, BiUserCircle,
+  BiBox, BiCartAlt, BiGroup, BiHome, 
+  BiShoppingBag, BiSolidBox, BiSolidCartAlt, 
+  BiSolidGroup, BiSolidHome, BiSolidShoppingBag
 } from "react-icons/bi"
 
 export const RoutesData = [
   {
-    key: "admin",
+    key: "employee",
     route: "",
     name: "Home Dashboard",
     icon: { active: <BiSolidHome />, inactive: <BiHome />},
@@ -18,13 +17,6 @@ export const RoutesData = [
     route: "pos",
     name: "POS/Create Order",
     icon: { active: <BiSolidShoppingBag />, inactive: <BiShoppingBag />},
-    hasCounter: false
-  },
-  {
-    key: "sales",
-    route: "sales",
-    name: "Sales Report",
-    icon: { active: <BiSolidBarChartAlt2 />, inactive: <BiBarChartAlt2 />},
     hasCounter: false
   },
   {
@@ -47,12 +39,5 @@ export const RoutesData = [
     name: "Customers",
     icon: { active: <BiSolidGroup />, inactive: <BiGroup />},
     hasCounter: true
-  },
-  {
-    key: "users",
-    route: "users",
-    name: "Users",
-    icon: { active: <BiSolidUserCircle />, inactive: <BiUserCircle />},
-    hasCounter: true
-  },
+  }
 ]

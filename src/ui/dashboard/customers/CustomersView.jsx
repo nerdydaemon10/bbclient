@@ -5,18 +5,8 @@ import CustomerStyle from "./CustomersStyle.jsx"
 import CustomersTable from "./CustomersTable.jsx"
 import RemoveModal from "./RemoveModal.jsx"
 import UpdateModal from "./UpdateModal.jsx"
-import { useEffect } from "react"
-import { setBreadcrumb } from "../../redux/dashboardSlice.js"
-import { useDispatch } from "react-redux"
-import { breadcrumbItems } from "./Util.jsx"
 
-function CustomersView() {
-  const dispatch = useDispatch()
-  
-  useEffect(() => {
-    dispatch(setBreadcrumb(breadcrumbItems))
-  }, [])
-  
+function CustomersView() {  
   return (
     <CustomersProvider>
       <CustomerStyle />

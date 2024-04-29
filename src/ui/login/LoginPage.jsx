@@ -36,14 +36,14 @@ function LoginPage() {
   useEffect(() => {
     usernameRef.current.focus()
   }, [])
-
+  
   useEffect(() => {
-    if (isSuccess) {
-      const user = local.get("user")
-      const _enum = Role.toEnum(user.role_id)
-
-      navigate(`/${_enum}`)
-    }
+    if (!isSuccess) return
+    const user = local.get("user")
+    const roleId = user ? user.role_id : 0
+    const role = Role.toEnum(roleId)
+    
+    navigate(`/${role}`)
   }, [isSuccess])
 
   return (

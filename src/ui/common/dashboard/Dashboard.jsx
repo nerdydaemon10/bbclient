@@ -1,23 +1,22 @@
 import { useEffect, useState } from "react"
-import { Link, useLocation } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import { 
-	BiDownload,
 	BiLogIn, BiShieldQuarter, 
-	BiSolidCoffeeBean, BiSolidHome
+	BiSolidCoffeeBean
 } from "react-icons/bi"
 
 import "./Dashboard.css"
-import { useDispatch, useSelector } from "react-redux"
 import local from "../../../util/local.js"
 import { Role } from "../../../util/classes"
-import { exportToExcel } from "../../redux/salesSlice.js"
-import { Button, Flex, LinkButton } from "../index"
+import { Flex, LinkButton } from "../index"
+import DashboardNavbar from "./DashboardNavbar.jsx"
+import { currentRoute } from "./util.js"
 
-function Dashboard({sidebarItems, breadcrumbItems, children}) {
+function Dashboard({routesData, children}) {
 	return (
 		<div className="dashboard d-grid vh-100">
-			<DashboardSidebar items={sidebarItems} />
-			<DashboardNavbar breadcrumbItems={breadcrumbItems} />
+			<DashboardSidebar routesData={routesData} />
+			<DashboardNavbar routesData={routesData} />
 			<DashboardMain>
 				{children}
 			</DashboardMain>
@@ -25,18 +24,15 @@ function Dashboard({sidebarItems, breadcrumbItems, children}) {
 	)
 }
 
-function DashboardSidebar({items}) {
+function DashboardSidebar({routesData}) {
 	const location = useLocation()
-  const [route, setRoute] = useState(location.pathname)
+	const [route, setRoute] = useState(currentRoute(location))
+
 	const user = local.get("user")
-
-  const handleClick = (route) => {
-    setRoute(route)
-  }
-
+	
 	useEffect(() => {
-    setRoute(location.pathname)
-	}, [location.pathname])
+    setRoute(currentRoute(location))
+	}, [location])
 
 	return (
 		<div className="dashboard-sidebar d-grid border-end">
@@ -55,13 +51,11 @@ function DashboardSidebar({items}) {
 			<div className="dashboard-sidebar-body p-2">
 				<ul className="list-unstyled d-flex flex-column gap-2 m-0 p-0">
 				{
-					items.map((item, index) => (
+					routesData.map((routeData, index) => (
 						<SidebarItem 
 							key={index}
-							item={item} 
-							index={index}
-							isSelected={compareRoute(item.route, route)}
-							onClick={() => handleClick(item.route)}
+							routeData={routeData} 
+							isSelected={isSelected(routeData.key, route)}
 						/>
 					))
 				}
@@ -80,6 +74,7 @@ function DashboardSidebar({items}) {
 				<LinkButton
 					variant="outline-dark"
 					to="sign-out"
+					replace
 				>
 					<BiLogIn className="me-1"/>
 					Sign Out
@@ -89,65 +84,27 @@ function DashboardSidebar({items}) {
 	)
 }
 
-function SidebarItem({item, isSelected, onClick}) {
+function SidebarItem({routeData, isSelected, onClick}) {
 	const variant = isSelected ? 'dark' : 'light'
-	const icon = isSelected ? item.icon.active : item.icon.inactive
+	const icon = isSelected ? routeData.icon.active : routeData.icon.inactive
 
 	return (
 		<li>
 			<LinkButton
-				to={item.route}
+				to={routeData.route}
 				variant={variant}
 				isFullWidth={true}
 				onClick={onClick}
 			>
 				<div className="d-flex flex-row align-items-center justify-content-start fs-7 fw-medium gap-1">
 					{icon}
-					{item.label}
-					{item.hasCounter && (<span className={`badge rounded-pill text-bg-${isSelected ? "light" : "dark"} ms-auto`}>99+</span>)}
+					{routeData.name}
+					{routeData.hasCounter && (<span className={`badge rounded-pill text-bg-${isSelected ? "light" : "dark"} ms-auto`}>99+</span>)}
 				</div>
 			</LinkButton>
 		</li>
 	)
 }
-function DashboardNavbar() {
-	const { breadcrumbItems } = useSelector((state) => state.dashboard)
-	const { exportToExcelRes } = useSelector((state) => state.sales)
-	const dispatch = useDispatch()
-
-	const handleClick = () => {
-		dispatch(exportToExcel())
-	}
-
-	return (
-    <div className="dashboard-navbar d-flex flex-row align-items-center justify-content-between p-2 border-bottom">
-      <ol className="breadcrumb m-0 p-0">
-				<Link 
-					to=""
-					className="breadcrumb-item"
-				>
-          <span className="app-breadcrumb-item-icon">
-            <BiSolidHome className="me-1" />
-          </span>
-					Home Dashboard
-				</Link>
-				{
-					breadcrumbItems.map((item, index) => (
-						<Link key={index} to={item.route} className="breadcrumb-item">{item.name}</Link>
-					))
-				}
-      </ol>
-			<Button
-				isLoading={exportToExcelRes.isLoading}
-				onClick={handleClick}
-			>
-				<BiDownload className="me-1" />
-				Export to Excel
-			</Button>
-    </div>
-	)
-}
-
 function DashboardMain({children}) {
 	return (
 		<div className="dashboard-main p-2 gap-2">
@@ -156,7 +113,7 @@ function DashboardMain({children}) {
 	)
 }
 
-function compareRoute(route, current) {
+function isSelected(route, current) {
   const lastIndex = current.lastIndexOf("/")
   const isLastIndex = (lastIndex === current.length - 1) && (lastIndex !== 0)
   const formattedRoute = isLastIndex ? current.substring(0, lastIndex) : current
@@ -164,8 +121,4 @@ function compareRoute(route, current) {
   return formattedRoute === route
 }
 
-export {
-	Dashboard,
-	DashboardSidebar,
-	DashboardMain
-}
+export { Dashboard, DashboardSidebar, DashboardMain }

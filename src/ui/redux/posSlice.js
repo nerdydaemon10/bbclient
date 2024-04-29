@@ -1,7 +1,7 @@
 import { first } from "lodash"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
-import { Tabs } from "../home/pos/Util.jsx"
+import { Tabs } from "../dashboard/pos/Util.jsx"
 import { OrderService } from "../../data/services"
 import { PaymentMethodsData, rowsPerPages } from "../../util/Config.jsx"
 import { TableType, FetchType } from "../../util/classes"

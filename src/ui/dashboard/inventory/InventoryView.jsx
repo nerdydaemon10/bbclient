@@ -22,7 +22,7 @@ function TitleContainer() {
   return (
     <div className="title-container">
       <h3 className="text-body-primary fw-bold mb-0">Inventory</h3>
-      <p className="text-body-secondary mb-0">Please add some descriptions...</p>
+      <p className="text-body-secondary mb-0">View list of products in inventory</p>
     </div>
   )
 }

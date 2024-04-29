@@ -3,8 +3,8 @@ import ObjectHelper from "../../util/helpers/ObjectHelper.js"
 
 export default class SaleService {}
 
-SaleService.exportToExcel = async function() {
-  const response = await client.get('/admin/export')
+SaleService.exportAsExcel = async function() {
+  const response = await client.get('/admin/export', { responseType: "blob"})
   return response.data
 }
 
@@ -21,6 +21,6 @@ SaleService.findAll = async function(sq=null) {
   
   const params = ObjectHelper.toUriParams(customSq) 
   const response = await client.get(`/admin/sales?${params}`)
-  
+
   return response.data
 }
