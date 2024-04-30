@@ -2,9 +2,9 @@
 import { debounce } from "lodash"
 import { createContext, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { DELAY_MILLIS } from "../../../util/Config.jsx"
-import { setFulfilled, setPending, setRejected } from "../../redux/salesSlice.js"
-import { SaleService } from "../../../data/services"
+import { DELAY_MILLIS } from "../../util/Config.jsx"
+import { setFulfilled, setPending, setRejected } from "../redux/salesSlice.js"
+import { SaleService } from "../../data/services/index.js"
 
 export const SalesContext = createContext()
 

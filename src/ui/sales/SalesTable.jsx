@@ -1,16 +1,18 @@
 import { BiLinkAlt } from "react-icons/bi"
-import { Button, SelectInput, TDStatus, THeaders } from "../../common"
+import { Button, SelectInput, TDStatus, THeaders } from "../common/index.jsx"
 import { columns } from "./Util.jsx"
-import { noSearchResults } from "../../../util/helper.jsx"
+import { noSearchResults } from "../../util/helper.jsx"
 import { isEmpty, size } from "lodash"
-import StringHelper from "../../../util/helpers/StringHelper.js"
-import { PaymentMethod, OrderStatus, GenericMessage } from "../../../util/classes"
-import DateHelper from "../../../util/helpers/DateHelper.js"
-import { rowsPerPages } from "../../../util/Config.jsx"
+import StringHelper from "../../util/helpers/StringHelper.js"
+import { PaymentMethod, OrderStatus, GenericMessage } from "../../util/classes/index.js"
+import DateHelper from "../../util/helpers/DateHelper.js"
+import { rowsPerPages } from "../../util/Config.jsx"
 import { useDispatch, useSelector } from "react-redux"
-import { setSq } from "../../redux/salesSlice.js"
+import { setSq } from "../redux/salesSlice.js"
 import { useContext } from "react"
 import { SalesContext } from "./SalesProvider.jsx"
+import { Link } from "react-router-dom"
+import { setOrder } from "../redux/checkoutsSlice.js"
 
 function SalesTable() {
   const { sq, fetch } = useSelector((state) => state.sales)
@@ -56,7 +58,12 @@ function SalesTable() {
 }
 function TableContainer({isLoading, sq, data, error}) {
   const colSpan = size(columns)
-  
+  const dispatch = useDispatch()
+
+  const handleClick = (sale) => {
+    dispatch(setOrder(sale))
+  }
+
   return (
     <div className="table-wrapper table-container">
       <table className="table">
@@ -85,6 +92,7 @@ function TableContainer({isLoading, sq, data, error}) {
               <TDSale
                 key={index}
                 sale={sale}
+                onClick={() => handleClick(sale)}
               />
             )) : (
               <></>
@@ -95,7 +103,7 @@ function TableContainer({isLoading, sq, data, error}) {
     </div>
   )
 }
-function TDSale({sale}) {
+function TDSale({sale, onClick}) {
   const refNumber = StringHelper.truncate(sale.reference_number, 15)
   const amountDue = StringHelper.toPesoCurrency(Number(sale.amount_due))
   const totalItems = StringHelper.toPcs(sale.number_of_items)
@@ -105,14 +113,16 @@ function TDSale({sale}) {
   const salesperson = StringHelper.truncate(sale.employee.full_name)
   const commission = StringHelper.toPesoCurrency(sale.commission)
   const dateCreated = DateHelper.toIsoStandard(sale.created_at)
-  
+
   return (
     <tr key={sale.id}>
       <td>
-        <a href="#">
+        <Link 
+          to="checkouts"
+          onClick={onClick}>
           <BiLinkAlt className="me-1" />
           {refNumber}
-        </a>
+        </Link>
       </td>
       <td>{amountDue}</td>
       <td>{totalItems}</td>

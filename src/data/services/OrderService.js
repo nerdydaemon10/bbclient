@@ -16,7 +16,7 @@ OrderService.findAll = async function(sq=null) {
   const params = ObjectHelper.toUriParams(sq)
   
   const response = await client.get(`${role}/orders/?${params}`)
-
+  
   return response.data
 }
 OrderService.approve = async function(id) {

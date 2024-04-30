@@ -113,11 +113,11 @@ export const buildResponse = (state=ResponseStatus.IDLE, payload=null) => {
 }
 export const buildColResponse = (state=ResponseStatus.IDLE, payload=null) => {
   if (state == ResponseStatus.PENDING)
-    return { isLoading: true, data: [], meta: { current_page: 0, last_page: 0 }, error: null }
+    return { isLoading: true, isCached: false, data: [], meta: { current_page: 0, last_page: 0 }, error: null }
   if (state == ResponseStatus.FULFILLED)
-    return { isLoading: false, data: payload.data, meta: payload.meta, error: null }
+    return { isLoading: false, isCached: true, data: payload.data, meta: payload.meta, error: null }
   if (state == ResponseStatus.REJECTED)
-    return { isLoading: false, data: [], meta: { current_page: 0, last_page: 0 }, error: payload }
+    return { isLoading: false, isCached: false, data: [], meta: { current_page: 0, last_page: 0 }, error: payload }
   // Idle
   return { isLoading: false, data: [], meta: { current_page: 0, last_page: 0 }, error: null }
 }

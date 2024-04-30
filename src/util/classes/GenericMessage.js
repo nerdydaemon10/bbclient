@@ -24,6 +24,8 @@ export default class GenericMessage {
     static SALES_NO_MATCH = "No sales match your search criteria. Try refining your search."
     static SALES_EMPTY = "No sales yet."
     static SALES_ERROR = "Something went wrong while fetching sales."
+
+    static CHECKOUTS_EMPTY = "No checkouts yet."
     
     static CUSTOMER_ADDED = "Customer was successfully added to the records."
     static CUSTOMER_UPDATED = "Customer's info was successfully updated."

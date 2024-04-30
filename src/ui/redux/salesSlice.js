@@ -46,6 +46,9 @@ const salesSlice = createSlice({
     },
     setRejected: (state, action) => {
       state.fetch.response = buildColResponse(ResponseStatus.REJECTED, action.payload)
+    },
+    resetStates: (state) => {
+      state.exportAsExcelResponse = buildResponse()
     }
   },
   extraReducers: (builder) => {
@@ -67,7 +70,8 @@ export const {
   setSq,
   setPending,
   setFulfilled,
-  setRejected
+  setRejected,
+  resetStates
 } = salesSlice.actions
 export { exportAsExcel }
 export default salesSlice.reducer

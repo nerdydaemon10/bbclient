@@ -51,7 +51,7 @@ function DashboardSidebar({routesData}) {
 			<div className="dashboard-sidebar-body p-2">
 				<ul className="list-unstyled d-flex flex-column gap-2 m-0 p-0">
 				{
-					routesData.map((routeData, index) => (
+					routesData.filter(routeData => routeData.isSidebarItem).map((routeData, index) => (
 						<SidebarItem 
 							key={index}
 							routeData={routeData} 

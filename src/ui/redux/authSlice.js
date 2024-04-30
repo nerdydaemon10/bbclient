@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { AuthService } from "../../data/services"
 import { local } from "../../util"
 import { isEmpty } from "lodash"
+import { buildResponse } from "../../util/Config.jsx"
+import ResponseStatus from "../../util/classes/ResponseStatus.js"
 
 export const login = createAsyncThunk(
   "auth/login", async (credentials, thunkAPI) => {
@@ -25,16 +27,8 @@ export const logout = createAsyncThunk(
 })
 
 const initialState = {
-  loginResponse: { 
-    isLoading: false,
-    isSuccess: false,
-    error: null
-  },
-  logoutResponse: { 
-    isLoading: false,
-    isSuccess: false,
-    error: null
-  }
+  loginResponse: buildResponse(),
+  logoutResponse: buildResponse()
 }
 
 const authSlice = createSlice({
@@ -42,33 +36,22 @@ const authSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
 		builder
+    // Login
     .addCase(login.pending, (state) => {
-      state.loginResponse = {
-        isLoading: true,
-        isSuccess: false,
-        error: null 
-      }
+      state.loginResponse = buildResponse(ResponseStatus.PENDING)
     })
     .addCase(login.fulfilled, (state, action) => {
       const { token, user } = action.payload
-
-      state.loginResponse = {
-        isLoading: false,
-        isSuccess: true,
-        error: null
-      }
       
+      state.loginResponse = buildResponse(ResponseStatus.FULFILLED, action.payload)
+
       local.set("token", token)
       local.set("user", user)
     })
     .addCase(login.rejected, (state, action) => {
-      state.loginResponse = {
-        isLoading: false,
-        isSuccess: false,
-        error: action.payload 
-      }
+      state.loginResponse = buildResponse(ResponseStatus.REJECTED, action.payload)
     })
-
+    // Logout
     .addCase(logout.pending, (state) => {
       state.loginResponse = {
         isLoading: false,
@@ -76,7 +59,6 @@ const authSlice = createSlice({
         error: null 
       }
     })
-
     .addCase(logout.fulfilled, (state) => {
       state.logoutResponse = {
         isLoading: false,
@@ -85,7 +67,6 @@ const authSlice = createSlice({
       }
       local.clear()
     })
-
     .addCase(logout.rejected, (state, action) => {
       state.logoutResponse = {
         isLoading: false,
@@ -96,5 +77,4 @@ const authSlice = createSlice({
   }
 })
 
-export const {  } = authSlice.actions
 export default authSlice.reducer

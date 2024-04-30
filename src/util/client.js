@@ -15,6 +15,7 @@ client.interceptors.request.use(
     config.headers["Accept"] = 'application/json'
     config.headers["x-api-key"] = X_API_KEY
     config.headers["Authorization"] = `Bearer ${token}`
+    config.headers["token"] = `${token}`
 
     return config
   },

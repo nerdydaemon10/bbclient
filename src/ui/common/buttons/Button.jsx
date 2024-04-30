@@ -1,4 +1,5 @@
 function Button({
+  extendedRef,
   className,
   style,
   variant="dark",
@@ -12,6 +13,7 @@ function Button({
 }) {
   return (
     <button 
+      ref={extendedRef}
       className={`btn btn-${variant} btn-${size} ${isFullWidth && "d-block w-100"} ${className}`} 
       style={style}
       type={isSubmit ? "submit" : "button" }

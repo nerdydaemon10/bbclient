@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useDispatch, useSelector } from "react-redux";
-import { paymentMethods, orderStatuses } from "../../../util/Config.jsx";
-import OrderStatus from "../../../util/classes/OrderStatus.js";
-import PaymentMethod from "../../../util/classes/PaymentMethod.js";
-import { Button, DateInput, SearchFieldInput, SelectInput } from "../../common";
-import { exportAsExcel, setSq } from "../../redux/salesSlice.js";
-import { useContext, useEffect } from "react";
-import { SalesContext } from "./SalesProvider.jsx";
-import { BiDownload } from "react-icons/bi";
-import moment from "moment";
+import { useDispatch, useSelector } from "react-redux"
+import { paymentMethods, orderStatuses } from "../../util/Config.jsx"
+import OrderStatus from "../../util/classes/OrderStatus.js"
+import PaymentMethod from "../../util/classes/PaymentMethod.js"
+import { Button, DateInput, SearchFieldInput, SelectInput } from "../common/index.jsx"
+import { exportAsExcel, resetStates, setSq } from "../redux/salesSlice.js"
+import { useContext, useEffect } from "react"
+import { SalesContext } from "./SalesProvider.jsx"
+import { BiDownload } from "react-icons/bi"
+import moment from "moment"
 
 function FilteringContainer() {
   const dispatch = useDispatch()
@@ -30,18 +30,21 @@ function FilteringContainer() {
     if (!isSuccess) return
 
     const url = URL.createObjectURL(data)
-
     const link = document.createElement('a')
 
     link.href = url
     link.setAttribute("download", `SALES_REPORT_${moment.now()}.xlsx`)
-    
     document.body.appendChild(link)
+
     link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
+
+    return () => {
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+      dispatch(resetStates())
+    }
   }, [isSuccess])
-  
+
   return (
     <div className="filtering-container d-flex flex-column border rounded p-2 gap-2">
       <DateInput 
@@ -89,7 +92,7 @@ function FilteringContainer() {
         onRender={(option) => `${PaymentMethod.toMethod(option)}`}
       />
       <hr className="mt-2 mb-2"/>
-      <Button 
+      <Button
         variant="outline-dark"
         isLoading={isLoading}
         onClick={handleClick}
@@ -100,5 +103,4 @@ function FilteringContainer() {
     </div>
   )
 }
-
 export default FilteringContainer

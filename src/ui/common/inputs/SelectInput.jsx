@@ -3,7 +3,9 @@ import { isUndefined } from "lodash"
 function SelectInput({
   label, name, 
   options, 
-  isDisabled, isAllCategoriesEnabled, 
+  isDisabled, 
+  isReadOnly,
+  isAllCategoriesEnabled, 
   feedback, 
   value, 
   onChange, 
@@ -21,7 +23,7 @@ function SelectInput({
       <select 
         className={`form-select  ${state}`}
         name={name}
-        disabled={isDisabled}
+        disabled={isDisabled || isReadOnly}
         value={value}
         onChange={onChange}
       >

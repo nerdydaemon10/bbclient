@@ -1,25 +1,29 @@
 import { Link } from "react-router-dom"
 
 function LinkButton({
+  extendedRef,
   to,
+  href,
   target,
+  download,
   variant="dark",
   size="md",
   isLoading,
   isDisabled,
-  isDownload,
   isFullWidth,
   isReplace,
   onClick,
-  className,
   style,
+  className,
   children
 }) {
   return (
     <Link
+      ref={extendedRef}
       to={to}
+      href={href}
       target={target}
-      download={isDownload}
+      download={download}
       replace={isReplace}
       role="button"
       type="button"

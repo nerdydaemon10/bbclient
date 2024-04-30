@@ -12,6 +12,7 @@ export function isSelected(route, current) {
 }
 
 export function currentRoute(location) {
-  const routes = location.pathname.split("/")
+  const excludes = ["checkouts"]
+  const routes = location.pathname.split("/").filter(route => !excludes.includes(route))
   return last(routes)
 }

@@ -7,6 +7,7 @@ import authSlice from "./authSlice.js"
 import ordersSlice from "./ordersSlice.js"
 import dashboardSlice from "./dashboardSlice.js"
 import salesSlice from "./salesSlice.js"
+import checkoutsSlice from "./checkoutsSlice.js"
 
 const reducer = combineReducers({
   auth: authSlice,
@@ -15,7 +16,8 @@ const reducer = combineReducers({
   inventory: inventorySlice,
   customers: customersSlice,
   orders: ordersSlice,
-  sales: salesSlice
+  sales: salesSlice,
+  checkouts: checkoutsSlice
 })
 
 const store = configureStore({

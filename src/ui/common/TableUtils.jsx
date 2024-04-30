@@ -1,7 +1,11 @@
 export function THeaders({columns}) {
   return (
     <tr>
-      {columns.map((column, index) => <th key={index}>{column}</th>)}
+      {columns.map((column, index) => (
+        <th key={index}>
+          {column}
+        </th>
+      ))}
     </tr>
   )
 }

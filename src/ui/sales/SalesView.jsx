@@ -3,7 +3,7 @@ import FilteringContainer from "./FilteringContainer.jsx"
 import SalesProvider from "./SalesProvider.jsx"
 import SalesStyle from "./SalesStyle.jsx"
 import SalesTable from "./SalesTable.jsx"
-import { ReceiptList } from "../../common"
+import { ReceiptList } from "../common/index.jsx"
 
 function SalesView() {
   return (
@@ -14,7 +14,7 @@ function SalesView() {
       <FilteringContainer />
       <ReceiptList 
         receipts={[
-          { name: "Commission", value: 50},
+          { name: "Salesp. Commission", value: 50},
           { name: "Total", value: 50},
         ]}
       />
