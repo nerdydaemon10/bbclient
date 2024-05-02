@@ -79,7 +79,7 @@ function FilteringContainer({name, status, onChange}) {
           <SelectInput
             name="status"
             options={orderStatuses}
-            isAllCategoriesEnabled
+            isOptional
             value={status}
             onChange={onChange}
             onRender={(option) => OrderStatus.toStatus(option)}

@@ -1,5 +1,4 @@
 import { isEmpty } from "lodash"
-import moment from "moment"
 
 export function findErrorByMessage(error) {
   if (!error) 
@@ -45,15 +44,10 @@ export function noSearchResults(sq, data) {
   const hasValues = entries.some((item) => !isEmpty(item[1]))
   return (data.length == 0) && hasValues
 }
-export function download(data, name) {
-  const url = URL.createObjectURL(data)
-  const link = document.createElement('a')
-  
-  link.href = url
-  link.setAttribute("download", `SALES_REPORT_${moment.now()}.xlsx`)
-
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-  URL.revokeObjectURL(url)
+export function computeProduct(checkout) {
+  return checkout.srp * checkout.quantity
+}
+export function computeSum(checkouts) {
+  if (isEmpty(checkouts)) return 0.00
+  return checkouts.reduce((accum, checkout) => accum + computeProduct(checkout), 0.00)
 }

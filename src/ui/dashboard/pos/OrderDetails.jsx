@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Button, CheckoutList, OptionInput, ReceiptList } from "../../common/index.jsx"
-import { Tabs, computeSum, hasIncompleteDetails } from "./Util.jsx"
+import { Tabs, hasIncompleteDetails } from "./Util.jsx"
 import CustomerDetails from "./CustomerDetails.jsx"
 import { useDispatch, useSelector } from "react-redux"
 import { createOrder, decrementQty, incrementQty, resetStates, setTab } from "../../redux/posSlice.js"
@@ -9,6 +9,7 @@ import { enqueueSnackbar } from "notistack"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { PosContext } from "./PosProvider.jsx"
 import { DELAY_MILLIS } from "../../../util/Config.jsx"
+import { computeSum } from "../../../util/helper.jsx"
 
 function OrderDetails() {
   const dispatch = useDispatch()

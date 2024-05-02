@@ -1,8 +1,10 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit"
 import { buildColResponse, buildResponse, rowsPerPages } from "../../util/Config.jsx"
-import { first } from "lodash"
+import { first, isEmpty } from "lodash"
 import { SaleService } from "../../data/services"
 import ResponseStatus from "../../util/classes/ResponseStatus.js"
+import UserService from "../../data/services/UserService.js"
+import { computeSum } from "../../util/helper.jsx"
 
 const exportAsExcel = createAsyncThunk(
   "sales/exportAsExcel", 
@@ -14,10 +16,20 @@ const exportAsExcel = createAsyncThunk(
     return thunkAPI.rejectWithValue(error.response.data)
   }
 })
+const fetchUsers = createAsyncThunk(
+  "sales/fetchUsers", 
+  async (thunkAPI) => {
+  try {
+    const response = await UserService.findAll()
+    return response
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data)
+  }
+})
 
-const defaultState = {
-  sq: {
-    "user.full_name": "",
+const initialState = { 
+  salesSq: {
+    user_id: "",
     "customer.full_name": "",
     date_start: "",
     date_end: "",
@@ -26,26 +38,26 @@ const defaultState = {
     per_page: first(rowsPerPages), 
     page: 1
   },
-  fetch: { response: buildColResponse() },
+  fetchSalesResponse: buildColResponse(),
+  fetchUsersResponse: buildColResponse(),
   exportAsExcelResponse: buildResponse()
 }
-const initialState = { ...defaultState }
 
 const salesSlice = createSlice({
   name: "sales",
   initialState,
   reducers: {
     setSq: (state, action) => {
-      state.sq = action.payload
+      state.salesSq = action.payload
     },
     setPending: (state) => {
-      state.fetch.response = buildColResponse(ResponseStatus.PENDING)
+      state.fetchSalesResponse = buildColResponse(ResponseStatus.PENDING)
     },
     setFulfilled: (state, action) => {
-      state.fetch.response = buildColResponse(ResponseStatus.FULFILLED, action.payload)
+      state.fetchSalesResponse = buildColResponse(ResponseStatus.FULFILLED, action.payload)
     },
     setRejected: (state, action) => {
-      state.fetch.response = buildColResponse(ResponseStatus.REJECTED, action.payload)
+      state.fetchSalesResponse = buildColResponse(ResponseStatus.REJECTED, action.payload)
     },
     resetStates: (state) => {
       state.exportAsExcelResponse = buildResponse()
@@ -63,15 +75,36 @@ const salesSlice = createSlice({
     .addCase(exportAsExcel.rejected, (state, action) => {
       state.exportAsExcelResponse = buildResponse(ResponseStatus.REJECTED, action.payload)
     })
+    // Fetch Users
+    .addCase(fetchUsers.pending, (state) => {
+      state.fetchUsersResponse = buildColResponse(ResponseStatus.PENDING)
+    })
+    .addCase(fetchUsers.fulfilled, (state, action) => {
+      state.fetchUsersResponse = buildColResponse(ResponseStatus.FULFILLED, action.payload)
+    })
+    .addCase(fetchUsers.rejected, (state, action) => {
+      state.fetchUsersResponse = buildColResponse(ResponseStatus.REJECTED, action.payload)
+    })
   }
 })
 
-export const { 
+export const selectSales = (state) => state.fetchSalesResponse.data ?? []
+export const selectUsersResponse = (state) => state.fetchUsersResponse.data ?? []
+export const selectTotalSales = createSelector([selectSales], (sales) => {
+  if (isEmpty(sales)) return 0.00
+  return sales.reduce((accum, sale) => accum + computeSum(sale.checkouts), 0.00)
+})
+export const selectTotalCommission = createSelector([selectSales], (sales) => {
+  if (isEmpty(sales)) return 0.00
+  return sales.reduce((accum, sale) => accum + sale.commission, 0.00)
+})
+
+export const {
   setSq,
   setPending,
   setFulfilled,
   setRejected,
   resetStates
 } = salesSlice.actions
-export { exportAsExcel }
+export { exportAsExcel, fetchUsers }
 export default salesSlice.reducer

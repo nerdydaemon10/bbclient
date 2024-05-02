@@ -13,8 +13,7 @@ function CheckoutsView() {
   const { order } = useSelector((state) => state.checkouts)
 
   useEffect(() => {
-    if (isEmpty(order)) 
-      navigate("..")
+    if (isEmpty(order)) navigate("..")
   }, [order])
 
   return (

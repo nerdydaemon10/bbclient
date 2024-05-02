@@ -15,24 +15,24 @@ import { Link } from "react-router-dom"
 import { setOrder } from "../redux/checkoutsSlice.js"
 
 function SalesTable() {
-  const { sq, fetch } = useSelector((state) => state.sales)
-  const { isLoading, data, meta, error } = fetch.response
   const { searchSales } = useContext(SalesContext)
+  const { salesSq, fetchSalesResponse } = useSelector((state) => state.sales)
+  const { isLoading, data, meta, error } = fetchSalesResponse
 
   const dispatch = useDispatch()
 
   const handleChange = (e) => {
-    dispatch(setSq({ ...sq, [e.target.name]: e.target.value }))
+    dispatch(setSq({ ...salesSq, [e.target.name]: e.target.value }))
     searchSales.cancel()
   }
   const handlePrevious = () => {
-    let page = sq.page > 1 ? sq.page - 1 : 1 
-    dispatch(setSq({ ...sq, page: page }))
+    let page = salesSq.page > 1 ? salesSq.page - 1 : 1 
+    dispatch(setSq({ ...salesSq, page: page }))
     searchSales.cancel()
   }
   const handleNext = () => {
-    let page = sq.page < meta.last_page ? sq.page + 1 : meta.last_page
-    dispatch(setSq({ ...sq, page: page }))
+    let page = salesSq.page < meta.last_page ? salesSq.page + 1 : meta.last_page
+    dispatch(setSq({ ...salesSq, page: page }))
     searchSales.cancel()
   }
 
@@ -40,13 +40,13 @@ function SalesTable() {
     <>
       <TableContainer
         isLoading={isLoading}
-        sq={sq}
+        sq={salesSq}
         data={data}
         error={error}
       />
       <PaginationContainer
         isLoading={isLoading}
-        rowsPerPage={sq.per_page}
+        rowsPerPage={salesSq.per_page}
         currentPage={meta.current_page}
         lastPage={meta.last_page}
         onChange={handleChange}
@@ -63,6 +63,8 @@ function TableContainer({isLoading, sq, data, error}) {
   const handleClick = (sale) => {
     dispatch(setOrder(sale))
   }
+
+  console.log(data)
 
   return (
     <div className="table-wrapper table-container">

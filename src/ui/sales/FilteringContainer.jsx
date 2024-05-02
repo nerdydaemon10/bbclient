@@ -4,32 +4,35 @@ import { paymentMethods, orderStatuses } from "../../util/Config.jsx"
 import OrderStatus from "../../util/classes/OrderStatus.js"
 import PaymentMethod from "../../util/classes/PaymentMethod.js"
 import { Button, DateInput, SearchFieldInput, SelectInput } from "../common/index.jsx"
-import { exportAsExcel, resetStates, setSq } from "../redux/salesSlice.js"
+import { exportAsExcel, fetchUsers, resetStates, setSq } from "../redux/salesSlice.js"
 import { useContext, useEffect } from "react"
 import { SalesContext } from "./SalesProvider.jsx"
 import { BiDownload } from "react-icons/bi"
 import moment from "moment"
 
 function FilteringContainer() {
+  const { searchSales } = useContext(SalesContext)
+  const { salesSq, fetchUsersResponse, exportAsExcelResponse } = useSelector((state) => state.sales)
+
   const dispatch = useDispatch()
 
-  const { sq, exportAsExcelResponse } = useSelector((state) => state.sales)
-  const { isLoading, isSuccess, data } = exportAsExcelResponse
-  const { searchSales } = useContext(SalesContext)
-
   const handleChange = (e) => {
-    dispatch(setSq({ ...sq, [e.target.name]: e.target.value }))
+    dispatch(setSq({ ...salesSq, [e.target.name]: e.target.value }))
     searchSales.cancel()
   }
 
   const handleClick = () => {
-    dispatch(exportAsExcel(sq))
+    dispatch(exportAsExcel(salesSq))
   }
 
   useEffect(() => {
-    if (!isSuccess) return
+    dispatch(fetchUsers())
+  }, [])
+  
+  useEffect(() => {
+    if (!exportAsExcelResponse.isSuccess) return
 
-    const url = URL.createObjectURL(data)
+    const url = URL.createObjectURL(exportAsExcelResponse.data)
     const link = document.createElement('a')
 
     link.href = url
@@ -43,42 +46,49 @@ function FilteringContainer() {
       URL.revokeObjectURL(url)
       dispatch(resetStates())
     }
-  }, [isSuccess])
-
+  }, [exportAsExcelResponse.isSuccess])
+  
   return (
-    <div className="filtering-container d-flex flex-column border rounded p-2 gap-2">
+    <div className="card filtering-container">
+      <div className="card-header p-2">
+        <div className="card-header-title">Filter Sales</div>
+      </div>
+      <div className="card-body d-flex flex-column p-2 gap-2">
       <DateInput 
         label="Date Start" 
         name="date_start" 
-        value={sq.date_start}
+        value={salesSq.date_start}
         onChange={handleChange} 
       />
       <DateInput 
         label="Date End" 
         name="date_end" 
-        value={sq.date_end}
+        value={salesSq.date_end}
         onChange={handleChange} 
       />
-      <SearchFieldInput
-        label="Employee Name"
-        name="user.full_name"
-        placeholder={"Search by Employee..."}
-        value={sq["user.full_name"]}
+      <SelectInput
+        isOptional
+        label="Salesperson"
+        name="user_id"
+        options={fetchUsersResponse.data}
+        value={salesSq.user_id}
+        valueSelector="id"
         onChange={handleChange}
+        onRender={(option) => `${option.full_name}`}
       />
       <SearchFieldInput
         label="Customer Name"
         name="customer.full_name"
         placeholder={"Search by Customer..."}
-        value={sq["customer.full_name"]}
+        value={salesSq["customer.full_name"]}
         onChange={handleChange}
       />
       <SelectInput
+        isOptional
         label="Status"
         name="status"
         options={orderStatuses}
-        isAllCategoriesEnabled
-        value={sq.status}
+        value={salesSq.status}
         onChange={handleChange}
         onRender={(option) => `${OrderStatus.toStatus(option)}`}
       />
@@ -86,20 +96,21 @@ function FilteringContainer() {
         label="Payment Method"
         name="payment_method"
         options={paymentMethods}
-        isAllCategoriesEnabled
-        value={sq.payment_method}
+        isOptional
+        value={salesSq.payment_method}
         onChange={handleChange}
         onRender={(option) => `${PaymentMethod.toMethod(option)}`}
       />
       <hr className="mt-2 mb-2"/>
       <Button
         variant="outline-dark"
-        isLoading={isLoading}
+        isLoading={exportAsExcelResponse.isLoading}
         onClick={handleClick}
       >
         <BiDownload className="me-1" />
         Export as Excel
       </Button>
+      </div>
     </div>
   )
 }

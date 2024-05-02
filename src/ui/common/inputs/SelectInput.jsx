@@ -1,14 +1,16 @@
 import { isUndefined } from "lodash"
 
 function SelectInput({
-  label, name, 
-  options, 
   isDisabled, 
   isReadOnly,
-  isAllCategoriesEnabled, 
-  feedback, 
-  value, 
-  onChange, 
+  isOptional,
+  label,
+  name,
+  options,
+  feedback,
+  value,
+  valueSelector,
+  onChange,
   onRender
 }) {
   const { state, message } = feedback || { state: "", message: ""}
@@ -27,9 +29,9 @@ function SelectInput({
         value={value}
         onChange={onChange}
       >
-        {isAllCategoriesEnabled && (<option value="">--All-Categories--</option>)}
+        {isOptional && (<option value="">--All-Categories--</option>)}
         {options.map((option, index) => (
-          <option key={index} value={option}>
+          <option key={index} value={valueSelector ? option[valueSelector] : option}>
             {isUndefined(onRender) ? option : onRender(option)}
           </option>
         ))}

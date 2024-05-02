@@ -76,7 +76,7 @@ function FilteringContainer({name, category, onChange}) {
           <SelectInput
             name="category_id"
             options={productCategories}
-            isAllCategoriesEnabled
+            isOptional
             value={category}
             onChange={onChange}
             onRender={(option) => ProductCategory.toCategory(option)}

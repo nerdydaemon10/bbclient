@@ -9,7 +9,8 @@ import { SaleService } from "../../data/services/index.js"
 export const SalesContext = createContext()
 
 function SalesProvider({children}) {
-  const { sq } = useSelector((state) => state.sales)
+  const { salesSq } = useSelector((state) => state.sales)
+  
   const dispatch = useDispatch()
 
   const fetchSales = (sq) => {
@@ -26,8 +27,8 @@ function SalesProvider({children}) {
   }, DELAY_MILLIS)
 
   useEffect(() => {
-    searchSales(sq)
-  }, [sq])
+    searchSales(salesSq)
+  }, [salesSq])
 
   return (
     <SalesContext.Provider value={{

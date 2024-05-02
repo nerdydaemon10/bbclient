@@ -21,14 +21,6 @@ function hasCheckouts(checkouts) {
   return checkouts.length > 0
 }
 
-function computeProduct(checkout) {
-  return checkout.srp * checkout.quantity
-}
-
-function computeSum(checkouts) {
-  return checkouts.reduce((accum, checkout) => accum + computeProduct(checkout), 0.00)
-}
-
 function isCheckedOut(checkouts, id) {
   return !!checkouts.find(checkout => checkout.id == id)
 }
@@ -46,8 +38,6 @@ export {
   customerCols,
   Tabs,
   hasCheckouts,
-  computeProduct,
-  computeSum,
   isCheckedOut,
   isProducts,
   hasIncompleteDetails

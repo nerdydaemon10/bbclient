@@ -20,7 +20,8 @@ SaleService.findAll = async function(sq=null) {
   const params = sq ? {
     start_date: sq.date_start,
     end_date: sq.date_end,
-    employee: sq["user.full_name"],
+    commission_by_id: sq["user_id"],
+    sales_by_id: sq["user_id"],
     customer: sq["customer.full_name"],
     status: sq.status,
     payment_method: sq.payment_method,
@@ -29,6 +30,5 @@ SaleService.findAll = async function(sq=null) {
   } : null
 
   const response = await client.get(`/admin/sales`, { params: params })
-
   return response.data
 }

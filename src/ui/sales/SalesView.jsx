@@ -4,8 +4,13 @@ import SalesProvider from "./SalesProvider.jsx"
 import SalesStyle from "./SalesStyle.jsx"
 import SalesTable from "./SalesTable.jsx"
 import { ReceiptList } from "../common/index.jsx"
+import { useSelector } from "react-redux"
+import { selectTotalCommission, selectTotalSales } from "../redux/salesSlice.js"
 
 function SalesView() {
+  const totalCommission = useSelector((state) => selectTotalCommission(state.sales))
+  const totalSales = useSelector((state) => selectTotalSales(state.sales))
+
   return (
     <SalesProvider>
       <SalesStyle />
@@ -14,8 +19,8 @@ function SalesView() {
       <FilteringContainer />
       <ReceiptList 
         receipts={[
-          { name: "Salesp. Commission", value: 50},
-          { name: "Total", value: 50},
+          { name: "Salesp. Commission", value: totalCommission},
+          { name: "Total", value: totalSales},
         ]}
       />
     </SalesProvider>  

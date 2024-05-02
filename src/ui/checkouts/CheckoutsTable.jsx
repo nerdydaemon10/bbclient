@@ -10,33 +10,37 @@ function CheckoutsTable() {
   const { order } = useSelector((state) => state.checkouts)
   const checkouts = isEmpty(order) ? [] : order.checkouts
   const colSpan = size(columns)
-  
+
   return (
-    <div className="table-wrapper table-container">
-      <table className="table">
-        <thead>
-          <THeaders columns={columns} />
-        </thead>
-        <tbody>
-          {
-            isEmpty(checkouts) ? (
-              <TDStatus colSpan={colSpan}>
-                {GenericMessage.CHECKOUTS_EMPTY}
-              </TDStatus>
-            ) : checkouts ? checkouts.map((checkout, index) => (
-              <TDCheckout
-                key={index}
-                checkout={checkout}
-              />
-            )) : (
-              <></>
-            )
-          }
-        </tbody>
-      </table>
-    </div>
+    <ol className="list-group table-container">
+      {
+        checkouts.map((checkout, index) => (
+          <CheckoutItem key={index} checkout={checkout} />
+        ))
+      }
+    </ol>
   )
 }
+function CheckoutItem({checkout}) {
+  const name = StringHelper.truncate(checkout.name)
+  const description = StringHelper.truncate("lorem ipsum, dolor")
+  const srp = StringHelper.toPesoCurrency(checkout.srp)
+  const quantity = StringHelper.toPcs(checkout.quantity)
+
+  return (
+    <li className="list-group-item">
+      <div className="mb-2">
+        <h6 className="fw-bold mb-0">{name}</h6>
+        <div className="hstack gap-2 text-body-secondary">
+          <span>{description}</span>
+          <span>{srp}</span>
+        </div>
+      </div>
+      <h6 className="fw-bold mb-0">{srp}, {quantity}</h6>
+    </li>
+  )
+}
+
 function TDCheckout({checkout}) {
   const name = StringHelper.truncate(checkout.name)
   const quantity = StringHelper.toPcs(checkout.quantity)
