@@ -62,10 +62,14 @@ export const RoutesData = [
   },
 ]
 export const ProductCategoriesData = [
-  { key: 1, name: "Beverages" },
-  { key: 2, name: "Powder" },
-  { key: 3, name: "Dairy" },
-  { key: 4, name: "Goods" }
+  { key: 1, name: "Coffee Grounds" },
+  { key: 2, name: "Syrup" },
+  { key: 3, name: "Equipment" },
+  { key: 4, name: "Category1" },
+  { key: 5, name: "Category2" },
+  { key: 6, name: "Category3" },
+  { key: 7, name: "Category4" },
+  { key: 8, name: "Category5" }
 ]
 export const PaymentMethodsData = [
   {
