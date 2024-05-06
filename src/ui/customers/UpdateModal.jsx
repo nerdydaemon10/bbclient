@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import { useContext, useEffect } from "react"
-import { Modal, TextFieldInput } from "../../common"
+import { Modal, TextFieldInput } from "../common"
 import { CustomersContext } from "./CustomersProvider.jsx"
 import { enqueueSnackbar } from "notistack"
-import { closeModal, resetStates, setCustomer, updateCustomer } from "../../redux/customersSlice.js"
-import ModalType from "../../../util/classes/ModalType.js"
-import GenericMessage from "../../../util/classes/GenericMessage.js"
-import { DELAY_MILLIS } from "../../../util/Config.jsx"
-import { findErrorByName } from "../../../util/helper.jsx"
+import { closeModal, resetStates, setCustomer, updateCustomer } from "../redux/customersSlice.js"
+import ModalType from "../../util/classes/ModalType.js"
+import GenericMessage from "../../util/classes/GenericMessage.js"
+import { DELAY_MILLIS } from "../../util/Config.jsx"
+import { findErrorByName } from "../../util/helper.jsx"
 
 function UpdateModal() {
   const dispatch = useDispatch()

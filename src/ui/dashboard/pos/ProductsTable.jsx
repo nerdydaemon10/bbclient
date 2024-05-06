@@ -143,14 +143,16 @@ function TableContainer({isLoading, searchQuery, data, error}) {
 }
 
 function TDProduct({product, isCheckedOut, onClick}) {
+  const code = StringHelper.truncate(product.product_code)
   const name = StringHelper.truncate(product.name)
   const description = StringHelper.truncate(product.description)
   const category = ProductCategory.toCategory(product.category_id)
   const stocks = StringHelper.toStocks(product.quantity)
   const price = StringHelper.toPesoCurrency(product.srp)
-  
+
   return (
     <tr key={product.id}>
+      <td>{code}</td>
       <td>{name}</td>
       <td>{description}</td>
       <td>

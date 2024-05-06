@@ -1,7 +1,7 @@
 import { BiFile, BiPackage } from "react-icons/bi"
 import TableType from "../../../util/classes/TableType.js"
 
-const productCols = ["Name", "Description", "Category", "Stocks", "Price/SRP", "Action"]
+const productCols = ["Code", "Name", "Description", "Category", "Stocks", "Price/SRP", "Action"]
 const customerCols = ["Full Name", "Address", "Phone Number", "Email Address", "Action"]
 
 const Tabs = [

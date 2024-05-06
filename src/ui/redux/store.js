@@ -8,6 +8,8 @@ import ordersSlice from "./ordersSlice.js"
 import dashboardSlice from "./dashboardSlice.js"
 import salesSlice from "./salesSlice.js"
 import checkoutsSlice from "./checkoutsSlice.js"
+import { client } from "../../data/services/client.js"
+import employeesSlice from "./employeesSlice.js"
 
 const reducer = combineReducers({
   auth: authSlice,
@@ -17,15 +19,14 @@ const reducer = combineReducers({
   customers: customersSlice,
   orders: ordersSlice,
   sales: salesSlice,
-  checkouts: checkoutsSlice
+  checkouts: checkoutsSlice,
+  employees: employeesSlice,
+  [client.reducerPath]: client.reducer
 })
 
 const store = configureStore({
   reducer: reducer,
-  middleware: getDefaultMiddleware =>
-  getDefaultMiddleware({
-    serializableCheck: false,
-  }),
+  middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false }).concat(client.middleware),
   devTools: true
 })
 

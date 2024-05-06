@@ -16,8 +16,15 @@ const ModalStyle = createGlobalStyle`
   cursor: auto;
 }
 
-.x-modal {
+.x-modal,
+.x-modal-md {
   width: 540px;
+}
+.x-modal-sm {
+  width: 478px;
+}
+.x-modal-xs {
+  width: 428px;
 }
 
 .x-modal-header {}

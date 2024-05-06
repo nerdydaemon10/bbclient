@@ -10,6 +10,7 @@ import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { PosContext } from "./PosProvider.jsx"
 import { DELAY_MILLIS } from "../../../util/Config.jsx"
 import { computeSum } from "../../../util/helper.jsx"
+import StringHelper from "../../../util/helpers/StringHelper.js"
 
 function OrderDetails() {
   const dispatch = useDispatch()
@@ -93,9 +94,8 @@ function TabContainer({tab, checkouts, customer}) {
               onDecrement={handleDecrement} 
               onIncrement={handleIncrement}
             />
-            <ReceiptList 
-              className="receipt-list" 
-              receipts={[{name: "Total", value: computeSum(checkouts)}]
+            <ReceiptList
+              receipts={[{name: "Total", value: StringHelper.toPesoCurrency(computeSum(checkouts))}]
             } />
           </>
         ) : tab === "is-customer" ? (

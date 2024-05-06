@@ -2,6 +2,13 @@
 .fs-7 {
   font-size: 0.95rem !important;
 }
+.fs-8 {
+  font-size: 0.90rem !important;
+}
+/*--LINE-HEIGHT--*/
+.lh-0 {
+  line-height: 0;
+}
 /*--BOX--*/
 .box {
   width: 1.5rem;
@@ -23,8 +30,11 @@
   font-size: 0.90rem;
   font-weight: 500 !important;
   padding: 8px 12px;
-} 
-.table tbody > tr:hover {
+}
+.table tbody > tr.is-selected {
+  background-color: var(--bs-warning-bg-subtle);
+}
+.table tbody > tr:not(.is-selected):hover {
   background-color: #F9F9FA !important;
 }
 .table td {

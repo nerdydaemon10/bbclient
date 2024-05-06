@@ -3,12 +3,38 @@ import { useDispatch, useSelector } from "react-redux"
 import { paymentMethods, orderStatuses } from "../../util/Config.jsx"
 import OrderStatus from "../../util/classes/OrderStatus.js"
 import PaymentMethod from "../../util/classes/PaymentMethod.js"
-import { Button, DateInput, SearchFieldInput, SelectInput } from "../common/index.jsx"
+import { Button, CheckoutList, DateInput, SearchFieldInput, SelectInput } from "../common/index.jsx"
 import { exportAsExcel, fetchUsers, resetStates, setSq } from "../redux/salesSlice.js"
 import { useContext, useEffect } from "react"
 import { SalesContext } from "./SalesProvider.jsx"
 import { BiDownload } from "react-icons/bi"
 import moment from "moment"
+import { isEmpty } from "lodash"
+
+function SideContainer() {
+  const { sale } = useSelector((state) => state.sales)
+
+  return (
+    <div className="card side-container">
+      <div className="card-header p-2">
+        <h6 className="card-title fw-semibold mb-0">
+        {isEmpty(sale) ? "Filter Sales" : "Checkouts"}
+        </h6>
+      </div>
+      <div className="card-body overflow-y-auto p-0">
+        {isEmpty(sale) ? (
+          <FilteringContainer />
+        ) : (
+          <CheckoutList 
+            checkouts={sale.checkouts} 
+            isControlsDisabled
+            isOdd={false}
+          />
+        )}
+      </div>
+    </div>
+  )
+}
 
 function FilteringContainer() {
   const { searchSales } = useContext(SalesContext)
@@ -26,9 +52,11 @@ function FilteringContainer() {
   }
 
   useEffect(() => {
-    dispatch(fetchUsers())
-  }, [])
-  
+    if (!fetchUsersResponse.isLoaded) {
+      dispatch(fetchUsers())
+    }
+  }, [fetchUsersResponse.isLoaded])
+
   useEffect(() => {
     if (!exportAsExcelResponse.isSuccess) return
 
@@ -47,13 +75,9 @@ function FilteringContainer() {
       dispatch(resetStates())
     }
   }, [exportAsExcelResponse.isSuccess])
-  
+
   return (
-    <div className="card filtering-container">
-      <div className="card-header p-2">
-        <div className="card-header-title">Filter Sales</div>
-      </div>
-      <div className="card-body d-flex flex-column p-2 gap-2">
+    <div className=" d-flex flex-column p-2 gap-2">
       <DateInput 
         label="Date Start" 
         name="date_start" 
@@ -69,9 +93,9 @@ function FilteringContainer() {
       <SelectInput
         isOptional
         label="Salesperson"
-        name="user_id"
+        name="employee_id"
         options={fetchUsersResponse.data}
-        value={salesSq.user_id}
+        value={salesSq.employee_id}
         valueSelector="id"
         onChange={handleChange}
         onRender={(option) => `${option.full_name}`}
@@ -110,8 +134,7 @@ function FilteringContainer() {
         <BiDownload className="me-1" />
         Export as Excel
       </Button>
-      </div>
     </div>
   )
 }
-export default FilteringContainer
+export default SideContainer

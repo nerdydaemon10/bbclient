@@ -2,8 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { AuthService } from "../../data/services"
 import { local } from "../../util"
 import { isEmpty } from "lodash"
-import { buildResponse } from "../../util/Config.jsx"
-import ResponseStatus from "../../util/classes/ResponseStatus.js"
+import MutationResponse from "../../util/classes/MutationResponse.js"
 
 export const login = createAsyncThunk(
   "auth/login", async (credentials, thunkAPI) => {
@@ -15,64 +14,44 @@ export const login = createAsyncThunk(
     return thunkAPI.rejectWithValue(error.response.data)
   }
 })
-
 export const logout = createAsyncThunk(
   "auth/logout", async (thunkAPI) => {
-    try {
-      const response = await AuthService.logout()
-      return response
-    } catch(error) {
-      return thunkAPI.rejectWithValue(error.response.data)
-    }
+  try {
+    const response = await AuthService.logout()
+    return response
+  } catch(error) {
+    return thunkAPI.rejectWithValue(error.response.data)
+  }
 })
-
 const initialState = {
-  loginResponse: buildResponse(),
-  logoutResponse: buildResponse()
+  loginResponse: MutationResponse.Idle(),
+  logoutResponse: MutationResponse.Idle()
 }
-
 const authSlice = createSlice({
   name: "auth",
   initialState,
   extraReducers: (builder) => {
 		builder
-    // Login
+    // Login User
     .addCase(login.pending, (state) => {
-      state.loginResponse = buildResponse(ResponseStatus.PENDING)
+      state.loginResponse = MutationResponse.Pending()
     })
     .addCase(login.fulfilled, (state, action) => {
-      const { token, user } = action.payload
-      
-      state.loginResponse = buildResponse(ResponseStatus.FULFILLED, action.payload)
-
-      local.set("token", token)
-      local.set("user", user)
+      state.loginResponse = MutationResponse.Fulfilled(action.payload)
     })
     .addCase(login.rejected, (state, action) => {
-      state.loginResponse = buildResponse(ResponseStatus.REJECTED, action.payload)
+      state.loginResponse = MutationResponse.Rejected(action.payload)
     })
-    // Logout
+    // logout User
     .addCase(logout.pending, (state) => {
-      state.loginResponse = {
-        isLoading: false,
-        isSuccess: false,
-        error: null 
-      }
+      state.logoutResponse = MutationResponse.Pending()
     })
     .addCase(logout.fulfilled, (state) => {
-      state.logoutResponse = {
-        isLoading: false,
-        isSuccess: true,
-        error: null,
-      }
+      state.logoutResponse = MutationResponse.Fulfilled()
       local.clear()
     })
     .addCase(logout.rejected, (state, action) => {
-      state.logoutResponse = {
-        isLoading: false,
-        isSuccess: false,
-        error: action.payload,
-      }
+      state.logoutResponse = MutationResponse.Rejected(action.payload)
     })
   }
 })

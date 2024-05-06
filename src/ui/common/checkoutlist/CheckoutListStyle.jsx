@@ -7,7 +7,12 @@ const CheckoutListStyle = createGlobalStyle`
   --bs-border-width: 1px;
   --bs-border-color: var(--bs-transparent);
 }
-.checkout-list-item:nth-child(odd) {
+.checkout-list-item.is-odd:nth-child(odd) {
+  background-color: var(--bs-gray-100);
+  --bs-border-style: dashed;
+  --bs-border-color: var(--bs-dark);
+}
+.checkout-list-item.is-even:nth-child(even) {
   background-color: var(--bs-gray-100);
   --bs-border-style: dashed;
   --bs-border-color: var(--bs-dark);

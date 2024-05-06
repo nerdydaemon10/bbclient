@@ -41,7 +41,7 @@ function ProtectedRoute({roles, children}) {
   const user = local.get("user")
 	const roleId = user.role_id
 	const role = user && Role.toEnum(roleId)
-
+	
 	if (isEmpty(user)) {
 		return <Navigate to="/" replace />
 	}

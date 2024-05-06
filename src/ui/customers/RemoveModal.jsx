@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import { useContext, useEffect } from "react"
-import { Modal } from "../../common"
+import { Modal } from "../common"
 import { CustomersContext } from "./CustomersProvider.jsx"
 import { enqueueSnackbar } from "notistack"
-import { closeModal, removeCustomer, resetStates } from "../../redux/customersSlice.js"
-import ModalType from "../../../util/classes/ModalType.js"
-import GenericMessage from "../../../util/classes/GenericMessage.js"
-import { DELAY_MILLIS } from "../../../util/Config.jsx"
+import { closeModal, removeCustomer, resetStates } from "../redux/customersSlice.js"
+import ModalType from "../../util/classes/ModalType.js"
+import GenericMessage from "../../util/classes/GenericMessage.js"
+import { DELAY_MILLIS } from "../../util/Config.jsx"
 import { delay } from "lodash"
 
 function RemoveModal() {

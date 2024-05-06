@@ -1,14 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { TextFieldInput, PasswordFieldInput, Button } from "../common"
-import { login } from "../redux/authSlice.js"
-import { findErrorByMessage, findErrorByName } from "../../util/helper.jsx"
+import { getErrorMessage } from "../../util/helper.jsx"
 import { Role } from "../../util/classes"
 import { local } from "../../util"
 import { isEmpty } from "lodash"
+import InputHelper from "../../util/helpers/InputHelper.js"
+import { useDispatch, useSelector } from "react-redux"
+import { login } from "../redux/authSlice.js"
 
 function LoginPage() {
   const [credentials, setCredentials] = useState({
@@ -17,7 +18,7 @@ function LoginPage() {
   })
 
   const { loginResponse } = useSelector((state) => state.auth)
-  const { isLoading, isSuccess, error } = loginResponse
+  const { isLoading, isSuccess, data, error } = loginResponse
   const usernameRef = useRef(null)
 
   const dispatch = useDispatch()
@@ -36,16 +37,18 @@ function LoginPage() {
   useEffect(() => {
     usernameRef.current.focus()
   }, [])
-  
+
   useEffect(() => {
     if (!isSuccess) return
-    const user = local.get("user")
-    const roleId = user ? user.role_id : 0
-    const role = Role.toEnum(roleId)
-    
+    const { token, user } = data
+    const role = Role.toEnum(user.role_id)
+
+    local.set("token", token)
+    local.set("user", user)
+
     navigate(`/${role}`)
   }, [isSuccess])
-
+  
   return (
     <div className="w-100 vh-100 d-flex align-items-center justify-content-center">
       <form className="d-flex flex-column gap-2" onSubmit={handleSubmit}> 
@@ -60,8 +63,8 @@ function LoginPage() {
             name="username" 
             placeholder="Username"
             value={credentials.username}
-            feedback={findErrorByName(error, "username")}
             onChange={handleChange}
+            feedback={InputHelper.getErrorByName(error, "username")}
             ref={usernameRef}
           />
           <PasswordFieldInput
@@ -69,8 +72,8 @@ function LoginPage() {
             name="password" 
             placeholder="Password"
             value={credentials.password}
-            feedback={findErrorByName(error, "password")}
             onChange={handleChange}
+            feedback={InputHelper.getErrorByName(error, "password")}
           />
           <Button
             isLoading={isLoading}
@@ -89,10 +92,12 @@ function LoginPage() {
 }
 
 function ErrorAlert({error}) {
+  const message = getErrorMessage(error)
+
   return (
-    !isEmpty(findErrorByMessage(error)) && (
+    !isEmpty(message) && (
       <div className="alert alert-danger mb-1">
-        <small>{findErrorByMessage(error)}</small>
+        <small>{message}</small>
       </div>
     )
   )

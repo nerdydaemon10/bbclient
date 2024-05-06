@@ -6,16 +6,18 @@ const SalesStyle = createGlobalStyle`
   grid-template-rows: max-content 1fr 1fr max-content;
   grid-template-areas: 
     "title-container title-container"
-    "table-container filtering-container"
-    "table-container filtering-container"
+    "table-container side-container"
+    "table-container side-container"
     "pagination-container receipt-list";
 }
 
 .title-container {
   grid-area: title-container;
 }
-.filtering-container {
-  grid-area: filtering-container;
+.side-container {
+  grid-area: side-container;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .table-container {
   grid-area: table-container;

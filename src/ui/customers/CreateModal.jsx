@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import { useContext, useEffect, useState } from "react"
-import { Modal, TextFieldInput } from "../../common"
+import { Modal, TextFieldInput } from "../common"
 import { CustomersContext } from "./CustomersProvider.jsx"
 import { enqueueSnackbar } from "notistack"
-import { closeModal, createCustomer, resetStates } from "../../redux/customersSlice.js"
-import { ModalType, GenericMessage } from "../../../util/classes"
-import { DELAY_MILLIS } from "../../../util/Config.jsx"
-import { findErrorByName } from "../../../util/helper.jsx"
+import { closeModal, createCustomer, resetStates } from "../redux/customersSlice.js"
+import { ModalType, GenericMessage } from "../../util/classes"
+import { DELAY_MILLIS } from "../../util/Config.jsx"
+import { findErrorByName } from "../../util/helper.jsx"
 import { delay } from "lodash"
 
 const buildParam = () => {

@@ -20,11 +20,13 @@ const createOrder = createAsyncThunk(
 const buildCheckout = (product) => {
   return {
     id: product.id,
+    product_code: product.product_code,
+    category_id: product.category_id,
     name: product.name,
     description: product.description,
     srp: product.srp,
     member_price: product.member_price,
-    stocks: product.quantity,
+    stocks: product.quantity, 
     quantity: 1
   }
 }

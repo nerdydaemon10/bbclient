@@ -1,18 +1,17 @@
 import { BiLinkAlt } from "react-icons/bi"
 import { Button, SelectInput, TDStatus, THeaders } from "../common/index.jsx"
 import { columns } from "./Util.jsx"
-import { noSearchResults } from "../../util/helper.jsx"
+import { isEntitySelected, noSearchResults } from "../../util/helper.jsx"
 import { isEmpty, size } from "lodash"
 import StringHelper from "../../util/helpers/StringHelper.js"
 import { PaymentMethod, OrderStatus, GenericMessage } from "../../util/classes/index.js"
 import DateHelper from "../../util/helpers/DateHelper.js"
 import { rowsPerPages } from "../../util/Config.jsx"
 import { useDispatch, useSelector } from "react-redux"
-import { setSq } from "../redux/salesSlice.js"
+import { setSale, setSq } from "../redux/salesSlice.js"
 import { useContext } from "react"
 import { SalesContext } from "./SalesProvider.jsx"
 import { Link } from "react-router-dom"
-import { setOrder } from "../redux/checkoutsSlice.js"
 
 function SalesTable() {
   const { searchSales } = useContext(SalesContext)
@@ -20,7 +19,7 @@ function SalesTable() {
   const { isLoading, data, meta, error } = fetchSalesResponse
 
   const dispatch = useDispatch()
-
+  
   const handleChange = (e) => {
     dispatch(setSq({ ...salesSq, [e.target.name]: e.target.value }))
     searchSales.cancel()
@@ -57,14 +56,14 @@ function SalesTable() {
   )
 }
 function TableContainer({isLoading, sq, data, error}) {
-  const colSpan = size(columns)
+  const { sale } = useSelector((state) => state.sales)
+
   const dispatch = useDispatch()
+  const colSpan = size(columns)
 
   const handleClick = (sale) => {
-    dispatch(setOrder(sale))
+    dispatch(setSale(sale))
   }
-
-  console.log(data)
 
   return (
     <div className="table-wrapper table-container">
@@ -90,11 +89,12 @@ function TableContainer({isLoading, sq, data, error}) {
               <TDStatus colSpan={colSpan}>
                 {GenericMessage.SALES_EMPTY}
               </TDStatus>
-            ) : data ? data.map((sale, index) => (
+            ) : data ? data.map((item, index) => (
               <TDSale
                 key={index}
-                sale={sale}
-                onClick={() => handleClick(sale)}
+                sale={item}
+                isSelected={isEntitySelected(sale, item)}
+                onClick={() => handleClick(item)}
               />
             )) : (
               <></>
@@ -105,23 +105,21 @@ function TableContainer({isLoading, sq, data, error}) {
     </div>
   )
 }
-function TDSale({sale, onClick}) {
+function TDSale({sale, isSelected, onClick}) {
   const refNumber = StringHelper.truncate(sale.reference_number, 15)
   const amountDue = StringHelper.toPesoCurrency(Number(sale.amount_due))
   const totalItems = StringHelper.toPcs(sale.number_of_items)
   const status = OrderStatus.toObject(sale.status)
   const paymentMethod = PaymentMethod.toMethod(sale.payment_method)
-  const customer = StringHelper.truncate(sale.customer.full_name)
+  const customer = StringHelper.truncate(sale.customer?.full_name)
   const salesperson = StringHelper.truncate(sale.employee.full_name)
   const commission = StringHelper.toPesoCurrency(sale.commission)
   const dateCreated = DateHelper.toIsoStandard(sale.created_at)
 
   return (
-    <tr key={sale.id}>
+    <tr key={sale.id} className={`${isSelected ? "is-selected" : ""}`}>
       <td>
-        <Link 
-          to="checkouts"
-          onClick={onClick}>
+        <Link onClick={onClick}>
           <BiLinkAlt className="me-1" />
           {refNumber}
         </Link>

@@ -4,6 +4,7 @@ StringHelper.truncate = function (text, max=24) {
   if (!text) {
     return ""
   }
+  
   const length = text.length
   const exceed = length > max
 

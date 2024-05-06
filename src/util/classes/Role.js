@@ -4,6 +4,9 @@ export default class Role {
   static ADMIN = 1
   static EMPLOYEE = 2
 
+  static isAdmin = (key) => {
+    return key == this.ADMIN
+  }
   static toRole = (key) => {
     const role = RolesData.find((role) => role.key == key)
 
