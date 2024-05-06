@@ -1,21 +1,23 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import GenericMessage from "../../util/classes/GenericMessage.js"
-import { columns, columnsSize } from "./Util.jsx"
 import StringHelper from "../../util/helpers/StringHelper.js"
 import { DELAY_MILLIS } from "../../util/Config.jsx"
-import { BiCoffee, BiPlug, BiPlusCircle, BiSolidCheckCircle, BiSolidCoffee, BiSolidPlug, BiSolidStar, BiStar } from "react-icons/bi"
+import { BiCoffee, BiPlusCircle, BiSolidCheckCircle, BiSolidCoffee } from "react-icons/bi"
 import { isEntitySelected, noSearchResults } from "../../util/helper.jsx"
 import { useCallback, useEffect, useState } from "react"
 import ModalType from "../../util/classes/ModalType.js"
 import SearchFieldInput from "../common/inputs/SearchFieldInput.jsx"
-import { debounce, delay, isEmpty } from "lodash"
+import { debounce, delay, isEmpty, size } from "lodash"
 import { useFetchEmployeesQuery } from "../../data/services/employees.js"
-import { isPending } from "@reduxjs/toolkit"
-import { Button, TDStatus, THeaders, TablePagination } from "../common"
+import { Button, THeaders, TablePagination, TableStatus } from "../common"
 import Role from "../../util/classes/Role.js"
 import { openModal, setEmployee, setSq } from "../redux/employeesSlice.js"
 import DateHelper from "../../util/helpers/DateHelper.js"
 import local from "../../util/local.js"
+
+const columns = ["Full Name", "Username", "Role", "Status", "Date/Logged In", "Date/Logged Out", "Action"]
+const colSpan = size(columns)
 
 function EmployeesTable() {
   const dispatch = useDispatch()
@@ -53,17 +55,15 @@ function EmployeesTable() {
         onChange={handleChange}
       />
       <TableContainer 
-        isLoading={isLoading}
-        isFetching={isFetching}
-        searchQuery={sq}
+        sq={sq}
         data={data}
         error={error}
+        isFetching={isLoading || isFetching}
       />
       <TablePagination 
         meta={meta}
         rowsPerPage={sq.per_page}
-        isLoading={isLoading}
-        isPending={isPending}
+        isFetching={isLoading || isFetching}
         onChange={handleChange}
         onPrevious={handlePrevious}
         onNext={handleNext}
@@ -73,7 +73,7 @@ function EmployeesTable() {
 }
 function FilteringContainer({search, onChange}) {
   const dispatch = useDispatch()
-
+  
   const handleClick = () => {
     dispatch(openModal(ModalType.CREATE))
   }
@@ -99,10 +99,10 @@ function FilteringContainer({search, onChange}) {
     </div>
   )
 }
-function TableContainer({isLoading, isFetching, searchQuery, data, error}) {
-  const user = local.get("user")
-
+function TableContainer({sq, data, error, isFetching}) {
   const dispatch = useDispatch()
+
+  const user = local.get("user")
 
   const handleUpdate = (employee) => {
     dispatch(setEmployee(employee))
@@ -112,7 +112,7 @@ function TableContainer({isLoading, isFetching, searchQuery, data, error}) {
     dispatch(setEmployee(employee))
     delay(() => dispatch(openModal(ModalType.REMOVE)), DELAY_MILLIS)
   }
-  
+
   return (
     <div className="table-wrapper table-container">
       <table className="table">
@@ -121,29 +121,33 @@ function TableContainer({isLoading, isFetching, searchQuery, data, error}) {
         </thead>
         <tbody>
           {
-            isLoading || isFetching ? (
-              <TDStatus colSpan={columnsSize}>
-                {GenericMessage.ITEMS_FETCHING.replace("{{items}}", "customers")}
-              </TDStatus>
+            isFetching ? (
+              <TableStatus 
+                colSpan={colSpan} 
+                message={GenericMessage.EMPLOYEES_FETCHING} 
+              />
             ) : error ? (
-              <TDStatus colSpan={columnsSize}>
-                {error.message ? error.message : GenericMessage.ITEMS_ERROR.replace("{{items}}", "customers")}
-              </TDStatus>
-            ) : noSearchResults(searchQuery, data) ? (
-              <TDStatus colSpan={columnsSize}>
-              {GenericMessage.ITEMS_NO_MATCH.replace("{{items}}", "customers")}
-              </TDStatus>
+              <TableStatus 
+                colSpan={colSpan} 
+                message={GenericMessage.EMPLOYEES_ERROR} 
+              />
+            ) : noSearchResults(sq, data) ? (
+              <TableStatus 
+                colSpan={colSpan} 
+                message={GenericMessage.EMPLOYEES_NO_MATCH} 
+              />
             ) : isEmpty(data) ? (
-              <TDStatus colSpan={columnsSize}>
-                {GenericMessage.ITEMS_EMPTY.replace("{{items}}", "customers")}
-              </TDStatus>
-            ) : data.data.map((employee, index) => (
-              <Employee 
+              <TableStatus 
+                colSpan={colSpan} 
+                message={GenericMessage.EMPLOYEES_EMPTY} 
+              />
+            ) : data.data.map((item, index) => (
+              <TableData 
                 key={index} 
-                employee={employee} 
-                isUser={isEntitySelected(employee, user)}
-                onUpdate={() => handleUpdate(employee)}
-                onRemove={() => handleRemove(employee)}
+                item={item} 
+                isUser={isEntitySelected(item, user)}
+                onUpdate={() => handleUpdate(item)}
+                onRemove={() => handleRemove(item)}
               />
             ))
           }
@@ -153,14 +157,14 @@ function TableContainer({isLoading, isFetching, searchQuery, data, error}) {
   )
 }
 
-function Employee({employee, isUser, onUpdate, onRemove}) {
-  const fullName = StringHelper.truncate(employee.full_name)
-  const username = `@${StringHelper.truncate(employee.username)}`
-  const role = Role.toRole(employee.role_id)
-  const isAdmin = Role.isAdmin(employee.role_id)
-  const status = StringHelper.truncate(employee.status)
-  const loggedIn = DateHelper.toDateTime(employee.last_logged_in)
-  const loggedOut = DateHelper.toDateTime(employee.last_logged_out)
+function TableData({item, isUser, onUpdate, onRemove}) {
+  const fullName = StringHelper.truncate(item.full_name)
+  const username = `@${StringHelper.truncate(item.username)}`
+  const role = Role.toRole(item.role_id)
+  const isAdmin = Role.isAdmin(item.role_id)
+  const status = StringHelper.truncate(item.status)
+  const loggedIn = DateHelper.toDateTime(item.last_login_at)
+  const loggedOut = DateHelper.toDateTime(item.last_login_at)
 
   return (
     <tr>

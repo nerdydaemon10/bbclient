@@ -2,9 +2,17 @@ import { rowsPerPages } from "../../util/Config.jsx"
 import Button from "./buttons/Button.jsx"
 import SelectInput from "./inputs/SelectInput.jsx"
 
-export function TablePagination({className, meta, rowsPerPage, isLoading, isFetching, onChange, onPrevious, onNext}) {
+export function TableStatus({colSpan, message}) {
+  return (
+    <tr>
+      <td className="table-status" colSpan={colSpan}>
+        {message}
+      </td>
+    </tr>
+  )
+}
+export function TablePagination({className, meta, rowsPerPage, isFetching, onChange, onPrevious, onNext}) {
   const { current_page, last_page } = meta
-  const isPending = isLoading || isFetching
   
   return (
     <div className={`table-pagination-container ${className}`}>
@@ -23,14 +31,14 @@ export function TablePagination({className, meta, rowsPerPage, isLoading, isFetc
         <div className="btn-group">
           <Button
             variant="light" 
-            isDisabled={isPending || current_page <= 1}
+            isDisabled={isFetching || current_page <= 1}
             onClick={onPrevious}
           >
             Prev
           </Button>
           <Button 
             variant="light" 
-            isDisabled={isPending || current_page >= last_page} 
+            isDisabled={isFetching || current_page >= last_page} 
             onClick={onNext}
           >
             Next

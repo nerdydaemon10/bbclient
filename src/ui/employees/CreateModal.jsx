@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import { Modal, PasswordFieldInput, TextFieldInput } from "../common"
 import { enqueueSnackbar } from "notistack"
 import { ModalType, GenericMessage } from "../../util/classes"
-import { findErrorByName } from "../../util/helper.jsx"
 import { closeModal } from "../redux/employeesSlice.js"
 import { useCreateEmployeeMutation } from "../../data/services/employees.js"
 import InputHelper from "../../util/helpers/InputHelper.js"
@@ -18,7 +17,7 @@ const param = {
 function CreateModal() {
   const [employee, setEmployee] = useState({...param})
   const { isCreateModalOpen } = useSelector((state) => state.employees)
-  
+
   const [createEmployee, { isLoading, isSuccess, error }] = useCreateEmployeeMutation()
   
   const dispatch = useDispatch()
@@ -37,12 +36,11 @@ function CreateModal() {
   }
 
   useEffect(() => {
-    if (isSuccess) {
-      dispatch(closeModal(ModalType.CREATE))
-      enqueueSnackbar(GenericMessage.CUSTOMER_ADDED)
-      setEmployee({...param})
-      //delay(() => dispatch(resetStates()), DELAY_MILLIS)
-    }
+    if (!isSuccess) return
+
+    dispatch(closeModal(ModalType.CREATE))
+    enqueueSnackbar(GenericMessage.EMPLOYEE_ADDED)
+    setEmployee({...param})
   }, [isSuccess])
 
   return (
@@ -69,7 +67,7 @@ function CreateModal() {
           placeholder="e.g., @juan10"
           value={employee.username}
           onChange={handleChange}
-          feedback={InputHelper.getErrorByName(error, "full_name")}
+          feedback={InputHelper.getErrorByName(error, "username")}
         />
         <PasswordFieldInput 
           label="Password"
@@ -77,7 +75,7 @@ function CreateModal() {
           placeholder="Input password..."
           value={employee.password}
           onChange={handleChange}
-          feedback={InputHelper.getErrorByName(error, "full_name")}
+          feedback={InputHelper.getErrorByName(error, "password")}
         />
       </div>
     </Modal>

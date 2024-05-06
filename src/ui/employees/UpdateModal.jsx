@@ -5,7 +5,6 @@ import { Modal, PasswordFieldInput, TextFieldInput } from "../common"
 import { enqueueSnackbar } from "notistack"
 import ModalType from "../../util/classes/ModalType.js"
 import GenericMessage from "../../util/classes/GenericMessage.js"
-import { DELAY_MILLIS } from "../../util/Config.jsx"
 import { closeModal, setEmployee } from "../redux/employeesSlice.js"
 import { useUpdateEmployeeMutation } from "../../data/services/employees.js"
 import InputHelper from "../../util/helpers/InputHelper.js"
@@ -29,12 +28,11 @@ function UpdateModal() {
     dispatch(setEmployee({...employee, [e.target.name]: e.target.value}))
   }
 
-  // success 
   useEffect(() => {
-    if (isSuccess) {
-      dispatch(closeModal(ModalType.UPDATE))
-      enqueueSnackbar(GenericMessage.CUSTOMER_UPDATED)
-    }
+    if (!isSuccess) return
+
+    dispatch(closeModal(ModalType.UPDATE))
+    enqueueSnackbar(GenericMessage.EMPLOYEE_UPDATED)
   }, [isSuccess])
 
   return (

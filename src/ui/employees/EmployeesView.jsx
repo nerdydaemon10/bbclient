@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import CreateModal from "./CreateModal.jsx"
-import CustomersProvider from "./EmployeesProvider.jsx"
 import CustomerStyle from "./CustomersStyle.jsx"
 import RemoveModal from "./RemoveModal.jsx"
 import UpdateModal from "./UpdateModal.jsx"
@@ -8,14 +7,14 @@ import EmployeesTable from "./EmployeesTable.jsx"
 
 function EmployeesView() {  
   return (
-    <CustomersProvider>
+    <>
       <CustomerStyle />
       <TitleContainer />
       <EmployeesTable />
       <CreateModal />
       <UpdateModal />
       <RemoveModal />
-    </CustomersProvider>
+    </>
   )
 }
 

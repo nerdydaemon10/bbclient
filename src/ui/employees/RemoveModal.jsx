@@ -12,7 +12,7 @@ function RemoveModal() {
   const dispatch = useDispatch()
 
   const { employee, isRemoveModalOpen } = useSelector((state) => state.employees)
-  const [removeEmployee, { isLoading, isSuccess, error }] = useRemoveEmployeeMutation()
+  const [removeEmployee, { isLoading, isSuccess }] = useRemoveEmployeeMutation()
 
   const handleClose = () => {
     dispatch(closeModal(ModalType.REMOVE))
@@ -24,10 +24,10 @@ function RemoveModal() {
   }
   
   useEffect(() => {
-    if (isSuccess) {
-      dispatch(closeModal(ModalType.REMOVE))
-      enqueueSnackbar(GenericMessage.CUSTOMER_REMOVED)
-    }
+    if (!isSuccess) return
+
+    dispatch(closeModal(ModalType.REMOVE))
+    enqueueSnackbar(GenericMessage.EMPLOYEE_REMOVED)
   }, [isSuccess])
 
   return (
