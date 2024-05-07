@@ -8,10 +8,11 @@ import ordersSlice from "./ordersSlice.js"
 import dashboardSlice from "./dashboardSlice.js"
 import salesSlice from "./salesSlice.js"
 import checkoutsSlice from "./checkoutsSlice.js"
-import { client } from "../../data/services/client.js"
+import client from "../../data/services/client.js"
 import employeesSlice from "./employeesSlice.js"
 
 const reducer = combineReducers({
+  [client.reducerPath]: client.reducer,
   auth: authSlice,
   dashboard: dashboardSlice,
   pos: posSlice,
@@ -21,7 +22,6 @@ const reducer = combineReducers({
   sales: salesSlice,
   checkouts: checkoutsSlice,
   employees: employeesSlice,
-  [client.reducerPath]: client.reducer
 })
 
 const store = configureStore({

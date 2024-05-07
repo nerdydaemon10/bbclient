@@ -1,32 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Modal, TextFieldInput } from "../common"
-import { CustomersContext } from "./CustomersProvider.jsx"
 import { enqueueSnackbar } from "notistack"
-import { closeModal, createCustomer, resetStates } from "../redux/customersSlice.js"
+import { closeModal } from "../redux/customersSlice.js"
 import { ModalType, GenericMessage } from "../../util/classes"
-import { DELAY_MILLIS } from "../../util/Config.jsx"
-import { findErrorByName } from "../../util/helper.jsx"
-import { delay } from "lodash"
-
-const buildParam = () => {
-  return {
-    full_name: "",
-    address: "",
-    phone_number: "",
-    email_address: ""
-  }
-}
+import { useCreateCustomerMutation } from "../../data/services/customers.js"
+import InputHelper from "../../util/helpers/InputHelper.js"
+import { CustomerParam } from "../../util/params.js"
 
 function CreateModal() {
+  const [createCustomer, { isLoading, isSuccess, error }] = useCreateCustomerMutation()
+  const { isCreateModalOpen } = useSelector((state) => state.customers)
+  const [customer, setCustomer] = useState(CustomerParam)
   const dispatch = useDispatch()
-  
-  const { create } = useSelector((state) => state.customers)
-  const { isOpen, response } = create
-  const { fetchCustomers } = useContext(CustomersContext)
-  
-  const [param, setParam] = useState(buildParam())
 
   const handleClose = () => {
     dispatch(closeModal(ModalType.CREATE))
@@ -34,28 +21,26 @@ function CreateModal() {
 
   const handleConfirm = (e) => {
     e.preventDefault()
-    dispatch(createCustomer(param))
+    createCustomer(customer)
   }
-
+  
   const handleChange = (e) => {
-    setParam({ ...param, [e.target.name]: e.target.value })
+    setCustomer({ ...customer, [e.target.name]: e.target.value })
   }
 
   useEffect(() => {
-    if (response.isSuccess) {
-      dispatch(closeModal(ModalType.CREATE))
-      enqueueSnackbar(GenericMessage.CUSTOMER_ADDED)
-      fetchCustomers()
-      setParam(buildParam())
-      delay(() => dispatch(resetStates()), DELAY_MILLIS)
-    }
-  }, [response.isSuccess])
-  
+    if (!isSuccess) return
+
+    dispatch(closeModal(ModalType.CREATE))
+    enqueueSnackbar(GenericMessage.CUSTOMER_ADDED)
+    setCustomer(CustomerParam)
+  }, [isSuccess])
+
   return (
     <Modal  
       title="Create Customer"
-      isLoading={response.isLoading}
-      isOpen={isOpen} 
+      isLoading={isLoading}
+      isOpen={isCreateModalOpen} 
       onClose={handleClose}
       onConfirm={handleConfirm}
     >
@@ -65,8 +50,8 @@ function CreateModal() {
             label="Full Name"
             name="full_name"
             placeholder="e.g., Juan Dela Cruz"
-            feedback={findErrorByName(response.error, "full_name")}
-            value={param.full_name}
+            feedback={InputHelper.getErrorByName(error, "full_name")}
+            value={customer.full_name}
             onChange={handleChange}
           />
         </div>
@@ -75,8 +60,8 @@ function CreateModal() {
             label="Address"
             name="address"
             placeholder="e.g., Brgy. 143, Quezon City"
-            feedback={findErrorByName(response.error, "address")}
-            value={param.address}
+            feedback={InputHelper.getErrorByName(error, "address")}
+            value={customer.address}
             onChange={handleChange}
           />
         </div>
@@ -87,8 +72,8 @@ function CreateModal() {
             label="Phone Number"
             name="phone_number"
             placeholder="e.g., 0945665634943"
-            feedback={findErrorByName(response.error, "phone_number")}
-            value={param.phone_number}
+            feedback={InputHelper.getErrorByName(error, "phone_number")}
+            value={customer.phone_number}
             onChange={handleChange}
           />
         </div>
@@ -97,8 +82,8 @@ function CreateModal() {
             label="Email Address"
             name="email_address"
             placeholder="e.g., juandelacruz@gmail.com"
-            feedback={findErrorByName(response.error, "email_address")}
-            value={param.email_address}
+            feedback={InputHelper.getErrorByName(error, "email_address")}
+            value={customer.email_address}
             onChange={handleChange}
           />
         </div>

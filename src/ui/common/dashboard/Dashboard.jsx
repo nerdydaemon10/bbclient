@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { 
 	BiLogIn, BiShieldQuarter, 
 	BiSolidCoffeeBean
@@ -8,9 +9,13 @@ import {
 import "./Dashboard.css"
 import local from "../../../util/local.js"
 import { Role } from "../../../util/classes"
-import { Flex, LinkButton } from "../index"
+import { Button, Flex, LinkButton } from "../index"
 import DashboardNavbar from "./DashboardNavbar.jsx"
 import { currentRoute } from "./util.js"
+import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
+import StringHelper from "../../../util/helpers/StringHelper.js"
+import { isNil, truncate } from "lodash"
+import { useLogoutMutation } from "../../../data/services/auth.js"
 
 function Dashboard({routesData, children}) {
 	return (
@@ -25,11 +30,14 @@ function Dashboard({routesData, children}) {
 }
 
 function DashboardSidebar({routesData}) {
+	const user = local.get("user")
+	const fullName = truncate(user.full_name, { length: 24 })
+	const role = Role.toRole(user.role)
+	
 	const location = useLocation()
 	const [route, setRoute] = useState(currentRoute(location))
+	const { data, isLoading, isFetching } = useFetchSummariesQuery()
 
-	const user = local.get("user")
-	
 	useEffect(() => {
     setRoute(currentRoute(location))
 	}, [location])
@@ -54,7 +62,9 @@ function DashboardSidebar({routesData}) {
 					routesData.filter(routeData => routeData.isSidebarItem).map((routeData, index) => (
 						<SidebarItem 
 							key={index}
-							routeData={routeData} 
+							data={data}
+							routeData={routeData}
+							isPending={isLoading || isFetching}
 							isSelected={isSelected(routeData.key, route)}
 						/>
 					))
@@ -67,42 +77,78 @@ function DashboardSidebar({routesData}) {
 						<BiShieldQuarter />
 					</div>
 					<div>
-						<p className="text-body-primary fw-medium mb-0">{user.full_name}</p>
-						<p className="text-body-secondary fs-7 mb-0 lh-1">{Role.toRole(user.role_id)}</p>
+						<p className="text-body-primary fw-medium mb-0">{fullName}</p>
+						<p className="text-body-secondary fs-7 mb-0 lh-1">{role}</p>
 					</div>
         </div>
-				<LinkButton
-					to="sign-out"
-					variant="outline-dark"
-					replace
-				>
-					<BiLogIn className="me-1"/>
-					Sign Out
-				</LinkButton>
+				<SignOutButton />
       </div>
 		</div>
 	)
 }
 
-function SidebarItem({routeData, isSelected, onClick}) {
-	const variant = isSelected ? 'dark' : 'light'
+function SignOutButton() {
+	const [logout, { isLoading, isSuccess }] = useLogoutMutation()
+	const navigate = useNavigate()
+
+	const handleSignOut = () => {
+		logout()
+	}
+
+	useEffect(() => {
+		if (!isSuccess) return
+		navigate("sign-out")
+	}, [isSuccess])
+
+	return (
+		<Button 
+			variant="outline-dark"
+			isLoading={isLoading}
+			onClick={handleSignOut}
+		>
+			<BiLogIn className="me-1"/>
+			Sign Out
+		</Button>
+	)
+}
+
+function SidebarItem({data, routeData, isPending, isSelected, onClick}) {
+	const variant = isSelected ? "dark" : "light"
 	const icon = isSelected ? routeData.icon.active : routeData.icon.inactive
 
 	return (
 		<li>
-			<LinkButton
-				to={routeData.route}
+			<LinkButton 
+				to={routeData.route} 
 				variant={variant}
-				isFullWidth={true}
+				isFullWidth
 				onClick={onClick}
 			>
 				<div className="d-flex flex-row align-items-center justify-content-start fs-7 fw-medium gap-1">
 					{icon}
 					{routeData.name}
-					{routeData.hasCounter && (<span className={`badge rounded-pill text-bg-${isSelected ? "light" : "dark"} ms-auto`}>99+</span>)}
+					{routeData.hasCounter && <Badge data={data} routeData={routeData} isPending={isPending} isSelected={isSelected} />}
 				</div>
 			</LinkButton>
 		</li>
+	)
+}
+function Badge({data, routeData, isPending, isSelected}) {
+	const { key } = routeData
+	const bg = `text-bg-${isSelected ? "light" : "dark"}`
+	
+	return (
+		<span className={`badge ${bg} rounded-pill ms-auto`}>
+			{
+				isPending ? (
+					"Loading"
+				) : isNil(data) ? (
+					"Empty"
+				) : isNil(data[key]) ? (
+					"Empty"
+				) : StringHelper.toCount(data[key])
+			}
+		</span>
 	)
 }
 function DashboardMain({children}) {

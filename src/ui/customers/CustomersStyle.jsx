@@ -5,34 +5,30 @@ const CustomersStyle = createGlobalStyle`
   grid-template-columns: 1fr;
   grid-template-rows: max-content max-content 1fr max-content;
   grid-template-areas: 
-    "title-container"
-    "filtering-container"
-    "table-container"
-    "pagination-container";
+    "title-section"
+    "table-filtering"
+    "table-content"
+    "table-pagination";
 }
-
-/* --TITLE-CONTAINER-- */
-.title-container {
-  grid-area: title-container;
+/* --TITLE-SECTION-- */
+.title-section {
+  grid-area: title-section;
 }
-
-/* --FILTERING-CONTAINER-- */
-.filtering-container {
-  grid-area: filtering-container;
+/*--TABLE-FILTERING--*/
+.table-filtering {
+  grid-area: table-filtering;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-
-/* --TABLE-CONTAINER-- */
-.table-container {
-  grid-area: table-container;
+/*--TABLE-CONTENT--*/
+.table-content {
+  grid-area: table-content;
   overflow: auto !important;
 }
-
-/* --PAGINATION-CONTAINER-- */
-.pagination-container {
-  grid-area: pagination-container;
+/* --TABLE-PAGINATION-- */
+.table-pagination {
+  grid-area: table-pagination;
   display: flex;
   align-items: center;
   justify-content: space-between;

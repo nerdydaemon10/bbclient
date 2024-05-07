@@ -2,6 +2,19 @@ import { rowsPerPages } from "../../util/Config.jsx"
 import Button from "./buttons/Button.jsx"
 import SelectInput from "./inputs/SelectInput.jsx"
 
+export function TableHeaders({columns}) {
+  return (
+    <thead>
+      <tr>
+        {columns.map((column, index) => (
+          <th key={index}>
+            {column}
+          </th>
+        ))}
+      </tr>
+    </thead>
+  )
+}
 export function TableStatus({colSpan, message}) {
   return (
     <tr>
@@ -15,7 +28,7 @@ export function TablePagination({className, meta, rowsPerPage, isFetching, onCha
   const { current_page, last_page } = meta
   
   return (
-    <div className={`table-pagination-container ${className}`}>
+    <div className={`table-pagination-container d-flex align-items-center justify-content-between ${className}`}>
       <div className="d-flex flex-row align-items-center gap-2">
         <label className="fw-medium fs-7 text-nowrap">Rows per page</label>
         <SelectInput

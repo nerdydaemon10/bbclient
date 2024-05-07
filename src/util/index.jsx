@@ -1,4 +1,2 @@
-import client from "./client.js"
-import local from "./local.js"
-
-export { client, local }
+export { default as client } from './client.js'
+export { default as local } from './local.js'

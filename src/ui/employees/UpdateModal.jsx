@@ -10,9 +10,8 @@ import { useUpdateEmployeeMutation } from "../../data/services/employees.js"
 import InputHelper from "../../util/helpers/InputHelper.js"
 
 function UpdateModal() {
-  const { employee, isUpdateModalOpen } = useSelector((state) => state.employees)
   const [updateEmployee, { isLoading, isSuccess, error }] = useUpdateEmployeeMutation()
-
+  const { employee, isUpdateModalOpen } = useSelector((state) => state.employees)
   const dispatch = useDispatch()
 
   const handleClose = () => {

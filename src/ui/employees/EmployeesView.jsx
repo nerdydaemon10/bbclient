@@ -1,4 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { Fragment } from "react"
+
 import CreateModal from "./CreateModal.jsx"
 import CustomerStyle from "./CustomersStyle.jsx"
 import RemoveModal from "./RemoveModal.jsx"
@@ -7,20 +9,20 @@ import EmployeesTable from "./EmployeesTable.jsx"
 
 function EmployeesView() {  
   return (
-    <>
+    <Fragment>
       <CustomerStyle />
-      <TitleContainer />
+      <TitleSection />
       <EmployeesTable />
       <CreateModal />
       <UpdateModal />
       <RemoveModal />
-    </>
+    </Fragment>
   )
 }
 
-function TitleContainer() {
+function TitleSection() {
   return (
-    <div className="title-container">
+    <div className="title-section">
       <h3 className="text-body-primary fw-bold mb-0">Employees</h3>
       <p className="text-body-secondary mb-0">Please add some description...</p>
     </div>

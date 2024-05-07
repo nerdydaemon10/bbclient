@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import { useEffect } from "react"
-import { Modal } from "../common"
 import { enqueueSnackbar } from "notistack"
-import ModalType from "../../util/classes/ModalType.js"
-import GenericMessage from "../../util/classes/GenericMessage.js"
+import { useEffect } from "react"
+
 import { useRemoveEmployeeMutation } from "../../data/services/employees.js"
+import { ModalType, GenericMessage } from "../../util/classes"
 import { closeModal } from "../redux/employeesSlice.js"
+import { Modal } from "../common"
 
 function RemoveModal() {
   const dispatch = useDispatch()

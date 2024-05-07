@@ -1,8 +1,8 @@
 import {
-  BiBarChartAlt2, BiBox, BiCartAlt, BiCheckboxChecked, BiGroup, BiHome, 
+  BiBarChartAlt2, BiBox, BiCartAlt, BiGroup, BiHome, 
   BiPackage, 
   BiShoppingBag, BiSolidBarChartAlt2, BiSolidBox, 
-  BiSolidCartAlt, BiSolidCheckboxChecked, BiSolidGroup, BiSolidHome, 
+  BiSolidCartAlt, BiSolidGroup, BiSolidHome, 
   BiSolidPackage, 
   BiSolidShoppingBag, BiSolidUserCircle, BiUserCircle,
 } from "react-icons/bi"

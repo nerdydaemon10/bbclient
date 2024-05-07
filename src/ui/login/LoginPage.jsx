@@ -3,50 +3,35 @@ import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { TextFieldInput, PasswordFieldInput, Button } from "../common"
-import { getErrorMessage } from "../../util/helper.jsx"
-import { Role } from "../../util/classes"
-import { local } from "../../util"
 import { isEmpty } from "lodash"
 import InputHelper from "../../util/helpers/InputHelper.js"
-import { useDispatch, useSelector } from "react-redux"
-import { login } from "../redux/authSlice.js"
+import { useLoginMutation } from "../../data/services/auth.js"
 
 function LoginPage() {
+  const [login, { isLoading, isSuccess, data, error }] = useLoginMutation()
   const [credentials, setCredentials] = useState({
     username: "",
     password: ""
   })
-
-  const { loginResponse } = useSelector((state) => state.auth)
-  const { isLoading, isSuccess, data, error } = loginResponse
   const usernameRef = useRef(null)
-
-  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    dispatch(login(credentials))
+    login(credentials)
   }
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
   }
 
-  // run only once.
   useEffect(() => {
     usernameRef.current.focus()
   }, [])
 
   useEffect(() => {
     if (!isSuccess) return
-    const { token, user } = data
-    const role = Role.toEnum(user.role_id)
-
-    local.set("token", token)
-    local.set("user", user)
-
-    navigate(`/${role}`)
+      navigate(`/${data.user.role}`)
   }, [isSuccess])
   
   return (
@@ -92,7 +77,7 @@ function LoginPage() {
 }
 
 function ErrorAlert({error}) {
-  const message = getErrorMessage(error)
+  const message = InputHelper.getErrorByMessage(error)
 
   return (
     !isEmpty(message) && (

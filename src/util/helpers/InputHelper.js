@@ -2,17 +2,12 @@ import { isEmpty } from "lodash"
 
 export default class InputHelper {}
 
-InputHelper.getErrorByMessage = function(key, error, alter=null) {
-  const name = isEmpty(alter) 
-    ? key.replace("_", " ") 
-    : alter
-
+InputHelper.getErrorByMessage = function(error) {
   if (isEmpty(error)) return ""
-  if (isEmpty(error.errors)) return ""
-  if (isEmpty(error.errors[key]))
-    return { state: "is-valid", message: `The ${name} looks good!` }
-  
-  return { state: "is-invalid", message: error.errors[key] }
+  if (isEmpty(error.data)) return ""
+  if (isEmpty(error.data.message)) return ""
+
+  return error.data.message
 }
 InputHelper.getErrorByName = function(error, key, alter=null) {
   const name = isEmpty(alter) 

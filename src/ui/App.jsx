@@ -1,9 +1,10 @@
 import { Navigate, Route, Routes } from "react-router-dom"
+import { isNil } from "lodash"
+import { Fragment } from "react"
 
 import LoginPage from "./login/LoginPage.jsx"
 import { Role } from "../util/classes"
-import local from "../util/local.js"
-import { isEmpty } from "lodash"
+import { local } from "../util"
 import AdminPage from "./admin/AdminPage.jsx"
 import EmployeePage from "./employee/EmployeePage.jsx"
 
@@ -30,29 +31,32 @@ function App() {
 }
 function AuthRoute({children}) {
 	const user = local.get("user")
-	const role = user && Role.toEnum(user.role_id)
+	
+	if (!isNil(user)) 
+		return <Navigate to={`/${user.role}`} replace />
 
-	if (isEmpty(user)) 
-		return <>{children}</>
-
-	return <Navigate to={`/${role}`} replace />
+	return (
+		<Fragment>
+			{children}
+		</Fragment>
+	)
 }
 function ProtectedRoute({roles, children}) {
   const user = local.get("user")
-	const roleId = user.role_id
-	const role = user && Role.toEnum(roleId)
-	
-	if (isEmpty(user)) {
+
+	if (isNil(user)) 
 		return <Navigate to="/" replace />
-	}
+		
+	const unauthorized = !roles.includes(user.role)
 
-	const isRestricted = !roles.includes(roleId)
+	if (unauthorized) 
+		return <Navigate to={`/${user.role}`} replace />
 
-	if (isRestricted) {
-		return <Navigate to={`/${role}`} replace />
-	}
-	
-	return <>{children}</>
+	return (
+		<Fragment>
+			{children}
+		</Fragment>
+	)
 }
 
 export default App

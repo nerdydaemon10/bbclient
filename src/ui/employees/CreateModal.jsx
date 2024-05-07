@@ -1,23 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import { useEffect, useState } from "react"
-import { Modal, PasswordFieldInput, TextFieldInput } from "../common"
 import { enqueueSnackbar } from "notistack"
+import { useEffect, useState } from "react"
+
+import { useCreateEmployeeMutation } from "../../data/services/employees.js"
+import { Modal, PasswordFieldInput, TextFieldInput } from "../common"
 import { ModalType, GenericMessage } from "../../util/classes"
 import { closeModal } from "../redux/employeesSlice.js"
-import { useCreateEmployeeMutation } from "../../data/services/employees.js"
-import InputHelper from "../../util/helpers/InputHelper.js"
-
-const param = {
-  full_name: "",
-  username: "",
-  password: ""
-}
+import { InputHelper } from "../../util/helpers"
+import { EmployeeParam } from "../../util/params.js"
 
 function CreateModal() {
-  const [employee, setEmployee] = useState({...param})
+  const [employee, setEmployee] = useState(EmployeeParam)
   const { isCreateModalOpen } = useSelector((state) => state.employees)
-
+  
   const [createEmployee, { isLoading, isSuccess, error }] = useCreateEmployeeMutation()
   
   const dispatch = useDispatch()
@@ -40,7 +36,7 @@ function CreateModal() {
 
     dispatch(closeModal(ModalType.CREATE))
     enqueueSnackbar(GenericMessage.EMPLOYEE_ADDED)
-    setEmployee({...param})
+    setEmployee(EmployeeParam)
   }, [isSuccess])
 
   return (

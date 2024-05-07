@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import { Modal } from "../../common"
-import { resetStates } from "../../redux/customersSlice.js"
 import ModalType from "../../../util/classes/ModalType.js"
 import { closeModal, rejectOrder } from "../../redux/ordersSlice.js"
 import { useContext, useEffect } from "react"
@@ -34,7 +33,6 @@ function RejectModal() {
     dispatch(closeModal(ModalType.REJECT))
     enqueueSnackbar(GenericMessage.ORDER_REJECTED)
     fetchOrders()
-    delay(() => dispatch(resetStates()), DELAY_MILLIS)
   }, [response.isSuccess])
 
   return (

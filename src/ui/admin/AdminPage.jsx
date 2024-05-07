@@ -6,7 +6,6 @@ import HomeView from "../dashboard/default/HomeView.jsx"
 import { RoutesData } from "./Util.jsx"
 import PosView from "../dashboard/pos/PosView.jsx"
 import OrdersView from "./orders/OrdersView.jsx"
-import CheckoutsView from "../checkouts/CheckoutsView.jsx"
 import SalesView from "../sales/SalesView.jsx"
 import EmployeesView from "../employees/EmployeesView.jsx"
 
@@ -16,12 +15,7 @@ function AdminPage() {
 			<Routes>
         <Route exact path="/" element={<HomeView />} />
 				<Route path="pos" element={<PosView />} />
-        <Route path="sales/*" element={
-					<Routes>
-						<Route exact path="/" element={<SalesView />} />
-						<Route exact path="checkouts" element={<CheckoutsView />} />
-					</Routes>
-				} />
+        <Route path="sales" element={<SalesView />} />
         <Route path="inventory" element={<InventoryView />} />
         <Route path="orders" element={<OrdersView />} />
         <Route path="customers" element={<CustomersView />} />

@@ -8,7 +8,7 @@ const initialState = {
   employee: { id: 0, full_name: "", username: "", password: "" },
   isCreateModalOpen: false,
   isUpdateModalOpen: false,
-  isRemoveModalOpen: false,
+  isRemoveModalOpen: false
 }
 const employeesSlice = createSlice({
   name: "employees",
@@ -16,6 +16,16 @@ const employeesSlice = createSlice({
   reducers: {
     setSq: (state, action) => { 
       state.sq = action.payload
+    },
+    previousPage: (state,) => {
+      const sq = state.sq
+      state.sq = { ...sq, page: sq.page > 1 ? sq.page - 1 : 1 }
+    },
+    nextPage: (state, action) => {
+      const sq = state.sq
+      const meta = action.payload
+
+      state.sq = { ...sq, page: sq.page < meta.last_page ? sq.page + 1 : meta.last_page }
     },
     setEmployee: (state, action) => { 
       state.employee = { ...state.employee, ...action.payload }
@@ -34,10 +44,10 @@ const employeesSlice = createSlice({
       if (action.payload == ModalType.UPDATE)
         state.isUpdateModalOpen = false
       if (action.payload == ModalType.REMOVE)
-        state.isRemoveModalOpen = false
+        state.isRemoveModalOpen = false 
     }
   }
 })
 
-export const { setSq, setEmployee, openModal, closeModal } = employeesSlice.actions
+export const { setSq, previousPage, nextPage, setEmployee, openModal, closeModal } = employeesSlice.actions
 export default employeesSlice.reducer

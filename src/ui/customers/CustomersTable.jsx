@@ -1,65 +1,72 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import { GenericMessage } from "../../util/classes"
-import { columns, columnsSize } from "./Util.jsx"
-import DateHelper from "../../util/helpers/DateHelper.js"
-import StringHelper from "../../util/helpers/StringHelper.js"
-import { DELAY_MILLIS, rowsPerPages } from "../../util/Config.jsx"
+import { debounce, delay, isEmpty, size } from "lodash"
 import { BiPlusCircle } from "react-icons/bi"
+import React, { useCallback, useEffect, useState } from "react"
+
+import { Fallback, GenericMessage, ModalType } from "../../util/classes"
+import { DateHelper, StringHelper } from "../../util/helpers"
+import { DELAY_MILLIS } from "../../util/Config.jsx"
 import { noSearchResults } from "../../util/helper.jsx"
-import { Button, SelectInput, TDStatus, THeaders, SearchFieldInput } from "../common"
-import { useContext } from "react"
-import { CustomersContext } from "./CustomersProvider.jsx"
-import { openModal, resetStates, setCustomer, setSq } from "../redux/customersSlice.js"
-import ModalType from "../../util/classes/ModalType.js"
-import { delay, isEmpty } from "lodash"
+import { Button, SearchFieldInput, TablePagination, TableStatus, TableHeaders } from "../common"
+import { openModal, setCustomer, setSq } from "../redux/customersSlice.js"
+import { useFetchCustomersQuery } from "../../data/services/customers.js"
+import { nextPage, previousPage } from "../redux/customersSlice.js"
+
+const columns = ["Full Name", "Address", "Phone Number", "Email Address", "Created By", "Date Created", "Date Modified", "Action"]
+const colSpan = size(columns)
 
 function CustomersTable() {
   const dispatch = useDispatch()
 
-  const { sq, fetch } = useSelector((state) => state.customers)
-  const { isLoading, data, meta, error } = fetch.response
-  const { searchCustomers } = useContext(CustomersContext)
+  const { sq } = useSelector((state) => state.customers)
+  const [sqtemp, setSqtemp] = useState(sq)
+
+  const debouncer = useCallback(debounce((sqtemp) => {
+    setSqtemp(sqtemp)
+  }, DELAY_MILLIS), [])
+
+  const { data, error, isLoading, isFetching } = useFetchCustomersQuery(sqtemp)
+  const meta = Fallback.checkMeta(data)
 
   const handleChange = (e) => {
     dispatch(setSq({ ...sq, [e.target.name]: e.target.value }))
-    searchCustomers.cancel()
   }
   const handlePrevious = () => {
-    let page = sq.page > 1 ? sq.page - 1 : 1
-    dispatch(setSq({ ...sq, page: page }))
-    searchCustomers.cancel()
+    dispatch(previousPage())
   }
-  const handleNext = () => {
-    let page = sq.page < meta.last_page ? sq.page + 1 : meta.last_page
-    dispatch(setSq({ ...sq, page: page }))
-    searchCustomers.cancel()
+  const handleNext = (meta) => {
+    dispatch(nextPage(meta))
   }
-  
+
+  useEffect(() => {
+    debouncer(sq)
+  }, [sq])
+
   return (
-    <>
-      <FilteringContainer 
-        fullName={sq.full_name}
+    <React.Fragment>
+      <TableFiltering 
+        search={sq.search}
         onChange={handleChange}
       />
-      <TableContainer 
-        isLoading={isLoading}
-        searchQuery={sq}
-        data={data}
+      <TableContent 
+        sq={sq}
+        data={isEmpty(data) ? [] : data.data}
         error={error}
+        isFetching={isLoading || isFetching}
       />
-      <PaginationContainer
+      <TablePagination 
+        meta={meta}
         rowsPerPage={sq.per_page}
-        currentPage={meta.current_page}
-        lastPage={meta.last_page}
-        isLoading={isLoading}
-        onChange={handleChange} 
+        isFetching={isLoading || isFetching}
+        onChange={handleChange}
         onPrevious={handlePrevious}
-        onNext={handleNext}
+        onNext={() => handleNext(meta)}
       />
-    </>
+    </React.Fragment>
   )
 }
-function FilteringContainer({fullName, onChange}) {
+function TableFiltering({search, onChange}) {
   const dispatch = useDispatch()
 
   const handleClick = () => {
@@ -67,13 +74,13 @@ function FilteringContainer({fullName, onChange}) {
   }
 
   return (
-    <div className="filtering-container">
+    <div className="table-filtering">
       <div className="row gx-2">
         <div className="col-6">
           <SearchFieldInput
-            name="full_name"
             placeholder="Search by Customer..."
-            value={fullName}
+            name="search"
+            value={search}
             onChange={onChange}
           />
         </div>
@@ -87,11 +94,10 @@ function FilteringContainer({fullName, onChange}) {
     </div>
   )
 }
-function TableContainer({isLoading, searchQuery, data, error}) {
+function TableContent({sq, data, error, isFetching}) {
   const dispatch = useDispatch()
 
   const handleUpdate = (customer) => {
-    dispatch(resetStates())
     dispatch(setCustomer(customer))
     delay(() => dispatch(openModal(ModalType.UPDATE)), DELAY_MILLIS)
   }
@@ -104,37 +110,37 @@ function TableContainer({isLoading, searchQuery, data, error}) {
   return (
     <div className="table-wrapper table-container">
       <table className="table">
-        <thead>
-          <THeaders columns={columns} />
-        </thead>
+        <TableHeaders columns={columns} />
         <tbody>
           {
-            isLoading ? (
-              <TDStatus colSpan={columnsSize}>
-                {GenericMessage.ITEMS_FETCHING.replace("{{items}}", "customers")}
-              </TDStatus>
-            ) : error ? (
-              <TDStatus colSpan={columnsSize}>
-                {error.message ? error.message : GenericMessage.ITEMS_ERROR.replace("{{items}}", "customers")}
-              </TDStatus>
-            ) : noSearchResults(searchQuery, data) ? (
-              <TDStatus colSpan={columnsSize}>
-              {GenericMessage.ITEMS_NO_MATCH.replace("{{items}}", "customers")}
-              </TDStatus>
-            ) : isEmpty(data) ? (
-              <TDStatus colSpan={columnsSize}>
-                {GenericMessage.ITEMS_EMPTY.replace("{{items}}", "customers")}
-              </TDStatus>
-            ) : data ? data.map((customer, index) => (
-              <TDCustomer
-                key={index}
-                customer={customer}
-                onUpdate={() => handleUpdate(customer)}
-                onRemove={() => handleRemove(customer)}
+            isFetching ? (
+              <TableStatus 
+                colSpan={colSpan} 
+                message={GenericMessage.CUSTOMERS_FETCHING} 
               />
-            )) : (
-              <></>
-            )
+            ) : error ? (
+              <TableStatus 
+                colSpan={colSpan} 
+                message={GenericMessage.CUSTOMERS_ERROR} 
+              />
+            ) : noSearchResults(sq, data) ? (
+              <TableStatus 
+                colSpan={colSpan} 
+                message={GenericMessage.CUSTOMERS_NO_MATCH} 
+              />
+            ) : isEmpty(data) ? (
+              <TableStatus 
+                colSpan={colSpan} 
+                message={GenericMessage.CUSTOMERS_EMPTY} 
+              />
+            ) : data.map((item, index) => (
+              <TableItem 
+                key={index} 
+                item={item}
+                onUpdate={() => handleUpdate(item)}
+                onRemove={() => handleRemove(item)}
+              />
+            ))
           }
         </tbody>
       </table>
@@ -142,17 +148,17 @@ function TableContainer({isLoading, searchQuery, data, error}) {
   )
 }
 
-function TDCustomer({customer, onUpdate, onRemove}) {
-  const fullName = StringHelper.truncate(customer.full_name)
-  const address = StringHelper.truncate(customer.address)
-  const phoneNumber = StringHelper.truncate(customer.phone_number)
-  const emailAddress = StringHelper.truncate(customer.email_address)
-  const createdBy = StringHelper.truncate(customer.created_by)
-  const dateCreated = DateHelper.toIsoStandard(customer.created_at)
-  const dateModified = DateHelper.toIsoStandard(customer.updated_at)
+function TableItem({item, onUpdate, onRemove}) {
+  const fullName = StringHelper.truncate(item.full_name)
+  const address = StringHelper.truncate(item.address)
+  const phoneNumber = StringHelper.truncate(item.phone_number)
+  const emailAddress = StringHelper.truncate(item.email_address)
+  const createdBy = StringHelper.truncate(item.created_by)
+  const dateCreated = DateHelper.toIsoStandard(item.created_at)
+  const dateModified = DateHelper.toIsoStandard(item.updated_at)
 
   return (
-    <tr key={customer.id}>
+    <tr>
       <td>{fullName}</td>
       <td>{address}</td>
       <td>{phoneNumber}</td>
@@ -161,57 +167,14 @@ function TDCustomer({customer, onUpdate, onRemove}) {
       <td>{dateCreated}</td>
       <td>{dateModified}</td>
       <td className="hstack gap-1">
-        <Button 
-          variant="dark"
-          size="sm"
-          onClick={onUpdate}
-        >
+        <Button variant="dark" size="sm" onClick={onUpdate}>
           Update
         </Button>
-        <Button 
-          variant="light"
-          size="sm"
-          onClick={onRemove}
-        >
+        <Button variant="light" size="sm" onClick={onRemove}>
           Remove
         </Button>
       </td>
     </tr>
-  )
-}
-function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onChange, onPrevious, onNext}) {
-  return (
-    <div className="pagination-container">
-      <div className="d-flex flex-row align-items-center gap-2">
-        <label className="fw-medium fs-7 text-nowrap">Rows per page</label>
-        <SelectInput
-          name="per_page"
-          options={rowsPerPages}
-          value={rowsPerPage}
-          onChange={onChange}
-          onRender={(option) => `${option} rows`}
-        />
-      </div>
-      <div className="d-flex flex-row align-items-center gap-2">
-        <label className="fw-medium fs-7 text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>
-        <div className="btn-group">
-          <Button
-            variant="light" 
-            isDisabled={isLoading || currentPage <= 1}
-            onClick={onPrevious}
-          >
-            Prev
-          </Button>
-          <Button 
-            variant="light" 
-            isDisabled={isLoading || currentPage >= lastPage} 
-            onClick={onNext}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
-    </div>
   )
 }
 

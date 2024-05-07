@@ -3,7 +3,6 @@ import { buildColResponse, buildResponse, rowsPerPages } from "../../util/Config
 import { first, isEmpty } from "lodash"
 import { SaleService } from "../../data/services"
 import ResponseStatus from "../../util/classes/ResponseStatus.js"
-import UserService from "../../data/services/UserService.js"
 import { computeSum, isEntitySelected } from "../../util/helper.jsx"
 
 const exportAsExcel = createAsyncThunk(
@@ -20,7 +19,7 @@ const fetchUsers = createAsyncThunk(
   "sales/fetchUsers", 
   async (thunkAPI) => {
   try {
-    const response = await UserService.findAll()
+    const response = []
     return response
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data)

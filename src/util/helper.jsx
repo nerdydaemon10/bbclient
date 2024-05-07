@@ -48,7 +48,7 @@ export function noSearchResults(sq, data) {
   const entries = Object
     .entries(sq)
     .filter((entry) => !excludes.includes(entry[0]))
-    
+  
   if (!data)
     return false
 
@@ -56,7 +56,8 @@ export function noSearchResults(sq, data) {
     return false
 
   const hasValues = entries.some((item) => !isEmpty(item[1]))
-  return (data.length == 0) && hasValues
+
+  return isEmpty(data) && hasValues
 }
 export function computeProduct(checkout) {
   return checkout.srp * checkout.quantity

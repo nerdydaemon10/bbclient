@@ -44,7 +44,8 @@ const defaultState = {
   reject: {
     isOpen: false,
     response: buildResponse()
-  }
+  },
+  resetStates: (state, action) => {}
 }
 
 const initialState = { ...defaultState }

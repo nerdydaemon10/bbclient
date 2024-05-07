@@ -5,10 +5,10 @@ const CustomersStyle = createGlobalStyle`
   grid-template-columns: 1fr;
   grid-template-rows: max-content max-content 1fr max-content;
   grid-template-areas: 
-    "title-container"
-    "filtering-container"
-    "table-container"
-    "table-pagination-container";
+    "title-section"
+    "table-filtering"
+    "table-content"
+    "table-pagination";
 }
 
 /* --TITLE-CONTAINER-- */
@@ -16,26 +16,23 @@ const CustomersStyle = createGlobalStyle`
   grid-area: title-container;
 }
 
-/* --FILTERING-CONTAINER-- */
-.filtering-container {
-  grid-area: filtering-container;
+/* --TABLE-FILTERING-- */
+.table-filtering {
+  grid-area: table-filtering;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-/* --TABLE-CONTAINER-- */
-.table-container {
-  grid-area: table-container;
+/* --TABLE-CONTENT-- */
+.table-content {
+  grid-area: table-content;
   overflow: auto !important;
 }
 
-/* --PAGINATION-CONTAINER-- */
-.table-pagination-container {
-  grid-area: table-pagination-container;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* --TABLE-PAGINATION-- */
+.table-pagination {
+  grid-area: table-pagination;
 }`
 
 export default CustomersStyle

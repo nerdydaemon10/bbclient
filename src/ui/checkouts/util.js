@@ -1,1 +1,0 @@
-export const columns = ["Name", "Quantity", "Price/SRP", "Price/Member", "Amount Due"]

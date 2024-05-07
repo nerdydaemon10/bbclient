@@ -1,20 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { Fragment, useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import GenericMessage from "../../util/classes/GenericMessage.js"
-import StringHelper from "../../util/helpers/StringHelper.js"
-import { DELAY_MILLIS } from "../../util/Config.jsx"
-import { BiCoffee, BiPlusCircle, BiSolidCheckCircle, BiSolidCoffee } from "react-icons/bi"
-import { isEntitySelected, noSearchResults } from "../../util/helper.jsx"
-import { useCallback, useEffect, useState } from "react"
-import ModalType from "../../util/classes/ModalType.js"
-import SearchFieldInput from "../common/inputs/SearchFieldInput.jsx"
 import { debounce, delay, isEmpty, size } from "lodash"
+
+import { Fallback, GenericMessage, ModalType, Role, User } from "../../util/classes"
+import { StringHelper, DateHelper } from "../../util/helpers"
+import { DELAY_MILLIS } from "../../util/Config.jsx"
+import { BiPlusCircle, BiSolidCheckCircle } from "react-icons/bi"
+import { isEntitySelected, noSearchResults } from "../../util/helper.jsx"
 import { useFetchEmployeesQuery } from "../../data/services/employees.js"
-import { Button, THeaders, TablePagination, TableStatus } from "../common"
-import Role from "../../util/classes/Role.js"
-import { openModal, setEmployee, setSq } from "../redux/employeesSlice.js"
-import DateHelper from "../../util/helpers/DateHelper.js"
-import local from "../../util/local.js"
+import { Button, TablePagination, TableStatus, SearchFieldInput, TableHeaders } from "../common"
+import { nextPage, openModal, previousPage, setEmployee, setSq } from "../redux/employeesSlice.js"
+import { local } from "../../util"
 
 const columns = ["Full Name", "Username", "Role", "Status", "Date/Logged In", "Date/Logged Out", "Action"]
 const colSpan = size(columns)
@@ -30,33 +27,31 @@ function EmployeesTable() {
   }, DELAY_MILLIS), [])
 
   const { isLoading, isFetching, data, error } = useFetchEmployeesQuery(sqtemp)
-  const meta = data ? data.meta : { current_page: 1, last_page: 1 }
-
+  const meta = Fallback.checkMeta(data)
+  
   const handleChange = (e) => {
     dispatch(setSq({ ...sq, [e.target.name]: e.target.value}))
   }
   const handlePrevious = () => {
-    let page = sq.page > 1 ? sq.page - 1 : 1
-    dispatch(setSq({ ...sq, page: page }))
+    dispatch(previousPage())
   }
-  const handleNext = () => {
-    let page = sq.page < meta.last_page ? sq.page + 1 : meta.last_page
-    dispatch(setSq({ ...sq, page: page }))
+  const handleNext = (meta) => {
+    dispatch(nextPage(meta))
   }
 
   useEffect(() => {
     debouncer(sq)
   }, [sq])
-
+  
   return (
-    <>
-      <FilteringContainer 
+    <Fragment>
+      <TableFiltering 
         search={sq.search}
         onChange={handleChange}
       />
-      <TableContainer 
+      <TableContent
         sq={sq}
-        data={data}
+        data={isEmpty(data) ? [] : data.data}
         error={error}
         isFetching={isLoading || isFetching}
       />
@@ -66,12 +61,12 @@ function EmployeesTable() {
         isFetching={isLoading || isFetching}
         onChange={handleChange}
         onPrevious={handlePrevious}
-        onNext={handleNext}
+        onNext={() => handleNext(meta)}
       />
-    </>
+    </Fragment>
   )
 }
-function FilteringContainer({search, onChange}) {
+function TableFiltering({search, onChange}) {
   const dispatch = useDispatch()
   
   const handleClick = () => {
@@ -79,7 +74,7 @@ function FilteringContainer({search, onChange}) {
   }
 
   return (
-    <div className="filtering-container">
+    <div className="table-filtering">
       <div className="row gx-2">
         <div className="col-6">
           <SearchFieldInput
@@ -99,7 +94,7 @@ function FilteringContainer({search, onChange}) {
     </div>
   )
 }
-function TableContainer({sq, data, error, isFetching}) {
+function TableContent({sq, data, error, isFetching}) {
   const dispatch = useDispatch()
 
   const user = local.get("user")
@@ -114,11 +109,9 @@ function TableContainer({sq, data, error, isFetching}) {
   }
 
   return (
-    <div className="table-wrapper table-container">
+    <div className="table-wrapper table-content">
       <table className="table">
-        <thead>
-          <THeaders columns={columns} />
-        </thead>
+        <TableHeaders columns={columns} />
         <tbody>
           {
             isFetching ? (
@@ -141,10 +134,10 @@ function TableContainer({sq, data, error, isFetching}) {
                 colSpan={colSpan} 
                 message={GenericMessage.EMPLOYEES_EMPTY} 
               />
-            ) : data.data.map((item, index) => (
-              <TableData 
+            ) : data.map((item, index) => (
+              <TableItem 
                 key={index} 
-                item={item} 
+                item={item}
                 isUser={isEntitySelected(item, user)}
                 onUpdate={() => handleUpdate(item)}
                 onRemove={() => handleRemove(item)}
@@ -156,16 +149,15 @@ function TableContainer({sq, data, error, isFetching}) {
     </div>
   )
 }
-
-function TableData({item, isUser, onUpdate, onRemove}) {
+function TableItem({item, isUser, onUpdate, onRemove}) {
   const fullName = StringHelper.truncate(item.full_name)
   const username = `@${StringHelper.truncate(item.username)}`
   const role = Role.toRole(item.role_id)
   const isAdmin = Role.isAdmin(item.role_id)
-  const status = StringHelper.truncate(item.status)
+  const status =  User.toObject(item.status)
   const loggedIn = DateHelper.toDateTime(item.last_login_at)
   const loggedOut = DateHelper.toDateTime(item.last_login_at)
-
+  
   return (
     <tr>
       <td>
@@ -180,26 +172,18 @@ function TableData({item, isUser, onUpdate, onRemove}) {
         </span>
       </td>
       <td>
-        <span className={status == "Online" ? "badge text-bg-dark" : "badge text-bg-light"}>
-          <span className="me-1">{status == "Online" ? <BiSolidCoffee /> : <BiCoffee />}</span>
-          {status}
+        <span className={`badge ${status.badge}`}>
+          <span className="me-1">{status.icon}</span>
+          {status.name}
         </span>
       </td>
       <td>{loggedIn}</td>
       <td>{loggedOut}</td>
       <td className="hstack gap-1">
-        <Button 
-          variant="dark"
-          size="sm"
-          onClick={onUpdate}
-        >
+        <Button variant="dark" size="sm" onClick={onUpdate}>
           Update
         </Button>
-        <Button 
-          variant="light"
-          size="sm"
-          onClick={onRemove}
-        >
+        <Button variant="light" size="sm" isDisabled={isUser} onClick={onRemove}>
           Remove
         </Button>
       </td>

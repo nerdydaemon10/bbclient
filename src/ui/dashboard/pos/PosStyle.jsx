@@ -2,7 +2,7 @@ import { createGlobalStyle } from "styled-components";
 
 const PosStyle = createGlobalStyle`
 .dashboard-main {
-  grid-template-columns: 1fr 1fr max-content;
+  grid-template-columns: 1fr 1fr 320px;
   grid-template-rows: max-content max-content 1fr max-content;
   grid-template-areas: 
     "title-container title-container title-container"

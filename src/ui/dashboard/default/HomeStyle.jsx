@@ -2,26 +2,26 @@ import { createGlobalStyle } from "styled-components"
 
 const HomeStyle = createGlobalStyle`
 .dashboard-main {
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: max-content max-content;
+  grid-template-columns: 1fr;
+  grid-template-rows: max-content max-content 1fr;
   grid-template-areas: 
-    "title-container title-container title-container title-container"
-    "trend-1 trend-2 trend-3 trend-4";
+    "title-container"
+    "trends-container"
+    "charts-container"
+  overflow-y: auto;
 }
 .title-container {
-  grid-area: title-container;
+  grid-area: "title-container";
 }
-.trend-1 {
-  grid-area: trend-1;
+.trends-container {
+  display: grid;
+  grid-area: "trends-container";
+  grid-template-columns: auto auto auto auto;
 }
-.trend-2 {
-  grid-area: trend-2;
-}
-.trend-3 {
-  grid-area: trend-3;
-}
-.trend-4 {
-  grid-area: trend-4;
+.charts-container {
+  display: grid;
+  grid-area: "charts-container";
+  grid-template-columns: 0.5fr 0.5fr;
 }
 `
 

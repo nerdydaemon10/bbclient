@@ -32,6 +32,13 @@ StringHelper.toPcs = function(number) {
   }
   return "No Items"
 }
-StringHelper.toPesoCurrency = function(number) {
-    return number.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })
+StringHelper.toCount = function(number, max=999) {
+  if (number == 0) return "0"
+  if (number > max) return `${max}+`
+
+  return number
+}
+StringHelper.toPesoCurrency = function(str) {
+  const number = Number(str)
+  return number.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })
 }

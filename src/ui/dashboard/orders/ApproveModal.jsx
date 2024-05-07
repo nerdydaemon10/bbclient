@@ -1,14 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import { Modal } from "../../common"
-import { resetStates } from "../../redux/customersSlice.js"
 import ModalType from "../../../util/classes/ModalType.js"
-import { approveOrder, closeModal } from "../../redux/ordersSlice.js"
+import { approveOrder, closeModal, resetStates } from "../../redux/ordersSlice.js"
 import { useContext, useEffect } from "react"
 import { enqueueSnackbar } from "notistack"
 import { OrdersContext } from "./OrdersProvider.jsx"
-import { DELAY_MILLIS } from "../../../util/Config.jsx"
-import { delay } from "lodash"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
 
 function ApproveModal() {
@@ -34,7 +31,7 @@ function ApproveModal() {
     dispatch(closeModal(ModalType.APPROVE))
     enqueueSnackbar(GenericMessage.ORDER_APPROVED)
     fetchOrders()
-    delay(() => dispatch(resetStates()), DELAY_MILLIS)
+    dispatch(resetStates())
   }, [response.isSuccess])
 
   return (

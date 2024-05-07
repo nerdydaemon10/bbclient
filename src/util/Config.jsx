@@ -4,6 +4,8 @@ import {
   BiShoppingBag, BiSolidBarChartAlt2, BiSolidBox, 
   BiSolidCartAlt, BiSolidGroup, BiSolidHome, 
   BiSolidShoppingBag, BiSolidUserCircle, BiUserCircle,
+  BiSolidCoffee,
+  BiCoffee,
 } from "react-icons/bi"
 import { first } from "lodash"
 import ResponseStatus from "./classes/ResponseStatus.js"
@@ -85,14 +87,18 @@ export const PaymentMethodsData = [
     value: 2
   }
 ]
+export const UserStatusesData = [
+  { key: "online", name: "Online", badge: "text-bg-dark", icon: <BiSolidCoffee /> },
+  { key: "offline", name: "Offline", badge: "text-bg-light", icon: <BiCoffee /> },
+]
 export const OrderStatusesData = [
   { key: "pending", name: "Pending", badge: "text-bg-light", icon: <BiHourglass /> },
   { key: "approved", name: "Approved", badge: "text-bg-dark", icon: <BiCheck /> },
   { key: "rejected", name: "Rejected", badge: "text-bg-secondary", icon: <BiX /> }
 ]
 export const RolesData = [
-  { key: 1, name: "Admin", enum: "admin" },
-  { key: 2, name: "Employee", enum: "employee" }
+  { key: 1, name: "Admin", normalize: "admin" },
+  { key: 2, name: "Employee", normalize: "employee" }
 ]
 
 export const paymentMethods = [1, 2]
