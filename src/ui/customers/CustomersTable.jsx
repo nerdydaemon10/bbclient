@@ -1,17 +1,16 @@
 import { useDispatch, useSelector } from "react-redux"
-import GenericMessage from "../../../util/classes/GenericMessage.js"
+import { GenericMessage } from "../../util/classes"
 import { columns, columnsSize } from "./Util.jsx"
-import DateHelper from "../../../util/helpers/DateHelper.js"
-import StringHelper from "../../../util/helpers/StringHelper.js"
-import { DELAY_MILLIS, rowsPerPages } from "../../../util/Config.jsx"
+import DateHelper from "../../util/helpers/DateHelper.js"
+import StringHelper from "../../util/helpers/StringHelper.js"
+import { DELAY_MILLIS, rowsPerPages } from "../../util/Config.jsx"
 import { BiPlusCircle } from "react-icons/bi"
-import { noSearchResults } from "../../../util/helper.jsx"
-import { Button, SelectInput, TDStatus, THeaders } from "../../common"
+import { noSearchResults } from "../../util/helper.jsx"
+import { Button, SelectInput, TDStatus, THeaders, SearchFieldInput } from "../common"
 import { useContext } from "react"
 import { CustomersContext } from "./CustomersProvider.jsx"
-import { openModal, resetStates, setCustomer, setSq } from "../../redux/customersSlice.js"
-import ModalType from "../../../util/classes/ModalType.js"
-import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
+import { openModal, resetStates, setCustomer, setSq } from "../redux/customersSlice.js"
+import ModalType from "../../util/classes/ModalType.js"
 import { delay, isEmpty } from "lodash"
 
 function CustomersTable() {
@@ -35,7 +34,7 @@ function CustomersTable() {
     dispatch(setSq({ ...sq, page: page }))
     searchCustomers.cancel()
   }
-
+  
   return (
     <>
       <FilteringContainer 

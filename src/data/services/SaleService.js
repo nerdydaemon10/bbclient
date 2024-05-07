@@ -6,12 +6,14 @@ SaleService.exportAsExcel = async function(sq=null) {
   const params = sq ? {
     start_date: sq.date_start,
     end_date: sq.date_end,
-    employee: sq["user.full_name"],
+    employee_id: sq["employee_id"],
     customer: sq["customer.full_name"],
     status: sq.status,
-    payment_method: sq.payment_method
+    payment_method: sq.payment_method,
+    per_page: sq.per_page, 
+    page: sq.page
   } : null
-
+  
   const response = await client.get('/admin/export', { responseType: "blob", params: params})
   return response.data
 }
@@ -20,8 +22,7 @@ SaleService.findAll = async function(sq=null) {
   const params = sq ? {
     start_date: sq.date_start,
     end_date: sq.date_end,
-    commission_by_id: sq["user_id"],
-    sales_by_id: sq["user_id"],
+    employee_id: sq["employee_id"],
     customer: sq["customer.full_name"],
     status: sq.status,
     payment_method: sq.payment_method,

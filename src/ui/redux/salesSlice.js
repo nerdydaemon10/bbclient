@@ -4,7 +4,7 @@ import { first, isEmpty } from "lodash"
 import { SaleService } from "../../data/services"
 import ResponseStatus from "../../util/classes/ResponseStatus.js"
 import UserService from "../../data/services/UserService.js"
-import { computeSum } from "../../util/helper.jsx"
+import { computeSum, isEntitySelected } from "../../util/helper.jsx"
 
 const exportAsExcel = createAsyncThunk(
   "sales/exportAsExcel", 
@@ -27,9 +27,9 @@ const fetchUsers = createAsyncThunk(
   }
 })
 
-const initialState = { 
+const initialState = {
   salesSq: {
-    user_id: "",
+    employee_id: "",
     "customer.full_name": "",
     date_start: "",
     date_end: "",
@@ -38,6 +38,7 @@ const initialState = {
     per_page: first(rowsPerPages), 
     page: 1
   },
+  sale: null,
   fetchSalesResponse: buildColResponse(),
   fetchUsersResponse: buildColResponse(),
   exportAsExcelResponse: buildResponse()
@@ -49,6 +50,19 @@ const salesSlice = createSlice({
   reducers: {
     setSq: (state, action) => {
       state.salesSq = action.payload
+      state.fetchSalesResponse.isLoaded = false
+    },
+    setSale: (state, action) => {
+      const { sale } = state
+      
+      if (isEmpty(state.sale) || !isEntitySelected(sale, action.payload)) {
+        state.sale = action.payload
+      } else {
+        state.sale = null
+      }
+    },
+    setTab: (state, action) => {
+      state.tab = action.payload
     },
     setPending: (state) => {
       state.fetchSalesResponse = buildColResponse(ResponseStatus.PENDING)
@@ -61,7 +75,7 @@ const salesSlice = createSlice({
     },
     resetStates: (state) => {
       state.exportAsExcelResponse = buildResponse()
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -88,19 +102,22 @@ const salesSlice = createSlice({
   }
 })
 
+export const selectSale = (state) => state.sale
 export const selectSales = (state) => state.fetchSalesResponse.data ?? []
 export const selectUsersResponse = (state) => state.fetchUsersResponse.data ?? []
-export const selectTotalSales = createSelector([selectSales], (sales) => {
-  if (isEmpty(sales)) return 0.00
-  return sales.reduce((accum, sale) => accum + computeSum(sale.checkouts), 0.00)
-})
 export const selectTotalCommission = createSelector([selectSales], (sales) => {
   if (isEmpty(sales)) return 0.00
   return sales.reduce((accum, sale) => accum + sale.commission, 0.00)
 })
+export const selectTotalSales = createSelector([selectSales], (sales) => {
+  if (isEmpty(sales)) return 0.00
+  return sales.reduce((accum, sale) => accum + computeSum(sale.checkouts), 0.00)
+})
 
 export const {
   setSq,
+  setTab,
+  setSale,
   setPending,
   setFulfilled,
   setRejected,

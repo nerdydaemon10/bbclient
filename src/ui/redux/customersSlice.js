@@ -37,6 +37,8 @@ const removeCustomer = createAsyncThunk(
 const defaultState = {
   sq: { full_name: "", category_id: "", per_page: rowsPerPages[0].id, page: 1 },
   customer: { id: 0, full_name: "", address: "", phone_number: "", email_address: "" },
+  customers: [],
+  isLoading: false,
   fetch: {
     response: buildColResponse()
   },
@@ -47,8 +49,8 @@ const defaultState = {
   update: {
     isOpen: "",
     response: buildResponse()
-  },
-  remove: {
+    },
+    remove: {
     isOpen: "",
     response: buildResponse()
   }

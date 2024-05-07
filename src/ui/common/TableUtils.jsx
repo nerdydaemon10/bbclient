@@ -9,7 +9,6 @@ export function THeaders({columns}) {
     </tr>
   )
 }
-
 export function TDStatus({colSpan, children}) {
   return (
     <tr>

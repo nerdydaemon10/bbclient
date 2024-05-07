@@ -1,13 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import FilteringContainer from "./FilteringContainer.jsx"
 import SalesProvider from "./SalesProvider.jsx"
 import SalesStyle from "./SalesStyle.jsx"
 import SalesTable from "./SalesTable.jsx"
 import { ReceiptList } from "../common/index.jsx"
 import { useSelector } from "react-redux"
 import { selectTotalCommission, selectTotalSales } from "../redux/salesSlice.js"
+import SideContainer from "./SideContainer.jsx"
+import StringHelper from "../../util/helpers/StringHelper.js"
+import { hasSelectedUser } from "./Util.jsx"
 
 function SalesView() {
+  const { salesSq } = useSelector((state) => state.sales)
   const totalCommission = useSelector((state) => selectTotalCommission(state.sales))
   const totalSales = useSelector((state) => selectTotalSales(state.sales))
 
@@ -16,11 +19,11 @@ function SalesView() {
       <SalesStyle />
       <TitleContainer />
       <SalesTable />
-      <FilteringContainer />
+      <SideContainer />
       <ReceiptList 
         receipts={[
-          { name: "Salesp. Commission", value: totalCommission},
-          { name: "Total", value: totalSales},
+          hasSelectedUser(salesSq) && { name: "Salesp. Commission", value: StringHelper.toPesoCurrency(totalCommission)},
+          { name: "Total", value: StringHelper.toPesoCurrency(totalSales)}
         ]}
       />
     </SalesProvider>  

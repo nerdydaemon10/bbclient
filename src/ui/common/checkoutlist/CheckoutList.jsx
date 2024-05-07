@@ -3,8 +3,9 @@ import StringHelper from "../../../util/helpers/StringHelper.js"
 import Button from "../buttons/Button.jsx"
 import CheckoutListStyle from "./CheckoutListStyle.jsx"
 import { BiMinus, BiPlus } from "react-icons/bi"
+import ProductCategory from "../../../util/classes/ProductCategory.js"
 
-function CheckoutList({className, checkouts, onDecrement, onIncrement}) {
+function CheckoutList({className, checkouts, isControlsDisabled, isOdd, onDecrement, onIncrement}) {
   return (
     <>
       <CheckoutListStyle />
@@ -15,8 +16,11 @@ function CheckoutList({className, checkouts, onDecrement, onIncrement}) {
           ) : (
             checkouts.map((checkout, index) => (
               <CheckoutItem 
-                key={index} 
+                key={index}
+                count={index + 1}
                 checkout={checkout}
+                isControlsDisabled={isControlsDisabled}
+                isOdd={isOdd}
                 onDecrement={() => onDecrement(checkout.id)} 
                 onIncrement={() => onIncrement(checkout.id)} 
               />
@@ -27,34 +31,43 @@ function CheckoutList({className, checkouts, onDecrement, onIncrement}) {
     </>
   )
 }
-function CheckoutItem({checkout,  onDecrement, onIncrement}) {
+function CheckoutItem({count, checkout, isControlsDisabled, isOdd=true, onDecrement, onIncrement}) {
   const name = StringHelper.truncate(checkout.name)
-  const description = StringHelper.truncate(checkout.description)
+  const code = StringHelper.truncate(checkout.product_code)
+  const srp = StringHelper.toPesoCurrency(checkout.srp)
+  const category = ProductCategory.toCategory(checkout.category_id)
   const total = StringHelper.toPesoCurrency(checkout.srp * checkout.quantity)
   const quantity = StringHelper.toPcs(checkout.quantity)
   
   return (
-    <li className="checkout-list-item d-flex flex-row justify-content-between border rounded p-2">
+    <li className={`checkout-list-item ${isControlsDisabled ? "" : "d-flex flex-row justify-content-between gap-2"} border rounded ${isOdd ? "is-odd" : "is-even" } p-2`}>
       <div className="d-flex flex-column justify-content-between">
-        <div>
-          <h6 className="text-body-primary fw-semibold mb-0">{name}</h6>
-          <p className="text-body-secondary fs-7 mb-0">{description}</p>
+        <div className="mb-1">
+          <div className="d-flex w-100 justify-content-between align-items-center">
+            <h6 className="text-body-primary fw-semibold mb-0">{name}</h6>
+            {isControlsDisabled && <h6 className="text-body-primary fw-semibold mb-0">#{count}</h6>}
+          </div>
+          <p className="text-body-secondary text-wrap fs-7 mb-0">{code}, {category}, {srp}</p>
         </div>
         <div className="hstack">
           <span className="fs-7 fw-semibold">{`${total}, ${quantity}`}</span>
         </div>
       </div>
-      <QuantityControls
-        quantity={checkout.quantity}
-        onDecrement={onDecrement} 
-        onIncrement={onIncrement} 
-      />
+      {
+        isControlsDisabled || (
+          <QuantityControls
+            quantity={checkout.quantity}
+            onDecrement={onDecrement} 
+            onIncrement={onIncrement} 
+          />
+        )
+      }
     </li>
   )
 }
 function EmptyItem() {
   return (
-    <li className="w-100 h-100 d-flex justify-content-center align-items-center text-center">
+    <li className="w-100 h-100 d-flex justify-content-center align-items-center text-center p-2">
       <div>
         <h6 className="text-body-primary mb-0">Checkouts are empty.</h6>
         <p className="text-body-secondary fs-7">Press <em>&apos;checkout&apos;</em> to some products.</p>

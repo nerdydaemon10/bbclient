@@ -10,7 +10,7 @@ import local from "../../../util/local.js"
 
 function PosView() {
   const { table } = useSelector((state) => state.pos)
-  
+
   return (
     <PosProvider>
       <PosStyle />

@@ -35,6 +35,14 @@ export default class GenericMessage {
     static CUSTOMERS_EMPTY = "No customers in our records, please add some customer."
     static CUSTOMERS_ERROR = "Something went wrong while fetching customers."
 
+    static EMPLOYEE_ADDED = "Employee was successfully added to the records."
+    static EMPLOYEE_UPDATED = "Employee's info was successfully updated."
+    static EMPLOYEE_REMOVED = "Employee was removed to the records."
+    static EMPLOYEES_FETCHING = "Fetching employees... please wait for a while."
+    static EMPLOYEES_NO_MATCH = "No employees match your search criteria. Try refining your search."
+    static EMPLOYEES_EMPTY = "No employees in our records, please add some empployee."
+    static EMPLOYEES_ERROR = "Something went wrong while fetching employees."
+
     static ITEM_CREATED = "{{item}} was successfully added to the records."
     static ITEM_UPDATED = "{{item}} was successfully updated."
     static ITEMS_FETCHING = "Fetching {{items}}... please wait for a while."

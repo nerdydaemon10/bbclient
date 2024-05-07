@@ -72,8 +72,8 @@ function DashboardSidebar({routesData}) {
 					</div>
         </div>
 				<LinkButton
-					variant="outline-dark"
 					to="sign-out"
+					variant="outline-dark"
 					replace
 				>
 					<BiLogIn className="me-1"/>

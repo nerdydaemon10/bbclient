@@ -31,3 +31,5 @@ export { default as Flex } from "./layouts/Flex.jsx"
 export { default as ReceiptList } from "./receipt/ReceiptList.jsx"
 
 export { default as TrendCard } from "./trendcard/TrendCard.jsx"
+
+export { TableStatus, TablePagination } from "./Table.jsx"

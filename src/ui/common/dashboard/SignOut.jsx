@@ -1,19 +1,16 @@
 import { useEffect } from "react"
-import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import local from "../../../util/local.js"
-import { logout } from "../../redux/authSlice.js"
 
 function SignOut() {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  //const [logout, { isSuccess }] = useLogoutMutation()
 
   useEffect(() => {
+    //logout()
     local.clear()
-    
-    dispatch(logout())
     navigate("/")
-  }, [dispatch, navigate])
+  }, [navigate])
 }
 
 export default SignOut

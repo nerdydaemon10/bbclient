@@ -16,7 +16,7 @@ function InventoryProvider({children}) {
     meta: null,
     error: null
   })
-
+  
   const handleFetchProductsAsync = () => {
     setApiResource({...apiResource, isLoading: true})
     ProductService.findAll(searchQuery).then((response) => {
