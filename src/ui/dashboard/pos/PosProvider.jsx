@@ -11,9 +11,8 @@ const PosContext = createContext()
 
 function PosProvider({children}) {
   const dispatch = useDispatch()
-
   const { products, customers } = useSelector((state) => state.pos)
-
+  
   const fetchProducts = (searchQuery) => {
     dispatch(setFetchResponse({
       type: FetchType.PRODUCTS,

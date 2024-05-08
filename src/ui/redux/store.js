@@ -5,28 +5,26 @@ import posSlice from "./posSlice.js"
 import customersSlice from "./customersSlice.js"
 import authSlice from "./authSlice.js"
 import ordersSlice from "./ordersSlice.js"
-import dashboardSlice from "./dashboardSlice.js"
 import salesSlice from "./salesSlice.js"
-import checkoutsSlice from "./checkoutsSlice.js"
 import client from "../../data/services/client.js"
 import employeesSlice from "./employeesSlice.js"
 
 const reducer = combineReducers({
   [client.reducerPath]: client.reducer,
   auth: authSlice,
-  dashboard: dashboardSlice,
   pos: posSlice,
   inventory: inventorySlice,
   customers: customersSlice,
   orders: ordersSlice,
   sales: salesSlice,
-  checkouts: checkoutsSlice,
   employees: employeesSlice,
 })
 
 const store = configureStore({
   reducer: reducer,
-  middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false }).concat(client.middleware),
+  middleware: getDefaultMiddleware => getDefaultMiddleware({ 
+    serializableCheck: false 
+  }).concat(client.middleware),
   devTools: true
 })
 

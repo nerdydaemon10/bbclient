@@ -7,12 +7,8 @@ import { Role } from "../util/classes"
 import { local } from "../util"
 import AdminPage from "./admin/AdminPage.jsx"
 import EmployeePage from "./employee/EmployeePage.jsx"
-import store from "./redux/store.js"
-import { employees } from "../data/services/employees.js"
 
 function App() {
-	store.dispatch(employees.endpoints.fetchEmployees.initiate())
-
 	return (
 		<Routes>
 			<Route path="/" element={

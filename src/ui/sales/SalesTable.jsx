@@ -1,17 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { BiLinkAlt } from "react-icons/bi"
 import { TableHeaders, TablePagination, TableStatus } from "../common"
 import { isEntitySelected, noSearchResults } from "../../util/helper.jsx"
-import { debounce, isEmpty, isNil, size } from "lodash"
+import { isEmpty, isNil, size } from "lodash"
 import StringHelper from "../../util/helpers/StringHelper.js"
 import { PaymentMethod, OrderStatus, GenericMessage, Fallback } from "../../util/classes/index.js"
 import DateHelper from "../../util/helpers/DateHelper.js"
 import { useDispatch, useSelector } from "react-redux"
 import { setSale, setSq } from "../redux/salesSlice.js"
-import { Fragment, useCallback, useContext, useEffect, useState } from "react"
+import { Fragment, useContext } from "react"
 import { Link } from "react-router-dom"
-import { DELAY_MILLIS } from "../../util/Config.jsx"
-import { useFetchSalesQuery } from "../../data/services/sales.js"
 import { nextPage, previousPage } from "../redux/employeesSlice.js"
 import { SalesContext } from "./SalesProvider.jsx"
 
@@ -20,16 +17,9 @@ const colSpan = size(columns)
 
 function SalesTable() {
   const dispatch = useDispatch()
-
   const { sq } = useSelector((state) => state.sales)
-  //const [sqtemp, setSqtemp] = useState(sq)
-
-  /*const debouncer = useCallback(debounce((sqtemp) => {
-    setSqtemp(sqtemp)
-  }, DELAY_MILLIS), [])*/
 
   const { isLoading, isFetching, data, error } = useContext(SalesContext)
-  //const { isLoading, isFetching, data, error } = useFetchSalesQuery(sqtemp)
   const meta = Fallback.checkMeta(data)
 
   const handleChange = (e) => {
@@ -41,10 +31,6 @@ function SalesTable() {
   const handleNext = (meta) => {
     dispatch(nextPage(meta))
   }
-
-  /*useEffect(() => {
-    debouncer(sq)
-  }, [sq])*/
 
   return (
     <Fragment>
