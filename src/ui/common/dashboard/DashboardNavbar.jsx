@@ -10,9 +10,7 @@ function DashboardNavbar({routesData}) {
 	const routes = location.pathname.split("/").filter(route => !excludes.includes(route))
 	const current = last(routes)
 
-  const handleClick = () => {
-    
-  }
+  const handleClick = () => {}
 
 	return (
     <div className="dashboard-navbar d-flex flex-row align-items-center justify-content-between p-2 border-bottom">
