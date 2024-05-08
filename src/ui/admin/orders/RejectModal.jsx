@@ -2,44 +2,38 @@
 import { useDispatch, useSelector } from "react-redux"
 import { Modal } from "../../common"
 import ModalType from "../../../util/classes/ModalType.js"
-import { closeModal, rejectOrder } from "../../redux/ordersSlice.js"
-import { useContext, useEffect } from "react"
+import { closeModal } from "../../redux/ordersSlice.js"
+import { useEffect } from "react"
 import { enqueueSnackbar } from "notistack"
-import { OrdersContext } from "./OrdersProvider.jsx"
-import { DELAY_MILLIS } from "../../../util/Config.jsx"
-import { delay } from "lodash"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
+import { useRejectOrderMutation } from "../../../data/services/orders.js"
 
 function RejectModal() {
-  const { reject, order } = useSelector((state) => state.orders)
-  const { isOpen, response } = reject
-  
-  const { fetchOrders } = useContext(OrdersContext)
-
   const dispatch = useDispatch()
+  const { order, isRejectModalOpen } = useSelector((state) => state.orders)
+  const [rejectOrder, { isLoading, isSuccess }] = useRejectOrderMutation()
 
   const handleClose = () => {
     dispatch(closeModal(ModalType.REJECT))
   }
-
+  
   const handleConfirm = (e) => {
     e.preventDefault()
-    dispatch(rejectOrder(order.id))
+    rejectOrder(order.id)
   }
 
   useEffect(() => {
-    if (!response.isSuccess) return
+    if (!isSuccess) return
 
     dispatch(closeModal(ModalType.REJECT))
     enqueueSnackbar(GenericMessage.ORDER_REJECTED)
-    fetchOrders()
-  }, [response.isSuccess])
+  }, [isSuccess, dispatch])
 
   return (
     <Modal  
       title="Reject Order"
-      isLoading={response.isLoading}
-      isOpen={isOpen} 
+      isOpen={isRejectModalOpen} 
+      isLoading={isLoading}
       onClose={handleClose}
       onConfirm={handleConfirm}
     >

@@ -22,12 +22,12 @@ function EmployeesTable() {
   const { sq } = useSelector((state) => state.employees)
   const [sqtemp, setSqtemp] = useState(sq)
 
+  const { isLoading, isFetching, data, error } = useFetchEmployeesQuery(sqtemp)
+  const meta = Fallback.checkMeta(data)
+  
   const debouncer = useCallback(debounce((sqtemp) => {
     setSqtemp(sqtemp)
   }, DELAY_MILLIS), [])
-
-  const { isLoading, isFetching, data, error } = useFetchEmployeesQuery(sqtemp)
-  const meta = Fallback.checkMeta(data)
   
   const handleChange = (e) => {
     dispatch(setSq(e))

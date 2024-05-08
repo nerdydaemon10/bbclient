@@ -1,18 +1,18 @@
-import OrdersProvider from "./OrdersProvider.jsx"
 import OrdersStyle from "./OrdersStyle.jsx"
 import OrdersTable from "./OrdersTable.jsx"
 import ApproveModal from "./ApproveModal.jsx"
 import RejectModal from "./RejectModal.jsx"
+import { Fragment } from "react"
 
 function OrdersView() {
   return (
-    <OrdersProvider>
+    <Fragment>
       <OrdersStyle />
       <TitleContainer />
       <OrdersTable />
       <ApproveModal />
       <RejectModal />
-    </OrdersProvider>
+    </Fragment>
   )
 }
 

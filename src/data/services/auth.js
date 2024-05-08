@@ -20,7 +20,7 @@ const auth = client.injectEndpoints({
         return { token: token, user: normalized }
       },
       invalidatesTags: (result) => {
-        return result ? ["LIST"] : []
+        return result ? ["List"] : []
       }
     }),
     logout: builder.mutation({
@@ -29,7 +29,7 @@ const auth = client.injectEndpoints({
         method: "POST"
       }),
       invalidatesTags: (result) => {
-        return result ? ["LIST"] : []
+        return result ? ["List"] : []
       }
     }),
   })

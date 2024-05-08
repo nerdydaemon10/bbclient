@@ -72,29 +72,3 @@ export function isEntitySelected(item, item2) {
 
   return item.id == item2.id
 }
-export const ActionResponse = (config) => {
-  const { state } = config
-
-  if (state == "pending")
-    return { isLoading: true, isSuccess: false, data: null, error: null }
-  if (state == "fulfilled")
-    return { isLoading: false, isSuccess: true, data: config.payload, error: null }
-  if (state == "rejected")
-    return { isLoading: false, isSuccess: false, data: null, error: config.payload }
-  // Idle
-  return { isLoading: false, isSuccess: false, data: null, error: null }
-}
-
-const buildDataResponse = (config) => {
-  const { state } = config
-
-  if (state == "pending")
-    return { isLoading: true, isLoaded: false, data: [], meta: { current_page: 0, last_page: 0 }, error: null }
-  if (state == "fulfilled")
-    return { isLoading: false, isLoaded: true, data: config.payload.data, meta: config.payload.meta, error: null }
-  if (state == "rejected")
-    return { isLoading: false, isLoaded: false, data: [], meta: { current_page: 0, last_page: 0 }, error: config.payload }
-
-  // Idle
-  return { isLoading: false, data: [], meta: { current_page: 0, last_page: 0 }, error: null }
-}

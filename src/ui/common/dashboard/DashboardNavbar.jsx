@@ -9,7 +9,7 @@ function DashboardNavbar({routesData}) {
 	const excludes = ["", "/"]
 	const routes = location.pathname.split("/").filter(route => !excludes.includes(route))
 	const current = last(routes)
-
+  
   const handleClick = () => {}
 
 	return (

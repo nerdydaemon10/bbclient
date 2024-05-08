@@ -8,10 +8,8 @@ import {
   BiCoffee,
 } from "react-icons/bi"
 import { first } from "lodash"
-import ResponseStatus from "./classes/ResponseStatus.js"
 
 export const DELAY_MILLIS = 250
-
 export const RoutesData = [
   {
     key: "dashboard",
@@ -110,24 +108,4 @@ export const buildSq = () => {
     per_page: first(rowsPerPages),
     page: 1
   }
-}
-export const buildResponse = (state=ResponseStatus.IDLE, payload=null) => {
-  if (state == ResponseStatus.PENDING)
-    return { isLoading: true, isSuccess: false, data: null, error: null }
-  if (state == ResponseStatus.FULFILLED)
-    return { isLoading: false, isSuccess: true, data: payload, error: null }
-  if (state == ResponseStatus.REJECTED)
-    return { isLoading: false, isSuccess: false, data: null, error: payload }
-  // Idle
-  return { isLoading: false, isSuccess: false, data: null, error: null }
-}
-export const buildColResponse = (state=ResponseStatus.IDLE, payload=null) => {
-  if (state == ResponseStatus.PENDING)
-    return { isLoading: true, isLoaded: false, data: [], meta: { current_page: 0, last_page: 0 }, error: null }
-  if (state == ResponseStatus.FULFILLED)
-    return { isLoading: false, isLoaded: true, data: payload.data, meta: payload.meta, error: null }
-  if (state == ResponseStatus.REJECTED)
-    return { isLoading: false, isLoaded: false, data: [], meta: { current_page: 0, last_page: 0 }, error: payload }
-  // Idle
-  return { isLoading: false, data: [], meta: { current_page: 0, last_page: 0 }, error: null }
 }

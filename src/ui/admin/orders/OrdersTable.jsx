@@ -1,77 +1,88 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
 import DateHelper from "../../../util/helpers/DateHelper.js"
 import StringHelper from "../../../util/helpers/StringHelper.js"
-import { DELAY_MILLIS, orderStatuses, rowsPerPages } from "../../../util/Config.jsx"
+import { DELAY_MILLIS, orderStatuses } from "../../../util/Config.jsx"
 import { noSearchResults } from "../../../util/helper.jsx"
-import { Button, SelectInput, TDStatus, THeaders } from "../../common"
-import { useContext } from "react"
+import { Button, SelectInput, TableHeaders, TablePagination, TableStatus } from "../../common"
 import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
-import { OrdersContext } from "./OrdersProvider.jsx"
 import PaymentMethod from "../../../util/classes/PaymentMethod.js"
-import { BiBlock, BiCheck, BiLinkAlt } from "react-icons/bi"
+import { BiBlock, BiCheck } from "react-icons/bi"
 import OrderStatus from "../../../util/classes/OrderStatus.js"
-import { openModal, setOrder, setSq } from "../../redux/ordersSlice.js"
-import { delay, isEmpty, size } from "lodash"
+import { nextPage, openModal, previousPage, setOrder, setSq } from "../../redux/ordersSlice.js"
+import { debounce, delay, isEmpty, isNil, size } from "lodash"
 import ModalType from "../../../util/classes/ModalType.js"
-import { columns } from "./Util.jsx"
+import { Fragment, useCallback, useEffect, useState } from "react"
+import { useFetchOrdersQuery } from "../../../data/services/orders.js"
+import local from "../../../util/local.js"
+import Fallback from "../../../util/classes/Fallback.js"
+
+const columns = ["Ref. Number", "Amount Due", "Total Items", "Status", "Payment Method", "Customer", "Salesperson", "Date Ordered", "Action"]
+const colSpan = size(columns)
 
 function OrdersTable() {
+  const user = local.get("user")
+
   const dispatch = useDispatch()
 
-  const { sq, fetch } = useSelector((state) => state.orders)
-  const { isLoading, data, meta, error } = fetch.response
-  const { searchOrders } = useContext(OrdersContext)
+  const { sq } = useSelector((state) => state.orders)
+  const [sqtemp, setSqtemp] = useState(sq)
+
+  const { isLoading, isFetching, data, error } = useFetchOrdersQuery(sqtemp, user.role)
+  const meta = Fallback.checkMeta(data)
   
+  const debouncer = useCallback(debounce((sqtemp) => {
+    setSqtemp(sqtemp)
+  }, DELAY_MILLIS), [])
+
   const handleChange = (e) => {
-    dispatch(setSq({ ...sq, [e.target.name]: e.target.value }))
-    searchOrders.cancel()
+    dispatch(setSq(e))
   }
   const handlePrevious = () => {
-    let page = sq.page > 1 ? sq.page - 1 : 1
-    dispatch(setSq({ ...sq, page: page }))
-    searchOrders.cancel()
+    dispatch(previousPage())
   }
-  const handleNext = () => {
-    let page = sq.page < meta.last_page ? sq.page + 1 : meta.last_page
-    dispatch(setSq({ ...sq, page: page }))
-    searchOrders.cancel()
+  const handleNext = (meta) => {
+    dispatch(nextPage(meta))
   }
+  
+  useEffect(() => {
+    debouncer(sq)
+  }, [debouncer, sq])
 
   return (
-    <>
-      <FilteringContainer 
-        name={sq.name}
+    <Fragment>
+      <TableFiltering 
+        search={sq.search}
         status={sq.status}
         onChange={handleChange}
       />
-      <TableContainer 
-        isLoading={isLoading} 
+      <TableContent
         sq={sq}
-        data={data}
+        data={isNil(data) ? [] : data.data}
         error={error}
+        isFetching={isLoading || isFetching}
       />
-      <PaginationContainer
+      <TablePagination 
+        meta={meta}
         rowsPerPage={sq.per_page}
-        currentPage={meta.current_page}
-        lastPage={meta.last_page}
-        isLoading={isLoading}
-        onChange={handleChange} 
+        isFetching={isLoading || isFetching}
+        onChange={handleChange}
         onPrevious={handlePrevious}
-        onNext={handleNext}
+        onNext={() => handleNext(meta)}
       />
-    </>
+    </Fragment>
   )
 }
-function FilteringContainer({name, status, onChange}) {
+function TableFiltering({search, status, onChange}) {
   return (
     <div className="filtering-container">
       <div className="row gx-2">
         <div className="col-6">
           <SearchFieldInput
-            name="name"
+            name="search"
             placeholder="Search by Order..."
-            value={name}
+            value={search}
             onChange={onChange}
           />
         </div>
@@ -89,10 +100,8 @@ function FilteringContainer({name, status, onChange}) {
     </div>
   )
 }
-function TableContainer({isLoading, sq, data, error}) {
+function TableContent({sq, data, error, isFetching}) {
   const dispatch = useDispatch()
-
-  const colSpan = size(columns)
 
   const handleApprove = (order) => {
     dispatch(setOrder(order))
@@ -107,37 +116,37 @@ function TableContainer({isLoading, sq, data, error}) {
   return (
     <div className="table-wrapper table-container">
       <table className="table">
-        <thead>
-          <THeaders columns={columns}/>
-        </thead>
+        <TableHeaders columns={columns} />
         <tbody>
           {
-            isLoading ? (
-              <TDStatus colSpan={colSpan}>
-                {GenericMessage.ORDERS_FETCHING}
-              </TDStatus>
-            ) : error ? (
-              <TDStatus colSpan={colSpan}>
-                {error.message ? error.message : GenericMessage.PRODUCTS_ERROR}
-              </TDStatus>
-            ) : noSearchResults(sq, data) ? (
-              <TDStatus colSpan={colSpan}>
-                {GenericMessage.ORDERS_NO_MATCH}
-              </TDStatus>
-            ) : isEmpty(data) ? (
-              <TDStatus colSpan={colSpan}>
-                {GenericMessage.ORDERS_EMPTY}
-              </TDStatus>
-            ) : data ? data.map((order, index) => (
-              <TDOrder
-                key={index}
-                order={order}
-                onApprove={() => handleApprove(order)}
-                onReject={() => handleReject(order)}
+            isFetching ? (
+              <TableStatus 
+                colSpan={colSpan} 
+                message={GenericMessage.ORDERS_FETCHING} 
               />
-            )) : (
-              <></>
-            )
+            ) : error ? (
+              <TableStatus 
+                colSpan={colSpan} 
+                message={GenericMessage.ORDERS_ERROR} 
+              />
+            ) : noSearchResults(sq, data) ? (
+              <TableStatus 
+                colSpan={colSpan} 
+                message={GenericMessage.ORDERS_NO_MATCH} 
+              />
+            ) : isEmpty(data) ? (
+              <TableStatus 
+                colSpan={colSpan} 
+                message={GenericMessage.ORDERS_EMPTY} 
+              />
+            ) : data.map((item, index) => (
+              <TableItem 
+                key={index} 
+                item={item}
+                onApprove={() => handleApprove(item)}
+                onReject={() => handleReject(item)}
+              />
+            ))
           }
         </tbody>
       </table>
@@ -145,22 +154,21 @@ function TableContainer({isLoading, sq, data, error}) {
   )
 }
 
-function TDOrder({order, onApprove, onReject}) {
-  const referenceNumber = StringHelper.truncate(order.reference_number)
-  const customer = StringHelper.truncate(order.customer.full_name)
-  const amountDue = StringHelper.toPesoCurrency(Number(order.amount_due))
-  const totalItems = StringHelper.toPcs(order.number_of_items)
-  const status = OrderStatus.toObject(order.status)
-  const paymentMethod = PaymentMethod.toMethod(order.payment_method)
-  const salesperson = StringHelper.truncate(order.employee.full_name)
-  const dateCreated = DateHelper.toIsoStandard(order.created_at)
-  
+function TableItem({item, onApprove, onReject}) {
+  const ref = StringHelper.truncate(item.reference_number)
+  const customer = StringHelper.truncate(item.customer.full_name)
+  const amountDue = StringHelper.toPesoCurrency(item.amount_due)
+  const totalItems = StringHelper.toPcs(item.number_of_items)
+  const status = OrderStatus.toObject(item.status)
+  const paymentMethod = PaymentMethod.toMethod(item.payment_method)
+  const salesperson = StringHelper.truncate(item.employee.full_name)
+  const dateCreated = DateHelper.toIsoStandard(item.created_at)
+
   return (
-    <tr key={order.id}>
+    <tr>
       <td>
         <a href="#">
-          <BiLinkAlt className="me-1" />
-          {referenceNumber}
+          {ref}
         </a>
       </td>
       <td>{amountDue}</td>
@@ -200,41 +208,6 @@ function TDOrder({order, onApprove, onReject}) {
         </Button>
       </td>
     </tr>
-  )
-}
-function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onChange, onPrevious, onNext}) {
-  return (
-    <div className="pagination-container">
-      <div className="d-flex flex-row align-items-center gap-2">
-        <label className="fw-medium fs-7 text-nowrap">Rows per page</label>
-        <SelectInput
-          name="per_page"
-          options={rowsPerPages}
-          value={rowsPerPage}
-          onChange={onChange}
-          onRender={(option) => `${option} rows`}
-        />
-      </div>
-      <div className="d-flex flex-row align-items-center gap-2">
-        <label className="fw-medium fs-7 text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>
-        <div className="btn-group">
-          <Button
-            variant="light" 
-            isDisabled={isLoading || currentPage <= 1}
-            onClick={onPrevious}
-          >
-            Prev
-          </Button>
-          <Button 
-            variant="light" 
-            isDisabled={isLoading || currentPage >= lastPage} 
-            onClick={onNext}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
-    </div>
   )
 }
 

@@ -3,11 +3,11 @@ import { useEffect } from "react"
 import Button from "../buttons/Button.jsx"
 import ModalStyle from "./ModalStyle.jsx"
 
-function Modal({title, size="md", isLoading, isOpen, onClose, onConfirm, children}) {
+function Modal({title, size="md", isOpen, isLoading, onClose, onConfirm, children}) {
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "unset"
   }, [isOpen])
-
+  
   return (
     <>
       <ModalStyle />

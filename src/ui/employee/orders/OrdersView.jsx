@@ -1,14 +1,14 @@
-import OrdersProvider from "./OrdersProvider.jsx"
+import { Fragment } from "react"
 import OrdersStyle from "./OrdersStyle.jsx"
 import OrdersTable from "./OrdersTable.jsx"
 
 function OrdersView() {
   return (
-    <OrdersProvider>
+    <Fragment>
       <OrdersStyle />
       <TitleContainer />
       <OrdersTable />
-    </OrdersProvider>
+    </Fragment>
   )
 }
 

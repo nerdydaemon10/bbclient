@@ -22,12 +22,12 @@ function CustomersTable() {
   const { sq } = useSelector((state) => state.customers)
   const [sqtemp, setSqtemp] = useState(sq)
 
+  const { data, error, isLoading, isFetching } = useFetchCustomersQuery(sqtemp)
+  const meta = Fallback.checkMeta(data)
+
   const debouncer = useCallback(debounce((sqtemp) => {
     setSqtemp(sqtemp)
   }, DELAY_MILLIS), [])
-
-  const { data, error, isLoading, isFetching } = useFetchCustomersQuery(sqtemp)
-  const meta = Fallback.checkMeta(data)
 
   const handleChange = (e) => {
     dispatch(setSq(e))

@@ -10,12 +10,12 @@ const SalesContext = createContext()
 function SalesProvider({children}) {
   const { sq } = useSelector((state) => state.sales)
   const [sqtemp, setSqtemp] = useState(sq)
+
+  const { isLoading, isFetching, data, error } = useFetchSalesQuery(sqtemp)
   
   const debouncer = useCallback(debounce((sqtemp) => {
     setSqtemp(sqtemp)
   }, DELAY_MILLIS), [])
-
-  const { isLoading, isFetching, data, error } = useFetchSalesQuery(sqtemp)
 
   useEffect(() => {
     debouncer(sq)

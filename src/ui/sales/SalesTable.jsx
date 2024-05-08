@@ -128,7 +128,6 @@ function TableItem({item, isSelected, onSelect}) {
     <tr className={`${isSelected ? "is-selected" : ""}`}>
       <td>
         <Link onClick={onSelect}>
-          <BiLinkAlt className="me-1" />
           {refNumber}
         </Link>
       </td>

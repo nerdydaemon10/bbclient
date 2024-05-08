@@ -24,3 +24,7 @@ export const ProductParam = {
   srp: "",
   member_price: ""
 }
+export const OrderParam = {
+  id: 0,
+  reference_number: ""
+}

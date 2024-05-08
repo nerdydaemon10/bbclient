@@ -1,22 +1,17 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+
 import { useDispatch, useSelector } from "react-redux"
 import { Modal } from "../../common"
 import ModalType from "../../../util/classes/ModalType.js"
-import { approveOrder, closeModal } from "../../redux/ordersSlice.js"
-import { useContext, useEffect } from "react"
+import { closeModal } from "../../redux/ordersSlice.js"
+import { useEffect } from "react"
 import { enqueueSnackbar } from "notistack"
-import { OrdersContext } from "./OrdersProvider.jsx"
-import { DELAY_MILLIS } from "../../../util/Config.jsx"
-import { delay } from "lodash"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
+import { useApproveOrderMutation } from "../../../data/services/orders.js"
 
 function ApproveModal() {
-  const { approve, order } = useSelector((state) => state.orders)
-  const { isOpen, response } = approve
-  
-  const { fetchOrders } = useContext(OrdersContext)
-
   const dispatch = useDispatch()
+  const { order, isApproveModalOpen } = useSelector((state) => state.orders)
+  const [approveOrder, { isLoading, isSuccess }] = useApproveOrderMutation()
 
   const handleClose = () => {
     dispatch(closeModal(ModalType.APPROVE))
@@ -24,22 +19,21 @@ function ApproveModal() {
 
   const handleConfirm = (e) => {
     e.preventDefault()
-    dispatch(approveOrder(order.id))
+    approveOrder(order.id)
   }
 
   useEffect(() => {
-    if (!response.isSuccess) return
-
+    if (!isSuccess) return
+    
     dispatch(closeModal(ModalType.APPROVE))
     enqueueSnackbar(GenericMessage.ORDER_APPROVED)
-    fetchOrders()
-  }, [response.isSuccess])
+  }, [isSuccess, dispatch])
 
   return (
-    <Modal  
+    <Modal
       title="Approve Order"
-      isLoading={response.isLoading}
-      isOpen={isOpen} 
+      isOpen={isApproveModalOpen} 
+      isLoading={isLoading}
       onClose={handleClose}
       onConfirm={handleConfirm}
     >
