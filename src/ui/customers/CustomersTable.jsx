@@ -2,7 +2,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { debounce, delay, isEmpty, isNil, size } from "lodash"
 import { BiPlusCircle } from "react-icons/bi"
-import React, { useCallback, useEffect, useState } from "react"
+import { Fragment, useCallback, useEffect, useState } from "react"
 
 import { Fallback, GenericMessage, ModalType } from "../../util/classes"
 import { DateHelper, StringHelper } from "../../util/helpers"
@@ -44,7 +44,7 @@ function CustomersTable() {
   }, [sq])
 
   return (
-    <React.Fragment>
+    <Fragment>
       <TableFiltering 
         search={sq.search}
         onChange={handleChange}
@@ -63,7 +63,7 @@ function CustomersTable() {
         onPrevious={handlePrevious}
         onNext={() => handleNext(meta)}
       />
-    </React.Fragment>
+    </Fragment>
   )
 }
 function TableFiltering({search, onChange}) {
