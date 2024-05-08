@@ -10,9 +10,9 @@ import { useUpdateEmployeeMutation } from "../../data/services/employees.js"
 import InputHelper from "../../util/helpers/InputHelper.js"
 
 function UpdateModal() {
-  const [updateEmployee, { isLoading, isSuccess, error }] = useUpdateEmployeeMutation()
-  const { employee, isUpdateModalOpen } = useSelector((state) => state.employees)
   const dispatch = useDispatch()
+  const { employee, isUpdateModalOpen } = useSelector((state) => state.employees)
+  const [updateEmployee, { isLoading, isSuccess, error }] = useUpdateEmployeeMutation()
 
   const handleClose = () => {
     dispatch(closeModal(ModalType.UPDATE))
@@ -46,24 +46,24 @@ function UpdateModal() {
       <div className="d-flex flex-column gap-2">
         <TextFieldInput 
           label="Full Name"
-          name="full_name"
           placeholder="e.g., Juan Dela Cruz"
+          name="full_name"
           value={employee.full_name}
           onChange={handleChange}
           feedback={InputHelper.getErrorByName(error, "full_name")}
         />
         <TextFieldInput 
           label="Username"
-          name="username"
           placeholder="e.g., @juan10"
+          name="username"
           value={employee.username}
           onChange={handleChange}
           feedback={InputHelper.getErrorByName(error, "userna")}
         />
         <PasswordFieldInput 
           label="Password"
-          name="password"
           placeholder="Input password..."
+          name="password"
           value={employee.password}
           onChange={handleChange}
           feedback={InputHelper.getErrorByName(error, "password")}

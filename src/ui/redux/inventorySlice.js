@@ -1,159 +1,55 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
-
-import ProductService from "../../data/services/ProductService.js"
-import { productCategories, rowsPerPages } from "../../util/Config.jsx"
+import { createSlice } from "@reduxjs/toolkit"
+import { rowsPerPages } from "../../util/Config.jsx"
 import ModalType from "../../util/classes/ModalType.js"
 import { first } from "lodash"
+import { ProductParam } from "../../util/params.js"
 
-const createProductAsync = createAsyncThunk(
-  "inventory/createProductAsync", 
-  async (param, thunkAPI) => {
-    try {
-      const response = await ProductService.create(param)
-      return response
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data)
-    }
-})
-const removeProductAsync = createAsyncThunk(
-  "inventory/removeProductAsync", 
-  async (id, thunkAPI) => {
-    try {
-      const response = await ProductService.remove(id)
-      return response
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data)
-    }
-})
-const updateProductAsync = createAsyncThunk(
-  "inventory/updateProductAsync", 
-  async (product, thunkAPI) => {
-    try {
-        const response = await ProductService.update(product)
-        return response
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data)
-    }
-})
-
-const defaultState = {
+const initialState = {
+  sq: { search: "", category_id: "", per_page: first(rowsPerPages), page: 1},
   isCreateModalOpen: false,
   isUpdateModalOpen: false,
   isRemoveModalOpen: false,
-  searchQuery: { name: "", category_id: "", per_page: rowsPerPages[0].id, page: 1 },
-  product: { name: "", description: "", category_id: first(productCategories), quantity: "", srp: "", member_price: "" },
-  createApiResource: { isLoading: false, isSuccess: false, data: null, error: null},
-  updateApiResource: { isLoading: false, isSuccess: false, data: null, error: null},
-  removeApiResource: { isLoading: false, isSuccess: false, data: null, error: null}
+  product: ProductParam,
 }
-const initialState = { ...defaultState }
-
 const inventorySlice = createSlice({
   name: "inventory",
   initialState,
   reducers: {
-    toggleModal: (state, action) => {
-      const { modalType, open } = action.payload
-
-      if (modalType == ModalType.CREATE) {
-        state.isCreateModalOpen = open
-      }
-      if (modalType == ModalType.UPDATE) {
-        state.isUpdateModalOpen = open
-      }
-      if (modalType == ModalType.REMOVE) {
-        state.isRemoveModalOpen = open
-      }
+    setSq: (state, action) => {
+      const e = action.payload.target
+      state.sq = { ...state.sq, [e.name]: e.value }
     },
-    setSearchQuery: (state, action) => {
-      state.searchQuery = action.payload
+    previousPage: (state,) => {
+      const sq = state.sq
+      state.sq = { ...sq, page: sq.page > 1 ? sq.page - 1 : 1 }
+    },
+    nextPage: (state, action) => {
+      const sq = state.sq
+      const meta = action.payload
+
+      state.sq = { ...sq, page: sq.page < meta.last_page ? sq.page + 1 : meta.last_page }
     },
     setProduct: (state, action) => {
       state.product = action.payload
     },
-    resetStates: (state) => {
-      state.createApiResource = { ...defaultState.createApiResource }
-      state.updateApiResource = { ...defaultState.updateApiResource }
-      state.removeApiResource = { ...defaultState.removeApiResource }
-    }
-  },
-  extraReducers: (builder) => {
-    builder
-    // Create Product
-    .addCase(createProductAsync.pending, (state) => {
-      state.createApiResource = {
-        isLoading: true,
-        isSuccess: false,
-        data: null,
-        error: null 
-      }
-    })
-    .addCase(createProductAsync.fulfilled, (state, action) =>  {
-      state.createApiResource = {
-        ...state.createApiResource,
-        isLoading: false,
-        isSuccess: true,
-        data: action.payload
-      }
-    })
-    .addCase(createProductAsync.rejected, (state, action) => {
-      state.createApiResource = { 
-        ...state.createApiResource,
-        isLoading: false,
-        error: action.payload
-      }
-    })
-    // Update Product
-    .addCase(updateProductAsync.pending, (state) => {
-      state.updateApiResource = {
-        isLoading: true,
-        isSuccess: false,
-        data: null,
-        error: null 
-      }
-    })
-    .addCase(updateProductAsync.fulfilled, (state, action) =>  {
-      state.updateApiResource = {
-        ...state.updateApiResource,
-        isLoading: false,
-        isSuccess: true,
-        data: action.payload
-      }
-    })
-    .addCase(updateProductAsync.rejected, (state, action) => {
-      state.updateApiResource = { 
-        ...state.updateApiResource,
-        isLoading: false,
-        error: action.payload
-      }
-    })
-    // Remove Product
-    .addCase(removeProductAsync.pending, (state) => {
-      state.removeApiResource = {
-        isLoading: true,
-        isSuccess: false,
-        data: null,
-        error: null 
-      }
-    })
-    .addCase(removeProductAsync.fulfilled, (state, action) =>  {
-      state.removeApiResource = {
-        ...state.removeApiResource,
-        isLoading: false,
-        isSuccess: true,
-        data: action.payload
-      }
-    })
-    .addCase(removeProductAsync.rejected, (state, action) => {
-      state.removeApiResource = {
-        ...state.removeApiResource,
-        isLoading: false,
-        error: action.payload
-      }
-    })
+    openModal: (state, action) => {
+      if (action.payload == ModalType.CREATE)
+        state.isCreateModalOpen = true
+      if (action.payload == ModalType.UPDATE)
+        state.isUpdateModalOpen = true
+      if (action.payload == ModalType.REMOVE)
+        state.isRemoveModalOpen = true
+    },
+    closeModal: (state, action) => {
+      if (action.payload == ModalType.CREATE)
+        state.isCreateModalOpen = false
+      if (action.payload == ModalType.UPDATE)
+        state.isUpdateModalOpen = false
+      if (action.payload == ModalType.REMOVE)
+        state.isRemoveModalOpen = false 
+    },
   }
 })
 
-export const { toggleModal, setSearchQuery, setProduct, resetStates } = inventorySlice.actions
-export { createProductAsync, updateProductAsync, removeProductAsync }
+export const { setSq, previousPage, nextPage, setProduct, openModal, closeModal } = inventorySlice.actions
 export default inventorySlice.reducer

@@ -11,13 +11,11 @@ import { InputHelper } from "../../util/helpers"
 import { EmployeeParam } from "../../util/params.js"
 
 function CreateModal() {
+  const dispatch = useDispatch()
   const [employee, setEmployee] = useState(EmployeeParam)
   const { isCreateModalOpen } = useSelector((state) => state.employees)
-  
   const [createEmployee, { isLoading, isSuccess, error }] = useCreateEmployeeMutation()
   
-  const dispatch = useDispatch()
-
   const handleClose = () => {
     dispatch(closeModal(ModalType.CREATE))
   }

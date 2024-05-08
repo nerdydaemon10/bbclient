@@ -10,11 +10,11 @@ import InputHelper from "../../util/helpers/InputHelper.js"
 import { CustomerParam } from "../../util/params.js"
 
 function CreateModal() {
-  const [createCustomer, { isLoading, isSuccess, error }] = useCreateCustomerMutation()
-  const { isCreateModalOpen } = useSelector((state) => state.customers)
-  const [customer, setCustomer] = useState(CustomerParam)
   const dispatch = useDispatch()
-
+  const [customer, setCustomer] = useState(CustomerParam)
+  const { isCreateModalOpen } = useSelector((state) => state.customers)
+  const [createCustomer, { isLoading, isSuccess, error }] = useCreateCustomerMutation()
+  
   const handleClose = () => {
     dispatch(closeModal(ModalType.CREATE))
   }

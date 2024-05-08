@@ -1,20 +1,20 @@
 import CreateModal from "./CreateModal.jsx"
-import InventoryProvider from "./InventoryProvider.jsx"
 import UpdateModal from "./UpdateModal.jsx"
 import RemoveModal from "./RemoveModal.jsx"
 import ProductsTable from "./ProductsTable.jsx"
 import InventoryStyle from "./InventoryStyle.jsx"
+import { Fragment } from "react"
 
 function InventoryView() {
   return (
-    <InventoryProvider>
+    <Fragment>
       <InventoryStyle />
       <TitleContainer />
       <ProductsTable />
       <CreateModal />
       <UpdateModal />
       <RemoveModal />
-    </InventoryProvider>
+    </Fragment>
   )
 }
 

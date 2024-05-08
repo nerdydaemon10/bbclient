@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { 
@@ -91,20 +91,20 @@ function SignOutButton() {
 	const [logout, { isLoading, isSuccess }] = useLogoutMutation()
 	const navigate = useNavigate()
 
-	const handleSignOut = () => {
+	const handleClick = () => {
 		logout()
 	}
 
 	useEffect(() => {
 		if (!isSuccess) return
-		navigate("sign-out")
-	}, [isSuccess])
+		navigate("/")
+	}, [isSuccess, navigate])
 
 	return (
 		<Button 
 			variant="outline-dark"
 			isLoading={isLoading}
-			onClick={handleSignOut}
+			onClick={handleClick}
 		>
 			<BiLogIn className="me-1"/>
 			Sign Out

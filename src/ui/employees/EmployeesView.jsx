@@ -2,15 +2,15 @@
 import { Fragment } from "react"
 
 import CreateModal from "./CreateModal.jsx"
-import CustomerStyle from "./CustomersStyle.jsx"
 import RemoveModal from "./RemoveModal.jsx"
 import UpdateModal from "./UpdateModal.jsx"
 import EmployeesTable from "./EmployeesTable.jsx"
+import EmployeesStyle from "./EmployeesStyle.jsx"
 
 function EmployeesView() {  
   return (
     <Fragment>
-      <CustomerStyle />
+      <EmployeesStyle />
       <TitleSection />
       <EmployeesTable />
       <CreateModal />

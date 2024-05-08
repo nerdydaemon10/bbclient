@@ -1,44 +1,37 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { createContext, useCallback, useEffect, useState } from "react"
+import { useSelector } from "react-redux"
 import { debounce } from "lodash"
-import { createContext, useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
 import { DELAY_MILLIS } from "../../util/Config.jsx"
-import { setFulfilled, setPending, setRejected } from "../redux/salesSlice.js"
-import { SaleService } from "../../data/services/index.js"
+import { useFetchSalesQuery } from "../../data/services/sales.js"
 
-export const SalesContext = createContext()
+const SalesContext = createContext()
 
 function SalesProvider({children}) {
-  const { salesSq, fetchSalesResponse } = useSelector((state) => state.sales)
+  const { sq } = useSelector((state) => state.sales)
+  const [sqtemp, setSqtemp] = useState(sq)
   
-  const dispatch = useDispatch()
+  const debouncer = useCallback(debounce((sqtemp) => {
+    setSqtemp(sqtemp)
+  }, DELAY_MILLIS), [])
 
-  const fetchSales = (sq) => {
-    dispatch(setPending())
-
-    SaleService
-    .findAll(sq)
-    .then((response) => dispatch(setFulfilled(response)))
-    .catch((error) => dispatch(setRejected(error)))
-  }
-
-  const searchSales = debounce((sq) => {
-    fetchSales(sq)
-  }, DELAY_MILLIS)
+  const { isLoading, isFetching, data, error } = useFetchSalesQuery(sqtemp)
 
   useEffect(() => {
-    if (!fetchSalesResponse.isLoaded) 
-      searchSales(salesSq)
-  }, [salesSq])
+    debouncer(sq)
+  }, [sq])
 
   return (
     <SalesContext.Provider value={{
-      fetchSales,
-      searchSales
+      isLoading,
+      isFetching,
+      data,
+      error
     }}>
       {children}
     </SalesContext.Provider>
   )
 }
 
+export { SalesContext }
 export default SalesProvider

@@ -2,10 +2,11 @@ import { createSlice } from "@reduxjs/toolkit"
 import { rowsPerPages } from "../../util/Config.jsx"
 import { first } from "lodash"
 import ModalType from "../../util/classes/ModalType.js"
+import { EmployeeParam } from "../../util/params.js"
 
 const initialState = {
   sq: { search: "", per_page: first(rowsPerPages), page: 1 },
-  employee: { id: 0, full_name: "", username: "", password: "" },
+  employee: EmployeeParam,
   isCreateModalOpen: false,
   isUpdateModalOpen: false,
   isRemoveModalOpen: false
@@ -14,8 +15,9 @@ const employeesSlice = createSlice({
   name: "employees",
   initialState,
   reducers: {
-    setSq: (state, action) => { 
-      state.sq = action.payload
+    setSq: (state, action) => {
+      const e = action.payload.target
+      state.sq = { ...state.sq, [e.name]: e.value }
     },
     previousPage: (state,) => {
       const sq = state.sq

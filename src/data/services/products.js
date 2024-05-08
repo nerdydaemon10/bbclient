@@ -1,34 +1,34 @@
 import { params } from "../../util/helper.jsx"
 import client from "./client.js"
 
-const tag = "Customer"
+const tag = "Product"
 const tags = ["List", tag]
 
-export const customers = client.injectEndpoints({
+const products = client.injectEndpoints({
   endpoints: builder => ({
-    createCustomer: builder.mutation({
-      query: (customer) => ({
-        url: `/customers`,
+    createProduct: builder.mutation({
+      query: (product) => ({
+        url: `/products`,
         method: "POST",
-        body: customer
+        body: product
       }),
       invalidatesTags: (result) => {
         return result ? [tag] : []
       }
     }),
-    updateCustomer: builder.mutation({
-      query: (customer) => ({
-        url: `/customers/${customer.id}`,
+    updateProduct: builder.mutation({
+      query: (product) => ({
+        url: `/products/${product.id}`,
         method: "PATCH",
-        body: customer
+        body: product
       }),
       invalidatesTags: (result) => {
         return result ? [tag] : []
       }
     }),
-    removeCustomer: builder.mutation({
+    removeProduct: builder.mutation({
       query: (id) => ({
-        url: `/customers/${id}`,
+        url: `/products/${id}`,
         method: "DELETE",
         params: id
       }),
@@ -36,9 +36,9 @@ export const customers = client.injectEndpoints({
         return result ? [tag] : []
       }
     }),
-    fetchCustomers: builder.query({
+    fetchProducts: builder.query({
       query: (sq) => ({
-        url: `/customers`,
+        url: `/products`,
         method: "GET",
         params: params(sq)
       }),
@@ -47,9 +47,10 @@ export const customers = client.injectEndpoints({
   })
 })
 
-export const {
-  useCreateCustomerMutation,
-  useUpdateCustomerMutation,
-  useRemoveCustomerMutation,
-  useFetchCustomersQuery,
-} = customers
+export const { 
+  useCreateProductMutation,
+  useUpdateProductMutation,
+  useRemoveProductMutation,
+  useFetchProductsQuery,
+} = products
+export default products

@@ -4,6 +4,8 @@ import local from "../../util/local.js"
 const X_API_KEY = import.meta.env.VITE_X_API_KEY
 const BASE_URL = import.meta.env.VITE_BASE_URL
 
+const tags = ["List", "Employee", "Customer", "Summary", "Product", "Sales"]
+
 const client = createApi({
   reducerPath: "client",
   baseQuery: fetchBaseQuery({ 
@@ -17,7 +19,7 @@ const client = createApi({
       headers.set("token", token)
     }
   }),
-  tagTypes: ["Employee", "Customer", "Summary"],
+  tagTypes: tags,
   endpoints: () => ({})
 })
 

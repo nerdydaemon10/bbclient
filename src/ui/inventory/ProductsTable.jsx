@@ -1,32 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import { debounce, delay, isEmpty, isNil, size } from "lodash"
+
+import { GenericMessage, ModalType, ProductCategory } from "../../util/classes"
+import { StringHelper, DateHelper } from "../../util/helpers"
+import { productCategories } from "../../util/Config.jsx"
 import { BiPlusCircle } from "react-icons/bi"
-import React, { useCallback, useEffect, useState } from "react"
-
-import { Fallback, GenericMessage, ModalType } from "../../util/classes"
-import { DateHelper, StringHelper } from "../../util/helpers"
-import { DELAY_MILLIS } from "../../util/Config.jsx"
 import { noSearchResults } from "../../util/helper.jsx"
-import { Button, SearchFieldInput, TablePagination, TableStatus, TableHeaders } from "../common"
-import { openModal, setCustomer, setSq } from "../redux/customersSlice.js"
-import { useFetchCustomersQuery } from "../../data/services/customers.js"
-import { nextPage, previousPage } from "../redux/customersSlice.js"
+import { Button, SearchFieldInput, SelectInput } from "../common"
+import { Fragment, useCallback, useEffect, useState } from "react"
+import { TableHeaders, TablePagination, TableStatus } from "../common/Table.jsx"
+import { DELAY_MILLIS } from "../../util/Config.jsx"
+import { useFetchProductsQuery } from "../../data/services/products.js"
+import Fallback from "../../util/classes/Fallback.js"
+import { nextPage, openModal, previousPage, setProduct, setSq } from "../redux/inventorySlice.js"
 
-const columns = ["Full Name", "Address", "Phone Number", "Email Address", "Created By", "Date Created", "Date Modified", "Action"]
+const columns = ["Code", "Name", "Description", "Category", "Stocks", "Price/SRP", "Price/Member", "Created By", "Date Created", "Date Modified", "Action"]
 const colSpan = size(columns)
 
-function CustomersTable() {
+function ProductsTable() {
   const dispatch = useDispatch()
 
-  const { sq } = useSelector((state) => state.customers)
+  const { sq } = useSelector((state) => state.inventory)
   const [sqtemp, setSqtemp] = useState(sq)
 
   const debouncer = useCallback(debounce((sqtemp) => {
     setSqtemp(sqtemp)
   }, DELAY_MILLIS), [])
 
-  const { data, error, isLoading, isFetching } = useFetchCustomersQuery(sqtemp)
+  const { isLoading, isFetching, data, error } = useFetchProductsQuery(sqtemp)
   const meta = Fallback.checkMeta(data)
 
   const handleChange = (e) => {
@@ -42,14 +44,15 @@ function CustomersTable() {
   useEffect(() => {
     debouncer(sq)
   }, [sq])
-
+  
   return (
-    <React.Fragment>
-      <TableFiltering 
+    <Fragment>
+      <TableFiltering
         search={sq.search}
+        category={sq.category}
         onChange={handleChange}
       />
-      <TableContent 
+      <TableContent
         sq={sq}
         data={isNil(data) ? [] : data.data}
         error={error}
@@ -63,10 +66,10 @@ function CustomersTable() {
         onPrevious={handlePrevious}
         onNext={() => handleNext(meta)}
       />
-    </React.Fragment>
+    </Fragment>
   )
 }
-function TableFiltering({search, onChange}) {
+function TableFiltering({ search, category, onChange }) {
   const dispatch = useDispatch()
 
   const handleClick = () => {
@@ -74,22 +77,32 @@ function TableFiltering({search, onChange}) {
   }
 
   return (
-    <div className="table-filtering">
+    <div className="filtering-container">
       <div className="row gx-2">
         <div className="col-6">
           <SearchFieldInput
-            placeholder="Search by Customer..."
             name="search"
+            placeholder="Search by Product..."
             value={search}
             onChange={onChange}
           />
         </div>
         <div className="col-6">
-          <Button variant="light" onClick={handleClick}>
-            <BiPlusCircle className="me-1" />
-            Create Customer
-          </Button>
+          <SelectInput
+            name="category_id"
+            options={productCategories}
+            isOptional
+            value={category}
+            onChange={onChange}
+            onRender={(option) => ProductCategory.toCategory(option)}
+          />
         </div>
+      </div>
+      <div>
+        <Button variant="light" onClick={handleClick}>
+          <BiPlusCircle className="me-1" />
+          Create Product
+        </Button>
       </div>
     </div>
   )
@@ -97,16 +110,16 @@ function TableFiltering({search, onChange}) {
 function TableContent({sq, data, error, isFetching}) {
   const dispatch = useDispatch()
 
-  const handleUpdate = (customer) => {
-    dispatch(setCustomer(customer))
+  const handleUpdate = (product) => {
+    dispatch(setProduct(product))
     delay(() => dispatch(openModal(ModalType.UPDATE)), DELAY_MILLIS)
   }
 
-  const handleRemove = (customer) => {
-    dispatch(setCustomer(customer))
+  const handleRemove = (product) => {
+    dispatch(setProduct(product))
     delay(() => dispatch(openModal(ModalType.REMOVE)), DELAY_MILLIS)
   }
-  
+
   return (
     <div className="table-wrapper table-container">
       <table className="table">
@@ -116,22 +129,22 @@ function TableContent({sq, data, error, isFetching}) {
             isFetching ? (
               <TableStatus 
                 colSpan={colSpan} 
-                message={GenericMessage.CUSTOMERS_FETCHING} 
+                message={GenericMessage.PRODUCTS_FETCHING} 
               />
             ) : error ? (
               <TableStatus 
                 colSpan={colSpan} 
-                message={GenericMessage.CUSTOMERS_ERROR} 
+                message={GenericMessage.PRODUCTS_ERROR} 
               />
             ) : noSearchResults(sq, data) ? (
               <TableStatus 
                 colSpan={colSpan} 
-                message={GenericMessage.CUSTOMERS_NO_MATCH} 
+                message={GenericMessage.PRODUCTS_NO_MATCH} 
               />
             ) : isEmpty(data) ? (
               <TableStatus 
                 colSpan={colSpan} 
-                message={GenericMessage.CUSTOMERS_EMPTY} 
+                message={GenericMessage.PRODUCTS_EMPTY} 
               />
             ) : data.map((item, index) => (
               <TableItem 
@@ -149,25 +162,33 @@ function TableContent({sq, data, error, isFetching}) {
 }
 
 function TableItem({item, onUpdate, onRemove}) {
-  const fullName = StringHelper.truncate(item.full_name)
-  const address = StringHelper.truncate(item.address)
-  const phoneNumber = StringHelper.truncate(item.phone_number)
-  const emailAddress = StringHelper.truncate(item.email_address)
+  const productCode = StringHelper.truncate(item.product_code)
+  const name = StringHelper.truncate(item.name)
+  const description = StringHelper.truncate(item.description)
+  const category = ProductCategory.toCategory(item.category_id)
+  const stocks = StringHelper.toStocks(item.quantity)
+  const srp = StringHelper.toPesoCurrency(item.srp)
+  const memberPrice = StringHelper.toPesoCurrency(item.member_price)
   const createdBy = StringHelper.truncate(item.created_by)
   const dateCreated = DateHelper.toIsoStandard(item.created_at)
   const dateModified = DateHelper.toIsoStandard(item.updated_at)
 
   return (
     <tr>
-      <td>{fullName}</td>
-      <td>{address}</td>
-      <td>{phoneNumber}</td>
-      <td>{emailAddress}</td>
+      <td>{productCode}</td>
+      <td>{name}</td>
+      <td>{description}</td>
+      <td>
+        <span className="badge text-bg-light">{category}</span>
+      </td>
+      <td>{stocks}</td>
+      <td>{srp}</td>
+      <td>{memberPrice}</td>
       <td>{createdBy}</td>
       <td>{dateCreated}</td>
       <td>{dateModified}</td>
       <td className="hstack gap-1">
-        <Button variant="dark" size="sm" onClick={onUpdate}>
+        <Button size="sm" onClick={onUpdate}>
           Update
         </Button>
         <Button variant="light" size="sm" onClick={onRemove}>
@@ -178,4 +199,4 @@ function TableItem({item, onUpdate, onRemove}) {
   )
 }
 
-export default CustomersTable
+export default ProductsTable

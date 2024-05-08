@@ -16,7 +16,7 @@ export { default as LinkButton } from "./buttons/LinkButton.jsx"
 export { default as CheckoutList } from "./checkoutlist/CheckoutList.jsx"
 
 // dashboard
-export { default as SignOut } from "./dashboard/SignOut.jsx"
+
 
 // inputs
 export { default as DateInput } from "./inputs/DateInput.jsx"

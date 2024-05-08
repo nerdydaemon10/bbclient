@@ -1,46 +1,25 @@
-import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit"
-import { buildColResponse, buildResponse, rowsPerPages } from "../../util/Config.jsx"
-import { first, isEmpty } from "lodash"
-import { SaleService } from "../../data/services"
-import ResponseStatus from "../../util/classes/ResponseStatus.js"
+import { createSelector, createSlice, isAnyOf } from "@reduxjs/toolkit"
+import { rowsPerPages } from "../../util/Config.jsx"
+import { first, isEmpty, isNil } from "lodash"
 import { computeSum, isEntitySelected } from "../../util/helper.jsx"
-
-const exportAsExcel = createAsyncThunk(
-  "sales/exportAsExcel", 
-  async (sq, thunkAPI) => {
-  try {
-    const response = await SaleService.exportAsExcel(sq)
-    return response
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data)
-  }
-})
-const fetchUsers = createAsyncThunk(
-  "sales/fetchUsers", 
-  async (thunkAPI) => {
-  try {
-    const response = []
-    return response
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data)
-  }
-})
+import { sales } from "../../data/services/sales.js"
+import moment from "moment"
+import { employees } from "../../data/services/employees.js"
 
 const initialState = {
-  salesSq: {
+  sq: {
     employee_id: "",
-    "customer.full_name": "",
-    date_start: "",
-    date_end: "",
+    customer: "",
+    start_date: "",
+    end_date: "",
     status: "",
     payment_method: "",
     per_page: first(rowsPerPages), 
     page: 1
   },
   sale: null,
-  fetchSalesResponse: buildColResponse(),
-  fetchUsersResponse: buildColResponse(),
-  exportAsExcelResponse: buildResponse()
+  sales: [],
+  salespersons: []
 }
 
 const salesSlice = createSlice({
@@ -48,61 +27,59 @@ const salesSlice = createSlice({
   initialState,
   reducers: {
     setSq: (state, action) => {
-      state.salesSq = action.payload
-      state.fetchSalesResponse.isLoaded = false
+      const e = action.payload.target
+      state.sq = { ...state.sq, [e.name]: e.value }
+    },
+    previousPage: (state,) => {
+      const sq = state.sq
+      state.sq = { ...sq, page: sq.page > 1 ? sq.page - 1 : 1 }
+    },
+    nextPage: (state, action) => {
+      const sq = state.sq
+      const meta = action.payload
+
+      state.sq = { ...sq, page: sq.page < meta.last_page ? sq.page + 1 : meta.last_page }
     },
     setSale: (state, action) => {
-      const { sale } = state
-      
-      if (isEmpty(state.sale) || !isEntitySelected(sale, action.payload)) {
-        state.sale = action.payload
-      } else {
-        state.sale = null
-      }
+      const isSelected = !isNil(state.sale) && isEntitySelected(state.sale, action.payload)
+      state.sale = isSelected ? null : action.payload
     },
     setTab: (state, action) => {
       state.tab = action.payload
     },
-    setPending: (state) => {
-      state.fetchSalesResponse = buildColResponse(ResponseStatus.PENDING)
-    },
-    setFulfilled: (state, action) => {
-      state.fetchSalesResponse = buildColResponse(ResponseStatus.FULFILLED, action.payload)
-    },
-    setRejected: (state, action) => {
-      state.fetchSalesResponse = buildColResponse(ResponseStatus.REJECTED, action.payload)
-    },
-    resetStates: (state) => {
-      state.exportAsExcelResponse = buildResponse()
-    },
   },
   extraReducers: (builder) => {
-    builder
-    // Export to excel
-    .addCase(exportAsExcel.pending, (state) => {
-      state.exportAsExcelResponse = buildResponse(ResponseStatus.PENDING)
+    builder.addMatcher(
+      isAnyOf(sales.endpoints.fetchSales.matchFulfilled), (state, action) => {  
+      state.sales = action.payload.data
     })
-    .addCase(exportAsExcel.fulfilled, (state, action) => {
-      state.exportAsExcelResponse = buildResponse(ResponseStatus.FULFILLED, action.payload)
+    builder.addMatcher(
+      isAnyOf(employees.endpoints.fetchEmployees.matchFulfilled), (state, action) => {  
+      state.salespersons = action.payload.data
     })
-    .addCase(exportAsExcel.rejected, (state, action) => {
-      state.exportAsExcelResponse = buildResponse(ResponseStatus.REJECTED, action.payload)
-    })
-    // Fetch Users
-    .addCase(fetchUsers.pending, (state) => {
-      state.fetchUsersResponse = buildColResponse(ResponseStatus.PENDING)
-    })
-    .addCase(fetchUsers.fulfilled, (state, action) => {
-      state.fetchUsersResponse = buildColResponse(ResponseStatus.FULFILLED, action.payload)
-    })
-    .addCase(fetchUsers.rejected, (state, action) => {
-      state.fetchUsersResponse = buildColResponse(ResponseStatus.REJECTED, action.payload)
+    builder.addMatcher(
+      isAnyOf(sales.endpoints.downloadSales.matchFulfilled), (_, action) => {
+      console.log(action.payload)
+      const now = moment.now()
+      const name = `SALES_REPORT_${now}.xlsx`
+
+      const url = URL.createObjectURL(action.payload)
+      const link = document.createElement('a')
+
+      link.href = url
+      link.setAttribute("download", name)
+      
+      document.body.appendChild(link)
+      link.click()
+
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
     })
   }
 })
 
 export const selectSale = (state) => state.sale
-export const selectSales = (state) => state.fetchSalesResponse.data ?? []
+export const selectSales = (state) => state.sales
 export const selectUsersResponse = (state) => state.fetchUsersResponse.data ?? []
 export const selectTotalCommission = createSelector([selectSales], (sales) => {
   if (isEmpty(sales)) return 0.00
@@ -116,11 +93,6 @@ export const selectTotalSales = createSelector([selectSales], (sales) => {
 export const {
   setSq,
   setTab,
-  setSale,
-  setPending,
-  setFulfilled,
-  setRejected,
-  resetStates
+  setSale
 } = salesSlice.actions
-export { exportAsExcel, fetchUsers }
 export default salesSlice.reducer

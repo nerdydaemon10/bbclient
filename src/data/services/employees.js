@@ -1,6 +1,9 @@
 import { params } from "../../util/helper.jsx"
 import client from "./client.js"
 
+const tag = "Employee"
+const tags = ["List", tag]
+
 export const employees = client.injectEndpoints({
   endpoints: builder => ({
     createEmployee: builder.mutation({
@@ -10,7 +13,7 @@ export const employees = client.injectEndpoints({
         body: employee
       }),
       invalidatesTags: (result) => {
-        return result ? ["Employee"] : []
+        return result ? [tag] : []
       }
     }),
     updateEmployee: builder.mutation({
@@ -20,7 +23,7 @@ export const employees = client.injectEndpoints({
         body: employee
       }),
       invalidatesTags: (result) => {
-        return result ? ["Employee"] : []
+        return result ? [tag] : []
       }
     }),
     removeEmployee: builder.mutation({
@@ -30,7 +33,7 @@ export const employees = client.injectEndpoints({
         params: id
       }),
       invalidatesTags: (result) => {
-        return result ? ["Employee"] : []
+        return result ? [tag] : []
       }
     }),
     fetchEmployees: builder.query({
@@ -39,7 +42,7 @@ export const employees = client.injectEndpoints({
         method: "GET",
         params: params(sq)
       }),
-      providesTags: ["Employee"]
+      providesTags: tags
     })
   })
 })

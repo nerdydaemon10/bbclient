@@ -1,30 +1,27 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { enqueueSnackbar } from "notistack"
-import { useContext, useEffect } from "react"
+import {useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-
-import { DELAY_MILLIS, productCategories } from "../../../util/Config.jsx"
-import { resetStates, setProduct, toggleModal, updateProductAsync } from "../../redux/inventorySlice.js"
-import { Modal, SelectInput, TextFieldInput } from "../../common"
-import { InventoryContext } from "./InventoryProvider.jsx"
-import ModalType from "../../../util/classes/ModalType.js"
-import GenericMessage from "../../../util/classes/GenericMessage.js"
-import ProductCategory from "../../../util/classes/ProductCategory.js"
-import { findErrorByName } from "../../../util/helper.jsx"
+import { productCategories } from "../../util/Config.jsx"
+import { closeModal, setProduct } from "../redux/inventorySlice.js"
+import { Modal, SelectInput, TextFieldInput } from "../common"
+import ModalType from "../../util/classes/ModalType.js"
+import GenericMessage from "../../util/classes/GenericMessage.js"
+import ProductCategory from "../../util/classes/ProductCategory.js"
+import { useUpdateProductMutation } from "../../data/services/products.js"
+import InputHelper from "../../util/helpers/InputHelper.js"
 
 function UpdateModal() {
   const dispatch = useDispatch()
-  
-  const { isUpdateModalOpen, product, updateApiResource } = useSelector((state) => state.inventory)
-  const { handleFetchProductsAsync } = useContext(InventoryContext)
+  const { product, isUpdateModalOpen } = useSelector((state) => state.inventory)
+  const [updateProduct, { isLoading, isSuccess, error}] = useUpdateProductMutation()
 
   const handleClose = () => {
-    dispatch(toggleModal({ modalType: ModalType.UPDATE, open: false }))
+    dispatch(closeModal(ModalType.UPDATE))
   }
 
   const handleConfirm = (e) => {
     e.preventDefault()
-    dispatch(updateProductAsync(product))
+    updateProduct(product)
   }
 
   const handleChange = (e) => {
@@ -32,19 +29,16 @@ function UpdateModal() {
   }
   
   useEffect(() => {
-    if (updateApiResource.isSuccess) {
-      dispatch(toggleModal({modalType: ModalType.UPDATE, open: false}))
-      enqueueSnackbar(GenericMessage.PRODUCT_UPDATED)
-      handleFetchProductsAsync()
-      // reset all redux-action-states including success that trigger snackbar
-      setTimeout(() => dispatch(resetStates()), DELAY_MILLIS)
-    }
-  }, [updateApiResource.isSuccess])
-  
+    if (!isSuccess) return
+
+    dispatch(closeModal(ModalType.UPDATE))
+    enqueueSnackbar(GenericMessage.PRODUCT_UPDATED)
+  }, [dispatch, isSuccess])
+
   return (
     <Modal 
       title="Update Product"
-      isLoading={updateApiResource.isLoading}
+      isLoading={isLoading}
       isOpen={isUpdateModalOpen} 
       onClose={handleClose}
       onConfirm={handleConfirm}
@@ -55,7 +49,7 @@ function UpdateModal() {
             label="Name"
             name="name"
             placeholder="e.g., Coffee Power"
-            feedback={findErrorByName(updateApiResource.error, "name")}
+            feedback={InputHelper.getErrorByName(error, "name")}
             value={product.name}
             onChange={handleChange}
           />
@@ -65,7 +59,7 @@ function UpdateModal() {
             label="Description"
             name="description"
             placeholder="e.g., 100 grams, with free spoon"
-            feedback={findErrorByName(updateApiResource.error, "description")}
+            feedback={InputHelper.getErrorByName(error, "description")}
             value={product.description}
             onChange={handleChange}
           />
@@ -77,7 +71,7 @@ function UpdateModal() {
             label="Category"
             name="category_id"
             options={productCategories}
-            feedback={findErrorByName(updateApiResource.error, "category_id", "category")}
+            feedback={InputHelper.getErrorByName(error, "category_id", "category")}
             value={product.category_id}
             onChange={handleChange}
             onRender={(option) => ProductCategory.toCategory(option)}
@@ -88,7 +82,7 @@ function UpdateModal() {
             label="Quantity"
             name="quantity"
             placeholder="e.g., 75"
-            feedback={findErrorByName(updateApiResource.error, "quantity")}
+            feedback={InputHelper.getErrorByName(error, "quantity")}
             value={product.quantity}
             onChange={handleChange}
           />
@@ -100,7 +94,7 @@ function UpdateModal() {
             label="SRP"
             name="srp"
             placeholder="e.g., 80.00"
-            feedback={findErrorByName(updateApiResource.error, "srp")}
+            feedback={InputHelper.getErrorByName(error, "srp")}
             value={product.srp}
             onChange={handleChange}
           />
@@ -110,7 +104,7 @@ function UpdateModal() {
             label="Member Price"
             name="member_price"
             placeholder="e.g., 90.00"
-            feedback={findErrorByName(updateApiResource.error, "member_price")}
+            feedback={InputHelper.getErrorByName(error, "member_price")}
             value={product.member_price}
             onChange={handleChange}
           />

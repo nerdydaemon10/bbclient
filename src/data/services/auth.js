@@ -1,7 +1,7 @@
 import client from "./client.js"
 import Role from "../../util/classes/Role.js"
 
-export const auth = client.injectEndpoints({
+const auth = client.injectEndpoints({
   endpoints: builder => ({
     login: builder.mutation({
       query: (credentials) => ({
@@ -20,16 +20,16 @@ export const auth = client.injectEndpoints({
         return { token: token, user: normalized }
       },
       invalidatesTags: (result) => {
-        return result ? ["Employee", "Customer", "Summary"] : []
+        return result ? ["LIST"] : []
       }
     }),
     logout: builder.mutation({
       query: () => ({
         url: "/auth/logout",
-        method: "POST",
+        method: "POST"
       }),
       invalidatesTags: (result) => {
-        return result ? ["Employee", "Customer", "Summary"] : []
+        return result ? ["LIST"] : []
       }
     }),
   })
@@ -39,3 +39,4 @@ export const {
   useLoginMutation,
   useLogoutMutation
 } = auth
+export default auth

@@ -1,6 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 
-const CustomersStyle = createGlobalStyle`
+const EmployeesStyle = createGlobalStyle`
 .dashboard-main {
   grid-template-columns: 1fr;
   grid-template-rows: max-content max-content 1fr max-content;
@@ -35,4 +35,4 @@ const CustomersStyle = createGlobalStyle`
   grid-area: table-pagination;
 }`
 
-export default CustomersStyle
+export default EmployeesStyle

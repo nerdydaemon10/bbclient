@@ -2,10 +2,11 @@ import { createSlice } from "@reduxjs/toolkit"
 import ModalType from "../../util/classes/ModalType.js"
 import { rowsPerPages } from "../../util/Config.jsx"
 import { first } from "lodash"
+import { CustomerParam } from "../../util/params.js"
 
 const defaultState = {
   sq: { search: "", per_page: first(rowsPerPages), page: 1 },
-  customer: { id: 0, full_name: "", address: "", phone_number: "", email_address: "" },
+  customer: CustomerParam,
   isCreateModalOpen: false,
   isUpdateModalOpen: false,
   isRemoveModalOpen: false
@@ -15,18 +16,9 @@ const customersSlice = createSlice({
   name: "customers",
   initialState,
   reducers: {
-    openModal: (state, action) => {
-      if (action.payload == ModalType.CREATE) state.isCreateModalOpen = true
-      if (action.payload == ModalType.UPDATE) state.isUpdateModalOpen = true
-      if (action.payload == ModalType.REMOVE) state.isRemoveModalOpen = true
-    },
-    closeModal: (state, action) => {
-      if (action.payload == ModalType.CREATE) state.isCreateModalOpen = false
-      if (action.payload == ModalType.UPDATE) state.isUpdateModalOpen = false
-      if (action.payload == ModalType.REMOVE) state.isRemoveModalOpen = false
-    },
     setSq: (state, action) => {
-      state.sq = action.payload
+      const e = action.payload.target
+      state.sq = { ...state.sq, [e.name]: e.value }
     },
     previousPage: (state,) => {
       const sq = state.sq
@@ -40,6 +32,16 @@ const customersSlice = createSlice({
     },
     setCustomer: (state, action) => {
       state.customer = action.payload
+    },
+    openModal: (state, action) => {
+      if (action.payload == ModalType.CREATE) state.isCreateModalOpen = true
+      if (action.payload == ModalType.UPDATE) state.isUpdateModalOpen = true
+      if (action.payload == ModalType.REMOVE) state.isRemoveModalOpen = true
+    },
+    closeModal: (state, action) => {
+      if (action.payload == ModalType.CREATE) state.isCreateModalOpen = false
+      if (action.payload == ModalType.UPDATE) state.isUpdateModalOpen = false
+      if (action.payload == ModalType.REMOVE) state.isRemoveModalOpen = false
     }
   }
 })

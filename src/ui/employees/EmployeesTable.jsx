@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Fragment, useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { debounce, delay, isEmpty, size } from "lodash"
+import { debounce, delay, isEmpty, isNil, size } from "lodash"
 
 import { Fallback, GenericMessage, ModalType, Role, User } from "../../util/classes"
 import { StringHelper, DateHelper } from "../../util/helpers"
@@ -30,7 +30,7 @@ function EmployeesTable() {
   const meta = Fallback.checkMeta(data)
   
   const handleChange = (e) => {
-    dispatch(setSq({ ...sq, [e.target.name]: e.target.value}))
+    dispatch(setSq(e))
   }
   const handlePrevious = () => {
     dispatch(previousPage())
@@ -51,7 +51,7 @@ function EmployeesTable() {
       />
       <TableContent
         sq={sq}
-        data={isEmpty(data) ? [] : data.data}
+        data={isNil(data) ? [] : data.data}
         error={error}
         isFetching={isLoading || isFetching}
       />
@@ -180,7 +180,7 @@ function TableItem({item, isUser, onUpdate, onRemove}) {
       <td>{loggedIn}</td>
       <td>{loggedOut}</td>
       <td className="hstack gap-1">
-        <Button variant="dark" size="sm" onClick={onUpdate}>
+        <Button size="sm" onClick={onUpdate}>
           Update
         </Button>
         <Button variant="light" size="sm" isDisabled={isUser} onClick={onRemove}>
