@@ -44,6 +44,6 @@ const auth = client.injectEndpoints({
 export const { 
   useLoginMutation,
   useVerifyMutation,
-  useLogoutMutation,
+  useLogoutMutation
 } = auth
 export default auth

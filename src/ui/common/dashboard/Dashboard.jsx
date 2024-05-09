@@ -94,7 +94,7 @@ function SignOutButton() {
 	const handleClick = () => {
 		logout()
 	}
-
+	
 	useEffect(() => {
 		if (!isSuccess) return
 		navigate("/")

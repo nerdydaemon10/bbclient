@@ -4,7 +4,6 @@ import { Table } from "../../common/Table.jsx"
 import { Button } from "../../common/index.jsx"
 import StringHelper from "../../../util/helpers/StringHelper.js"
 import ProductCategory from "../../../util/classes/ProductCategory.js"
-import { BiBlock, BiMessageAltError, BiSolidMessageAltError } from "react-icons/bi"
 
 function CriticalStocks() {
   const { isLoading, isFetching, data, error } = useFetchCriticalProductsQuery()
@@ -49,11 +48,11 @@ function CriticalStocks() {
       render: (item) => <Button className="btn btn-sm">Restock</Button>
     },
   ]
-
+  
   return (
     <div className="card border-danger">
-      <div className="card-header bg-danger-subtle border-danger d-flex justify-content-between align-items-center">
-        <h6 className="card-title fs-7 mb-0">
+      <div className="card-header d-flex justify-content-between align-items-center">
+        <h6 className="card-title text-danger fs-7 mb-0">
           Critical Stocks
         </h6>
         <button className="btn btn-sm opacity-0">Hidden</button>

@@ -8,21 +8,18 @@ const authSlice = createSlice({
   initialState: null,
   extraReducers: (builder) => {
     builder.addMatcher(
-      isAnyOf(auth.endpoints.login.matchFulfilled), (_, action) => {
+      isAnyOf(auth.endpoints.login.matchFulfilled), (state, action) => {
       const { token, user } = action.payload
 
       local.set("token", token)
       local.set("user", user)
-    }),
-    builder.addMatcher(
-      isAnyOf(auth.endpoints.logout.matchFulfilled), () => {
-      local.clear()
     })
     builder.addMatcher(
-      isAnyOf(auth.endpoints.verify.matchRejected), () => {
+      isAnyOf(auth.endpoints.logout.matchFulfilled), (state, action) => {
       local.clear()
     })
   }
 })
 
+//export const { setIsLoggedIn} = authSlice.actions
 export default authSlice.reducer

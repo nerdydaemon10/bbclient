@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from "react-redux"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
 import DateHelper from "../../../util/helpers/DateHelper.js"
 import StringHelper from "../../../util/helpers/StringHelper.js"
-import { DELAY_MILLIS, orderStatuses } from "../../../util/Config.jsx"
+import { DELAY_MILLIS } from "../../../util/Config.jsx"
 import { noSearchResults } from "../../../util/helper.jsx"
-import { Button, SelectInput, TableHeaders, TablePagination, TableStatus } from "../../common"
+import { Button, TableHeaders, TablePagination, TableStatus } from "../../common"
 import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
 import PaymentMethod from "../../../util/classes/PaymentMethod.js"
 import { BiBlock, BiCheck } from "react-icons/bi"
@@ -74,29 +74,15 @@ function OrdersTable() {
     </Fragment>
   )
 }
-function TableFiltering({search, status, onChange}) {
+function TableFiltering({search, onChange}) {
   return (
     <div className="filtering-container">
-      <div className="row gx-2">
-        <div className="col-6">
-          <SearchFieldInput
-            name="search"
-            placeholder="Search by Order..."
-            value={search}
-            onChange={onChange}
-          />
-        </div>
-        <div className="col-6">
-          <SelectInput
-            name="status"
-            options={orderStatuses}
-            isOptional
-            value={status}
-            onChange={onChange}
-            onRender={(option) => OrderStatus.toStatus(option)}
-          />
-        </div>
-      </div>
+      <SearchFieldInput
+        name="search"
+        placeholder="Search by Order..."
+        value={search}
+        onChange={onChange}
+      />
     </div>
   )
 }

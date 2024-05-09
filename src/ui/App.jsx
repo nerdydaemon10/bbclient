@@ -1,6 +1,6 @@
-import { Navigate, Route, Routes } from "react-router-dom"
 import { isNil } from "lodash"
 import { Fragment } from "react"
+import { Navigate, Route, Routes } from "react-router-dom"
 
 import LoginPage from "./login/LoginPage.jsx"
 import { Role } from "../util/classes"
@@ -35,10 +35,10 @@ function App() {
 }
 function AuthRoute({children}) {
 	const user = local.get("user")
-	
+
 	if (!isNil(user))
 		return <Navigate to={`/${user.role}`} replace />
-	
+
 	return (
 		<Fragment>
 			{children}
@@ -46,11 +46,11 @@ function AuthRoute({children}) {
 	)
 }
 function ProtectedRoute({roles, children}) {
-  const user = local.get("user")
+	const user = local.get("user")
 
 	if (isNil(user)) 
 		return <Navigate to="/" replace />
-		
+
 	const unauthorized = !roles.includes(user.role)
 
 	if (unauthorized) 
