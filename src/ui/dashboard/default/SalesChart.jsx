@@ -28,8 +28,22 @@ ChartJS.register(
 );
 
 const options = {
-  legend: {
-    display: false
+  scales: {
+    y: {
+      ticks: {
+        callback: function(value) {
+            return value.toLocaleString("en-PH",{style:"currency", currency:"PHP"})
+        }
+      }
+    },
+    yAxes: [{
+      ticks: {
+        beginAtZero: true,
+        callback: function(value, index, values) {
+          return value.toLocaleString("en-PH",{style:"currency", currency:"PHP"})
+        }
+      }
+    }]
   },
 }
 
