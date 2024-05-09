@@ -2,7 +2,7 @@ import { isEmpty, isNil, orderBy, size, sortBy, truncate } from "lodash"
 import { rowsPerPages } from "../../util/Config.jsx"
 import Button from "./buttons/Button.jsx"
 import SelectInput from "./inputs/SelectInput.jsx"
-import { BiSort } from "react-icons/bi"
+import { BiSort, BiSortAZ, BiSortZA } from "react-icons/bi"
 import moment from "moment"
 import { useEffect, useState } from "react"
 
@@ -31,13 +31,14 @@ export function Table({name, columns, data, error, sq, isFetching}) {
   }
 
   const tranform = (item, col) => {
+    if (col.type == "integer")
+      return Number(item[col.accessor])
     if (col.type == "string")
       return item[col.accessor]
     if (col.type == "date")
       return moment(item[col.accessor]).format("X")
-    if (col.type == "datetime") {
+    if (col.type == "datetime")
       return moment(item[col.accessor]).format("X")
-    }
     return item[col.accessor]
   }
 
@@ -46,6 +47,8 @@ export function Table({name, columns, data, error, sq, isFetching}) {
   }
 
   const hasEmptyResults = (data, sq) => {
+    if (isNil(sq)) return false
+
     const excludes = ["per_page", "page"]
     const entries = Object
       .entries(sq)
@@ -85,15 +88,16 @@ export function Table({name, columns, data, error, sq, isFetching}) {
       <thead>
         <tr>
         {columns.map((col, colIndex) => (
-          <th className={col.accessor == accessor && isAsc ? "is-sorted" : ""} key={colIndex}>
+          <th key={colIndex} className={col.accessor == accessor && isAsc ? "is-sorted" : ""}>
             {col.name}
             {
               col.sortable && (
                 <a 
                   className={`ms-1 color-reset table-sorter`}
                   type="button"
-                  onClick={() => handleSort(col)}>
-                  <BiSort />
+                  onClick={() => handleSort(col)}
+                >
+                  {col.accessor == accessor && isAsc ? <BiSortAZ /> : <BiSortZA />}
                 </a>
               )
             }

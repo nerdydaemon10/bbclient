@@ -1,6 +1,6 @@
 import { Fragment } from "react"
 
-function OptionInput({label, name, options, feedback, value, onChange}) {
+function OptionInput({label, name, options, size="md", feedback, value, onChange}) {
   const { state, message } = feedback || { state: "", message: ""}
 
   const variant = state == "is-valid"
@@ -25,7 +25,7 @@ function OptionInput({label, name, options, feedback, value, onChange}) {
               />
               <label
                 key={index}
-                className={`btn btn-outline-dark d-flex align-items-center justify-content-center`}
+                className={`btn btn-${size} btn-outline-dark d-flex align-items-center justify-content-center`}
                 htmlFor={`${name}${index}`}
               >
                 {option.icon}

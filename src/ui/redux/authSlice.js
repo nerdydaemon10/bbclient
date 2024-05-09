@@ -18,6 +18,10 @@ const authSlice = createSlice({
       isAnyOf(auth.endpoints.logout.matchFulfilled), () => {
       local.clear()
     })
+    builder.addMatcher(
+      isAnyOf(auth.endpoints.verify.matchRejected), () => {
+      local.clear()
+    })
   }
 })
 

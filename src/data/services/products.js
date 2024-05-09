@@ -43,6 +43,17 @@ const products = client.injectEndpoints({
         params: params(sq)
       }),
       providesTags: tags
+    }),
+    fetchCriticalProducts: builder.query({
+      query: (sq) => ({
+        url: `/products`,
+        method: "GET",
+        params: params(sq),
+      }),
+      transformResponse: (response) => {
+        return response.data.filter(product => product.quantity <= 60)
+      },
+      providesTags: tags
     })
   })
 })
@@ -52,5 +63,6 @@ export const {
   useUpdateProductMutation,
   useRemoveProductMutation,
   useFetchProductsQuery,
+  useFetchCriticalProductsQuery
 } = products
 export default products

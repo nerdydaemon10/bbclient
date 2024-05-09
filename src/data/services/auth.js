@@ -23,6 +23,12 @@ const auth = client.injectEndpoints({
         return result ? ["List"] : []
       }
     }),
+    verify: builder.mutation({
+      query: () => ({
+        url: "/auth/verify",
+        method: "GET"
+      }),
+    }),
     logout: builder.mutation({
       query: () => ({
         url: "/auth/logout",
@@ -37,6 +43,7 @@ const auth = client.injectEndpoints({
 
 export const { 
   useLoginMutation,
-  useLogoutMutation
+  useVerifyMutation,
+  useLogoutMutation,
 } = auth
 export default auth

@@ -11,7 +11,8 @@ import {
   Legend,
   BarElement,
 } from 'chart.js'
-import SalesChart from "./SalesChart.jsx";
+import SalesChart from "./SalesChart.jsx"
+import CriticalStocks from "./CriticalStocks.jsx"
 
 ChartJS.register(
   CategoryScale,
@@ -28,6 +29,7 @@ function ChartsContainer() {
   return (
     <div className="charts-container gap-2">
       <SalesChart />
+      <CriticalStocks />
     </div>
   )
 }

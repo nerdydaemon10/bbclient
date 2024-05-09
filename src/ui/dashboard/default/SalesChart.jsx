@@ -47,15 +47,7 @@ const options = {
             return value.toLocaleString("en-PH",{style:"currency", currency:"PHP"})
         }
       }
-    },
-    yAxes: [{
-      ticks: {
-        beginAtZero: true,
-        callback: function(value, index, values) {
-          return value.toLocaleString("en-PH",{style:"currency", currency:"PHP"})
-        }
-      }
-    }]
+    }
   },
 }
 
@@ -85,12 +77,13 @@ function SalesChart() {
   return (
     <div className="card">
       <div className="card-header d-flex justify-content-between align-items-center">
-        <div>
-          <h6 className="text-body-primary fw-semibold mb-0">Total Sales</h6>
-        </div>
+        <h6 className="card-title fs-7 mb-0">
+          Critical Stocks
+        </h6>
         <OptionInput 
           name="interval" 
-          options={IntervalsData} 
+          options={IntervalsData}
+          size="sm"
           value={sq.interval} 
           onChange={handleChange}
         />
