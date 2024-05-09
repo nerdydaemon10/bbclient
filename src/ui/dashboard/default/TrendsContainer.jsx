@@ -5,12 +5,10 @@ import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
 import StringHelper from "../../../util/helpers/StringHelper.js"
 
 function TrendsContainer() {
-  const { data, error, isLoading, isFetching } = useFetchSummariesQuery()
-
+  const { data } = useFetchSummariesQuery()
+  
   const totalSales = StringHelper.toPesoCurrency(data?.transactions_total.total_sales ?? 0.00)
   const todaySales = StringHelper.toPesoCurrency(data?.transactions_total.today_sales ?? 0.00)
-  const totalPending = StringHelper.toPesoCurrency(data?.transactions_total.total_pending ?? 0.00)
-  const totalRejected = StringHelper.toPesoCurrency(data?.transactions_total.total_rejected ?? 0.00)
   const totalCommission = StringHelper.toPesoCurrency(data?.transactions_total.total_commission ?? 0.00)
 
   const orders = data?.orders ?? 0

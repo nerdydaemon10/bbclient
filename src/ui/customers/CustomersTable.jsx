@@ -106,7 +106,7 @@ function TableContent({sq, data, error, isFetching}) {
     dispatch(setCustomer(customer))
     delay(() => dispatch(openModal(ModalType.REMOVE)), DELAY_MILLIS)
   }
-  
+
   const columns = [
     {
       name: "Full Name",
@@ -167,7 +167,7 @@ function TableContent({sq, data, error, isFetching}) {
         data={data} 
         error={error}
         sq={sq}
-        isFetching={isFetching} 
+        isFetching={isFetching}
       />
     </div>
   )
@@ -225,7 +225,6 @@ function TableContents({sq, data, error, isFetching}) {
     </div>
   )
 }
-
 function TableItem({item, onUpdate, onRemove}) {
   const fullName = StringHelper.truncate(item.full_name)
   const address = StringHelper.truncate(item.address)

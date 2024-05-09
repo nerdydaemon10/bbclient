@@ -1,17 +1,23 @@
+import { params } from "../../util/helper.jsx"
 import client from "./client.js"
-
-const tag = "Summary"
-const tags = ["List", tag]
 
 export const summaries = client.injectEndpoints({
   endpoints: builder => ({
     fetchSummaries: builder.query({
       query: () => `/admin/summary`,
-      providesTags: tags
+      providesTags: ["List", "Summary"]
+    }),
+    fetchChart: builder.query({
+      query: (sq) => ({ 
+       url: `/admin/chart/sales`,
+       params: params(sq)
+      }),
+      providesTags: ["List", "Chart"],
     })
   })
 })
 
 export const {
   useFetchSummariesQuery,
+  useFetchChartQuery
 } = summaries

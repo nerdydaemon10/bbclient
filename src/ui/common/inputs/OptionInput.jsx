@@ -1,4 +1,4 @@
-import React from "react"
+import { Fragment } from "react"
 
 function OptionInput({label, name, options, feedback, value, onChange}) {
   const { state, message } = feedback || { state: "", message: ""}
@@ -9,11 +9,11 @@ function OptionInput({label, name, options, feedback, value, onChange}) {
   
   return (
     <div className="d-flex flex-column gap-1">
-      <label className="fs-7 fw-medium">{label}</label>
+      {label && <label className="fs-7 fw-medium">{label}</label>}
       <div className={`btn-group w-100 mb-0  ${state}`} role="group">
         {
           options.map((option, index) => (
-            <React.Fragment key={index}>
+            <Fragment key={index}>
               <input
                 className="btn-check"
                 type="radio" 
@@ -31,7 +31,7 @@ function OptionInput({label, name, options, feedback, value, onChange}) {
                 {option.icon}
                 {option.name}
               </label>
-            </React.Fragment>
+            </Fragment>
           ))
         }
       </div>

@@ -98,7 +98,23 @@ export const RolesData = [
   { key: 1, name: "Admin", normalize: "admin" },
   { key: 2, name: "Employee", normalize: "employee" }
 ]
-
+export const IntervalsData = [
+  {
+    id: 1,
+    name: "Weekly",
+    value: "weekly"
+  },
+  {
+    id: 2,
+    name: "Monthly",
+    value: "monthly"
+  },
+  {
+    id: 3,
+    name: "Yearly",
+    value: "yearly"
+  }
+]
 export const paymentMethods = [1, 2]
 export const rowsPerPages = [15, 50, 100]
 export const orderStatuses = ["pending", "approved", "rejected"]

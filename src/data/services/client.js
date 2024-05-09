@@ -5,7 +5,7 @@ import local from "../../util/local.js"
 const X_API_KEY = import.meta.env.VITE_X_API_KEY
 const BASE_URL = import.meta.env.VITE_BASE_URL
 
-const tags = ["List", "Employee", "Customer", "Summary", "Product", "Sales", "Order"]
+const tags = ["List", "Employee", "Customer", "Summary", "Chart", "Product", "Sales", "Order"]
 
 const client = createApi({
   reducerPath: "client",

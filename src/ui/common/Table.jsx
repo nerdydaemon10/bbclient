@@ -19,17 +19,17 @@ import { useEffect, useState } from "react"
 export function Table({name, columns, data, error, sq, isFetching}) {
   const colSpan = size(columns)
   const [accessor, setAccessor] = useState("")
-  const [isAsc, setIsAsc] = useState(true)
+  const [isAsc, setIsAsc] = useState(false)
   const [dt, setDt] = useState([])
 
   const handleSort = (col) => {
     if (isNil(col.type)) return
     if (accessor == col.accessor) setIsAsc(!isAsc)
     if (accessor != col.accessor) setIsAsc(true)
-    setDt(orderBy(data, [(item) => tranform(item, col)], [isAsc ? "asc" : "desc"]))
     setAccessor(col.accessor)
+    setDt(orderBy(data, [(item) => tranform(item, col)], [isAsc ? "asc" : "desc"]))
   }
-  
+
   const tranform = (item, col) => {
     if (col.type == "string")
       return item[col.accessor]

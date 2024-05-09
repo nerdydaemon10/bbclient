@@ -8,11 +8,13 @@ import ordersSlice from "./ordersSlice.js"
 import salesSlice from "./salesSlice.js"
 import client from "../../data/services/client.js"
 import employeesSlice from "./employeesSlice.js"
+import homeSlice from "./homeSlice.js"
 
 const reducer = combineReducers({
   [client.reducerPath]: client.reducer,
   auth: authSlice,
   pos: posSlice,
+  home: homeSlice,
   inventory: inventorySlice,
   customers: customersSlice,
   orders: ordersSlice,
