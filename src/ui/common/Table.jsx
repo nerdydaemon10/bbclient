@@ -1,6 +1,144 @@
+import { isEmpty, isNil, orderBy, size, sortBy, truncate } from "lodash"
 import { rowsPerPages } from "../../util/Config.jsx"
 import Button from "./buttons/Button.jsx"
 import SelectInput from "./inputs/SelectInput.jsx"
+import { BiSort } from "react-icons/bi"
+import moment from "moment"
+import { useEffect, useState } from "react"
+
+/*columns = [
+  {
+    name: "Full Name",
+    accessor: "full_name",
+    type: "string",
+    sortable: true,
+    render: (item) => {}
+  }
+]*/
+
+export function Table({name, columns, data, error, sq, isFetching}) {
+  const colSpan = size(columns)
+  const [accessor, setAccessor] = useState("")
+  const [isAsc, setIsAsc] = useState(true)
+  const [dt, setDt] = useState([])
+
+  const handleSort = (col) => {
+    if (isNil(col.type)) return
+    if (accessor == col.accessor) setIsAsc(!isAsc)
+    if (accessor != col.accessor) setIsAsc(true)
+    setDt(orderBy(data, [(item) => tranform(item, col)], [isAsc ? "asc" : "desc"]))
+    setAccessor(col.accessor)
+  }
+  
+  const tranform = (item, col) => {
+    if (col.type == "string")
+      return item[col.accessor]
+    if (col.type == "date")
+      return moment(item[col.accessor]).format("X")
+    if (col.type == "datetime") {
+      return moment(item[col.accessor]).format("X")
+    }
+    return item[col.accessor]
+  }
+
+  const hasRenderer = (column) => {
+    return !isNil(column.render) || isNil(column.accessor)
+  }
+
+  const hasEmptyResults = (data, sq) => {
+    const excludes = ["per_page", "page"]
+    const entries = Object
+      .entries(sq)
+      .filter((entry) => !excludes.includes(entry[0]))
+    
+    if (!data)
+      return false
+  
+    if (data.length > 0)
+      return false
+  
+    const hasValues = entries.some((item) => !isEmpty(item[1]))
+  
+    return isEmpty(data) && hasValues
+  }
+
+  useEffect(() => {
+    setDt(data)
+  }, [data])
+
+  const render = (item, col) => {
+    if (isNil(col.type))
+      return item[col.accessor]
+    if (col.type == "string")
+      return truncate(item[col.accessor], { length: 24 })
+    if (col.type == "date")
+      //return moment(item[col.accessor]).format("YYYY-MM-DD")
+      return moment(item[col.accessor]).format("MMM, DD YYYY")
+    if (col.type == "datetime")
+      //return moment(item[col.accessor]).format("YYYY-MM-DD, h:mm:ss a")
+      return moment(item[col.accessor]).format("MMM, DD YYYY, h:mm a")
+    return item[col.accessor]
+  }
+
+  return (
+    <table className="table">
+      <thead>
+        <tr>
+        {columns.map((col, colIndex) => (
+          <th className={col.accessor == accessor && isAsc ? "is-sorted" : ""} key={colIndex}>
+            {col.name}
+            {
+              col.sortable && (
+                <a 
+                  className={`ms-1 color-reset table-sorter`}
+                  type="button"
+                  onClick={() => handleSort(col)}>
+                  <BiSort />
+                </a>
+              )
+            }
+          </th>
+        ))}
+        </tr>
+      </thead>
+      <tbody>
+        {
+          isFetching ? (
+            <TableStatus 
+              colSpan={colSpan} 
+              message={`Fetching ${name}... please wait for a while.`} 
+            />
+          ) : error ? (
+            <TableStatus 
+              colSpan={colSpan} 
+              message={`Something went wrong while fetching ${name}.`}
+            />
+          ) : hasEmptyResults(data, sq) ? (
+            <TableStatus 
+              colSpan={colSpan} 
+              message={`No ${name} match your search criteria. Try refining your search.`}
+            />
+          ) : isEmpty(data) ? (
+            <TableStatus 
+              colSpan={colSpan} 
+              message={`No ${name} in our records yet.`}
+            />
+          ) : dt.map((item, itemIndex) => (
+            <tr key={itemIndex}>
+              {
+                columns.map((col, colIndex) => 
+                  hasRenderer(col)
+                  ? (<td key={colIndex}>{col.render(item)}</td>)
+                  : (<td key={colIndex}>{render(item, col)}</td>)
+                )
+              }
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  )
+}
 
 export function TableHeaders({columns}) {
   return (

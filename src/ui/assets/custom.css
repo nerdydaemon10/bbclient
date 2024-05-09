@@ -31,6 +31,15 @@
   font-weight: 500 !important;
   padding: 8px 12px;
 }
+.table th.is-sorted {
+  color: var(--bs-dark) !important;
+  font-size: 0.90rem;
+  font-weight: 500 !important;
+  padding: 8px 12px;
+}
+.table-sorter {
+  color: inherit;
+}
 .table tbody > tr.is-selected {
   background-color: var(--bs-warning-bg-subtle);
 }

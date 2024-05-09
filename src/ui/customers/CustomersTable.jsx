@@ -12,9 +12,9 @@ import { Button, SearchFieldInput, TablePagination, TableStatus, TableHeaders } 
 import { openModal, setCustomer, setSq } from "../redux/customersSlice.js"
 import { useFetchCustomersQuery } from "../../data/services/customers.js"
 import { nextPage, previousPage } from "../redux/customersSlice.js"
+import { Table } from "../common/Table.jsx"
 
-const columns = ["Full Name", "Address", "Phone Number", "Email Address", "Created By", "Date Created", "Date Modified", "Action"]
-const colSpan = size(columns)
+//const columns = ["Full Name", "Address", "Phone Number", "Email Address", "Created By", "Date Created", "Date Modified", "Action"]
 
 function CustomersTable() {
   const dispatch = useDispatch()
@@ -95,6 +95,84 @@ function TableFiltering({search, onChange}) {
   )
 }
 function TableContent({sq, data, error, isFetching}) {
+  const dispatch = useDispatch()
+
+  const handleUpdate = (customer) => {
+    dispatch(setCustomer(customer))
+    delay(() => dispatch(openModal(ModalType.UPDATE)), DELAY_MILLIS)
+  }
+
+  const handleRemove = (customer) => {
+    dispatch(setCustomer(customer))
+    delay(() => dispatch(openModal(ModalType.REMOVE)), DELAY_MILLIS)
+  }
+  
+  const columns = [
+    {
+      name: "Full Name",
+      accessor: "full_name",
+      type:"string",
+      sortable: true
+    },
+    {
+      name: "Address",
+      accessor: "address",
+      type:"string",
+      sortable: true
+    },
+    {
+      name: "Phone Number",
+      accessor: "phone_number",
+      type:"string",
+      sortable: true
+    },
+    {
+      name: "Email Address",
+      accessor: "email_address",
+      type:"string",
+      sortable: true
+    },
+    {
+      name: "Date Created",
+      accessor: "created_at",
+      type:"date",
+      sortable: true
+    },
+    {
+      name: "Date Modified",
+      accessor: "updated_at",
+      type:"datetime",
+      sortable: true
+    },
+    {
+      name: "Action",
+      render: (item) => (
+        <div className="hstack gap-1">
+          <Button variant="dark" size="sm" onClick={() => handleUpdate(item)}>
+            Update
+          </Button>
+          <Button variant="light" size="sm" onClick={() => handleRemove(item)}>
+            Remove
+          </Button>
+        </div>
+      )
+    },
+  ]
+
+  return (
+    <div className="table-wrapper table-container">
+      <Table 
+        name="customers" 
+        columns={columns} 
+        data={data} 
+        error={error}
+        sq={sq}
+        isFetching={isFetching} 
+      />
+    </div>
+  )
+}
+function TableContents({sq, data, error, isFetching}) {
   const dispatch = useDispatch()
 
   const handleUpdate = (customer) => {
