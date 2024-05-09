@@ -9,7 +9,7 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js'
+} from "chart.js"
 import { useFetchChartQuery } from "../../../data/services/summaries.js"
 import { debounce, isNil } from "lodash"
 import { useDispatch, useSelector } from "react-redux"
@@ -25,9 +25,21 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend
-);
+)
 
 const options = {
+  tooltip: {
+    callbacks: {
+      label: (context) => {
+        let label = context.dataset.label || ""
+
+        if (label) label += ": "
+        if (context.parsed.y !== null) 
+          label += new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(context.parsed.y)
+        return label
+      }
+    }
+  },
   scales: {
     y: {
       ticks: {
@@ -87,10 +99,10 @@ function SalesChart() {
         {
           isLoading || isFetching ? (
             <div className="w-100 h-100 d-flex align-items-center justify-content-center">
-              <div className="text-center">
-                <span className="spinner-border"></span>
-                <p className="text-body-secondary mb-0">Fetching Sales, Please Wait...</p>
-              </div>
+              <p className="fs-7 mb-0">
+                <span className="spinner-border spinner-border-sm me-1"></span>
+                Fetching Sales, Please Wait...
+              </p>
             </div>
           ) : data ? (
             <Line
@@ -99,11 +111,11 @@ function SalesChart() {
                 labels,
                 datasets: [
                   {
-                    label: 'Total Sales',
+                    label: "Total Sales",
 
                     data: values,
-                    borderColor: 'rgb(50, 50, 50)',
-                    backgroundColor: 'rgba(40, 44, 52, 0.5)',
+                    borderColor: "rgb(50, 50, 50)",
+                    backgroundColor: "rgba(40, 44, 52, 0.5)",
                     tension: 0.3
                   }
                 ]
