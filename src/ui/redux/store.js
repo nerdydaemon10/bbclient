@@ -23,18 +23,12 @@ const reducer = combineReducers({
   employees: employeesSlice
 })
 
-const errorHandlingMiddleware = (store) => (next) => (action) => {
-  if (action.type.endsWith('rejected') && action.payload.status === 401) {
-    //local.clear()
-  }
-  return next(action)
-}
 
 const store = configureStore({
   reducer: reducer,
   middleware: getDefaultMiddleware => getDefaultMiddleware({ 
     serializableCheck: false 
-  }).concat(client.middleware, errorHandlingMiddleware),
+  }).concat(client.middleware),
   devTools: true
 })
 

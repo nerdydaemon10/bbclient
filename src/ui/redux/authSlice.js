@@ -3,6 +3,10 @@ import { createSlice, isAnyOf } from "@reduxjs/toolkit"
 import local from "../../util/local.js"
 import auth from "../../data/services/auth.js"
 
+const initialState = {
+  user: local.get("user")
+}
+
 const authSlice = createSlice({
   name: "auth",
   initialState: null,
@@ -21,5 +25,5 @@ const authSlice = createSlice({
   }
 })
 
-//export const { setIsLoggedIn} = authSlice.actions
+//export const { clearUser } = authSlice.actions
 export default authSlice.reducer

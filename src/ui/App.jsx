@@ -1,5 +1,5 @@
-import { isNil } from "lodash"
-import { Fragment } from "react"
+import { isEmpty, isNil } from "lodash"
+import { Fragment, useEffect } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 
 import LoginPage from "./login/LoginPage.jsx"
@@ -11,12 +11,31 @@ import store from "./redux/store.js"
 import auth from "../data/services/auth.js"
 
 function App() {
+	//local.clear()
+	const user = local.get("user")
+
+	return (
+		<Routes>
+			<Route path="/" element={
+				isNil(user) 
+					? <LoginPage />
+					: <Navigate to={`/${user.role}`} replace />
+			} />
+			<Route path="/admin/*" element={
+				!isNil(user)
+					? <AdminPage />
+					: <Navigate to="/" replace />
+			} />
+		</Routes>
+  )
+}
+function Apps() {
 	store.dispatch(auth.endpoints.verify.initiate())
 
 	return (
 		<Routes>
 			<Route path="/" element={
-				<AuthRoute isLogin>
+				<AuthRoute>
 					<LoginPage />
 				</AuthRoute>
 			} />
@@ -38,7 +57,7 @@ function AuthRoute({children}) {
 
 	if (!isNil(user))
 		return <Navigate to={`/${user.role}`} replace />
-
+		
 	return (
 		<Fragment>
 			{children}

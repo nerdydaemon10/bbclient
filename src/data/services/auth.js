@@ -27,7 +27,7 @@ const auth = client.injectEndpoints({
       query: () => ({
         url: "/auth/verify",
         method: "GET"
-      }),
+      })
     }),
     logout: builder.mutation({
       query: () => ({

@@ -94,12 +94,12 @@ function SignOutButton() {
 	const handleClick = () => {
 		logout()
 	}
-	
+
 	useEffect(() => {
 		if (!isSuccess) return
 		navigate("/")
 	}, [isSuccess, navigate])
-
+	
 	return (
 		<Button 
 			variant="outline-dark"

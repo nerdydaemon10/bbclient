@@ -10,20 +10,9 @@ import EmployeesView from "../employees/EmployeesView.jsx"
 import InventoryView from "../inventory/InventoryView.jsx"
 import store from "../redux/store.js"
 import { employees } from "../../data/services/employees.js"
-import { useEffect } from "react"
-import { isNil } from "lodash"
-import local from "../../util/local.js"
 
 function AdminPage() {
-	const user = local.get("user")
-	const navigate = useNavigate()
-
-	useEffect(() => {
-		if (!isNil(user)) return
-		navigate("/")
-	}, [user, navigate])
-
-	store.dispatch(employees.endpoints.fetchEmployees.initiate())
+	//store.dispatch(employees.endpoints.fetchEmployees.initiate())
 
 	return (
 		<Dashboard routesData={RoutesData}>

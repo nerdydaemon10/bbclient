@@ -132,7 +132,7 @@ function TableContent({sq, data, error, isFetching}) {
       type:"string",
       sortable: true
     },
-    {
+    { 
       name: "Date Created",
       accessor: "created_at",
       type:"date",
