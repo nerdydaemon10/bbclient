@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { TableHeaders, TablePagination, TableStatus } from "../common"
-import { isEntitySelected, noSearchResults } from "../../util/helper.jsx"
+import { isEntitySelected, toDateTime, toPcs, toPeso, truncate } from "../../util/helper.js"
 import { isEmpty, isNil, size } from "lodash"
-import StringHelper from "../../util/helpers/StringHelper.js"
 import { PaymentMethod, OrderStatus, GenericMessage, Fallback } from "../../util/classes/index.js"
-import DateHelper from "../../util/helpers/DateHelper.js"
 import { useDispatch, useSelector } from "react-redux"
 import { setSale, setSq } from "../redux/salesSlice.js"
 import { Fragment, useContext } from "react"
@@ -18,7 +16,7 @@ const colSpan = size(columns)
 function SalesTable() {
   const dispatch = useDispatch()
   const { sq } = useSelector((state) => state.sales)
-
+  
   const { isLoading, isFetching, data, error } = useContext(SalesContext)
   const meta = Fallback.checkMeta(data)
 
@@ -75,12 +73,7 @@ function TableContent({sq, data, error, isFetching}) {
                 colSpan={colSpan} 
                 message={GenericMessage.SALES_ERROR} 
               />
-            ) : noSearchResults(sq, data) ? (
-              <TableStatus 
-                colSpan={colSpan} 
-                message={GenericMessage.SALES_NO_MATCH} 
-              />
-            ) : isEmpty(data) ? (
+            )  : isEmpty(data) ? (
               <TableStatus 
                 colSpan={colSpan} 
                 message={GenericMessage.SALES_EMPTY} 
@@ -100,15 +93,15 @@ function TableContent({sq, data, error, isFetching}) {
   )
 }
 function TableItem({item, isSelected, onSelect}) {
-  const refNumber = StringHelper.truncate(item.reference_number, 15)
-  const amountDue = StringHelper.toPesoCurrency(item.amount_due)
-  const totalItems = StringHelper.toPcs(item.number_of_items)
+  const refNumber = truncate(item.reference_number, 15)
+  const amountDue = toPeso(item.amount_due)
+  const totalItems = toPcs(item.number_of_items)
   const status = OrderStatus.toObject(item.status)
   const paymentMethod = PaymentMethod.toMethod(item.payment_method)
-  const customer = StringHelper.truncate(item.customer?.full_name)
-  const salesperson = StringHelper.truncate(item.employee.full_name)
-  const commission = StringHelper.toPesoCurrency(item.commission)
-  const dateCreated = DateHelper.toIsoStandard(item.created_at)
+  const customer = truncate(item.customer?.full_name)
+  const salesperson = truncate(item.employee.full_name)
+  const commission = toPeso(item.commission)
+  const dateCreated = toDateTime(item.created_at)
 
   return (
     <tr className={`${isSelected ? "is-selected" : ""}`}>

@@ -6,15 +6,15 @@ import { enqueueSnackbar } from "notistack"
 import { closeModal } from "../redux/customersSlice.js"
 import { ModalType, GenericMessage } from "../../util/classes"
 import { useCreateCustomerMutation } from "../../data/services/customers.js"
-import InputHelper from "../../util/helpers/InputHelper.js"
 import { CustomerParam } from "../../util/params.js"
+import { getErrorByName } from "../../util/helper.js"
 
 function CreateModal() {
   const dispatch = useDispatch()
   const [customer, setCustomer] = useState(CustomerParam)
   const { isCreateModalOpen } = useSelector((state) => state.customers)
   const [createCustomer, { isLoading, isSuccess, error }] = useCreateCustomerMutation()
-  
+
   const handleClose = () => {
     dispatch(closeModal(ModalType.CREATE))
   }
@@ -39,8 +39,8 @@ function CreateModal() {
   return (
     <Modal  
       title="Create Customer"
+      isOpen={isCreateModalOpen}
       isLoading={isLoading}
-      isOpen={isCreateModalOpen} 
       onClose={handleClose}
       onConfirm={handleConfirm}
     >
@@ -50,7 +50,7 @@ function CreateModal() {
             label="Full Name"
             name="full_name"
             placeholder="e.g., Juan Dela Cruz"
-            feedback={InputHelper.getErrorByName(error, "full_name")}
+            feedback={getErrorByName(error, "full_name")}
             value={customer.full_name}
             onChange={handleChange}
           />
@@ -60,7 +60,7 @@ function CreateModal() {
             label="Address"
             name="address"
             placeholder="e.g., Brgy. 143, Quezon City"
-            feedback={InputHelper.getErrorByName(error, "address")}
+            feedback={getErrorByName(error, "address")}
             value={customer.address}
             onChange={handleChange}
           />
@@ -72,19 +72,19 @@ function CreateModal() {
             label="Phone Number"
             name="phone_number"
             placeholder="e.g., 0945665634943"
-            feedback={InputHelper.getErrorByName(error, "phone_number")}
+            feedback={getErrorByName(error, "phone_number")}
             value={customer.phone_number}
             onChange={handleChange}
           />
         </div>
         <div className="col-6">
           <TextFieldInput 
-            label="Email Address"
             name="email_address"
-            placeholder="e.g., juandelacruz@gmail.com"
-            feedback={InputHelper.getErrorByName(error, "email_address")}
             value={customer.email_address}
             onChange={handleChange}
+            label="Email Address"
+            placeholder="e.g., juandelacruz@gmail.com"
+            feedback={getErrorByName(error, "email_address")}
           />
         </div>
       </div>

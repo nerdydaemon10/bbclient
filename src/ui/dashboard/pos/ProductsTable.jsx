@@ -1,211 +1,163 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import GenericMessage from "../../../util/classes/GenericMessage.js"
-import { Tabs, isCheckedOut, productCols } from "./Util.jsx"
-import StringHelper from "../../../util/helpers/StringHelper.js"
-import { productCategories, rowsPerPages } from "../../../util/Config.jsx"
-import { noSearchResults } from "../../../util/helper.jsx"
-import { Button, SearchFieldInput, SelectInput, TDStatus, THeaders } from "../../common"
-import { useContext } from "react"
+import { isCheckedOut } from "./Util.jsx"
+import { DELAY_MILLIS, productCategories } from "../../../util/Config.jsx"
+import { Button, SearchFieldInput, SelectInput, TablePagination } from "../../common"
+import { Fragment, useCallback, useEffect, useState } from "react"
 import ProductCategory from "../../../util/classes/ProductCategory.js"
-import { addToCheckout, setSearchQuery, setTab } from "../../redux/posSlice.js"
-import { PosContext } from "./PosProvider.jsx"
-import { first, isEmpty, size } from "lodash"
+import {checkout, nextPage, previousPage, selectSq, setSq } from "../../redux/posSlice.js"
+import { debounce, isNil } from "lodash"
+import { useFetchProductsQuery } from "../../../data/services/products.js"
+import Fallback from "../../../util/classes/Fallback.js"
+import { Table } from "../../common/Table.jsx"
+import { toPeso } from "../../../util/helper.js"
 
 function ProductsTable() {
   const dispatch = useDispatch()
 
-  const { products } = useSelector((state) => state.pos)
-  const { searchQuery, fetchResponse } = products
-  const { isLoading, data, meta, error } = fetchResponse
-
-  const { searchProducts } = useContext(PosContext)
-
+  const sq = useSelector((state) => selectSq(state.pos))
+  const [sqtemp, setSqtemp] = useState(sq)
+  
+  const { data, error, isLoading, isFetching } = useFetchProductsQuery(sqtemp)
+  const meta = Fallback.checkMeta(data)
+  
+  const debouncer = useCallback(debounce((sqtemp) => {
+    setSqtemp(sqtemp)
+  }, DELAY_MILLIS), [])
+  
   const handleChange = (e) => {
-    dispatch(setSearchQuery({ ...searchQuery, [e.target.name]: e.target.value, page: 1 }))
-    searchProducts.cancel()
+    dispatch(setSq(e))
   }
   const handlePrevious = () => {
-    let page = searchQuery.page > 1 ? searchQuery.page - 1 : 1
-    dispatch(setSearchQuery({ ...searchQuery, page: page }))
-    searchProducts.cancel()
+    dispatch(previousPage())
   }
-  const handleNext = () => {
-    let page = searchQuery.page < meta.last_page ? searchQuery.page + 1 : meta.last_page
-    dispatch(setSearchQuery({ ...searchQuery, page: page }))
-    searchProducts.cancel()
+  const handleNext = (meta) => {
+    dispatch(nextPage(meta))
   }
+  
+  useEffect(() => {
+    debouncer(sq)
+  }, [sq])
 
   return (
-    <>
-      <FilteringContainer
-        name={searchQuery.name}
-        status={searchQuery.status}
+    <Fragment>
+      <TableFilter
+        search={sq.search}
+        category={sq.category_id}
         onChange={handleChange}
       />
-      <TableContainer 
-        isLoading={isLoading} 
-        searchQuery={searchQuery}
-        data={data}
+      <TableData
+        sq={sq}
+        data={isNil(data) ? [] : data.data}
         error={error}
+        isFetching={isLoading || isFetching}
       />
-      <PaginationContainer
-        rowsPerPage={searchQuery.per_page}
-        currentPage={meta.current_page}
-        lastPage={meta.last_page}
-        isLoading={isLoading}
-        onChange={handleChange} 
+      <TablePagination
+        meta={meta}
+        rowsPerPage={sq.per_page}
+        isFetching={isLoading || isFetching}
+        onChange={handleChange}
         onPrevious={handlePrevious}
-        onNext={handleNext}
+        onNext={() => handleNext(meta)}
       />
-    </>
+    </Fragment>
   )
 }
-function FilteringContainer({name, category, onChange}) {
+function TableFilter({search, category, onChange}) {
   return (
-    <div className="filtering-container is-products-table">
-      <div className="row gx-2">
-        <div className="col-6">
-          <SearchFieldInput
-            name="name"
-            placeholder="Search by Product..."
-            value={name}
-            onChange={onChange}
-          />
-        </div>
-        <div className="col-6">
-          <SelectInput
-            name="category_id"
-            options={productCategories}
-            isOptional
-            value={category}
-            onChange={onChange}
-            onRender={(option) => ProductCategory.toCategory(option)}
-          />
-        </div>
-      </div>
+    <div className="table-filter d-flex gap-2">
+      <SearchFieldInput
+        name="search"
+        value={search}
+        onChange={onChange}
+        placeholder="Search by Product..."
+      />
+      <SelectInput
+        name="category_id"
+        options={productCategories}
+        value={category}
+        onChange={onChange}
+        onRender={(option) => ProductCategory.toCategory(option)}
+        isOptional
+      />
     </div>
   )
 }
-function TableContainer({isLoading, searchQuery, data, error}) {
-  const { tab, checkouts } = useSelector(state => state.pos)
-
+function TableData({sq, data, error, isFetching}) {
   const dispatch = useDispatch()
-  
-  const firstTab = first(Tabs).value
-  const colSpan = size(productCols)
+  const { checkouts } = useSelector(state => state.pos)
 
-  const handleClick = (product) => {
-    dispatch(addToCheckout(product))
-
-    if (tab != firstTab)
-      dispatch(setTab(firstTab))
+  const handleCheckout = (product) => {
+    dispatch(checkout(product))
   }
 
-  return (
-    <div className="table-wrapper table-container">
-      <table className="table">
-        <thead>
-          <THeaders columns={productCols}/>
-        </thead>
-        <tbody>
-          {
-            isLoading ? (
-              <TDStatus colSpan={colSpan}>
-                {GenericMessage.PRODUCTS_FETCHING}
-              </TDStatus>
-            ) : error ? (
-              <TDStatus colSpan={colSpan}>
-                {error.message ? error.message : GenericMessage.PRODUCTS_ERROR}
-              </TDStatus>
-            ) : noSearchResults(searchQuery, data) ? (
-              <TDStatus colSpan={colSpan}>
-                {GenericMessage.PRODUCTS_NO_MATCH}
-              </TDStatus>
-            ) : isEmpty(data) ? (
-              <TDStatus colSpan={colSpan}>
-                {GenericMessage.PRODUCTS_EMPTY}
-              </TDStatus>
-            ) : data ? data.map((product, index) => (
-              <TDProduct
-                key={index}
-                product={product}
-                isCheckedOut={isCheckedOut(checkouts, product.id)}
-                onClick={() => handleClick(product)}
-              />
-            )) : (
-              <></>
-            )
-          }
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-function TDProduct({product, isCheckedOut, onClick}) {
-  const code = StringHelper.truncate(product.product_code)
-  const name = StringHelper.truncate(product.name)
-  const description = StringHelper.truncate(product.description)
-  const category = ProductCategory.toCategory(product.category_id)
-  const stocks = StringHelper.toStocks(product.quantity)
-  const price = StringHelper.toPesoCurrency(product.srp)
-
-  return (
-    <tr key={product.id}>
-      <td>{code}</td>
-      <td>{name}</td>
-      <td>{description}</td>
-      <td>
+  const columns = [
+    {
+      name: "Code",
+      accessor: "product_code",
+      type:"string",
+      sortable: true
+    },
+    {
+      name: "Name",
+      accessor: "name",
+      type:"string",
+      sortable: true,
+      render: (item) => (
+        <div className="vstack">
+          <span className="text-body-primary">{item.name}</span>
+          <span className="text-body-secondary">{item.description}</span>   
+        </div>
+      )
+    },
+    {
+      name: "Category",
+      accessor: "category_id",
+      type: "integer",
+      sortable: true,
+      render: (item) => (
         <span className="badge text-bg-light">
-          {category}
+          {ProductCategory.toCategory(item.category_id)}
         </span>
-      </td>
-      <td>{stocks}</td>
-      <td>{price}</td>
-      <td>
+      )
+    },
+    { 
+      name: "Stocks",
+      accessor: "quantity",
+      type: "integer",
+      sortable: true
+    },
+    {
+      name: "Price/SRP",
+      accessor: "srp",
+      type:"integer",
+      sortable: true,
+      render: (item) => toPeso(item.srp)
+    },
+    {
+      name: "Action",
+      render: (item) => (
         <Button
           size="sm"
-          isDisabled={isCheckedOut}
-          onClick={onClick}
+          isDisabled={isCheckedOut(checkouts, item)}
+          onClick={() => handleCheckout(item)}
         >
           Checkout
         </Button>
-      </td>
-    </tr>
-  )
-}
-function PaginationContainer({rowsPerPage, currentPage, lastPage, isLoading, onChange, onPrevious, onNext}) {
+      )
+    },
+  ]
+
   return (
-    <div className="pagination-container">
-      <div className="d-flex flex-row align-items-center gap-2">
-        <label className="fw-medium fs-7 text-nowrap">Rows per page</label>
-        <SelectInput
-          name="per_page"
-          options={rowsPerPages}
-          value={rowsPerPage}
-          onChange={onChange}
-          onRender={(option) => `${option} rows`}
-        />
-      </div>
-      <div className="d-flex flex-row align-items-center gap-2">
-        <label className="fw-medium fs-7 text-nowrap">{`Page ${currentPage} of ${lastPage}`}</label>
-        <div className="btn-group">
-          <Button
-            variant="light" 
-            isDisabled={isLoading || currentPage <= 1}
-            onClick={onPrevious}
-          >
-            Prev
-          </Button>
-          <Button 
-            variant="light" 
-            isDisabled={isLoading || currentPage >= lastPage} 
-            onClick={onNext}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+    <div className="table-wrapper table-data">
+      <Table
+        name="products" 
+        columns={columns}
+        sq={sq}
+        data={data}
+        error={error}
+        isFetching={isFetching}
+      />
     </div>
   )
 }

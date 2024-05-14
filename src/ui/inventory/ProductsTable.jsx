@@ -3,10 +3,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { debounce, delay, isEmpty, isNil, size } from "lodash"
 
 import { GenericMessage, ModalType, ProductCategory } from "../../util/classes"
-import { StringHelper, DateHelper } from "../../util/helpers"
 import { productCategories } from "../../util/Config.jsx"
 import { BiPlusCircle } from "react-icons/bi"
-import { noSearchResults } from "../../util/helper.jsx"
+import { toDateTime, toPeso, toStocks, truncate } from "../../util/helper.js"
 import { Button, SearchFieldInput, SelectInput } from "../common"
 import { Fragment, useCallback, useEffect, useState } from "react"
 import { TableHeaders, TablePagination, TableStatus } from "../common/Table.jsx"
@@ -136,11 +135,6 @@ function TableContent({sq, data, error, isFetching}) {
                 colSpan={colSpan} 
                 message={GenericMessage.PRODUCTS_ERROR} 
               />
-            ) : noSearchResults(sq, data) ? (
-              <TableStatus 
-                colSpan={colSpan} 
-                message={GenericMessage.PRODUCTS_NO_MATCH} 
-              />
             ) : isEmpty(data) ? (
               <TableStatus 
                 colSpan={colSpan} 
@@ -162,17 +156,17 @@ function TableContent({sq, data, error, isFetching}) {
 }
 
 function TableItem({item, onUpdate, onRemove}) {
-  const productCode = StringHelper.truncate(item.product_code)
-  const name = StringHelper.truncate(item.name)
-  const description = StringHelper.truncate(item.description)
+  const productCode = truncate(item.product_code)
+  const name = truncate(item.name)
+  const description = truncate(item.description)
   const category = ProductCategory.toCategory(item.category_id)
-  const stocks = StringHelper.toStocks(item.quantity)
-  const srp = StringHelper.toPesoCurrency(item.srp)
-  const memberPrice = StringHelper.toPesoCurrency(item.member_price)
-  const createdBy = StringHelper.truncate(item.created_by)
-  const dateCreated = DateHelper.toIsoStandard(item.created_at)
-  const dateModified = DateHelper.toIsoStandard(item.updated_at)
-
+  const stocks = toStocks(item.quantity)
+  const srp = toPeso(item.srp)
+  const memberPrice = toPeso(item.member_price)
+  const createdBy = truncate(item.created_by)
+  const dateCreated = toDateTime(item.created_at)
+  const dateModified = toDateTime(item.updated_at)
+  
   return (
     <tr>
       <td>{productCode}</td>

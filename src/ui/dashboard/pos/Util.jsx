@@ -1,10 +1,7 @@
 import { BiFile, BiPackage } from "react-icons/bi"
-import TableType from "../../../util/classes/TableType.js"
+import { isEmpty, isNil } from "lodash"
 
-const productCols = ["Code", "Name", "Description", "Category", "Stocks", "Price/SRP", "Action"]
-const customerCols = ["Full Name", "Address", "Phone Number", "Email Address", "Action"]
-
-const Tabs = [
+export const TabsData = [
   {
     name: "Checkouts",
     icon: <BiPackage className="me-1" size={18} />,
@@ -17,28 +14,9 @@ const Tabs = [
   }
 ]
 
-function hasCheckouts(checkouts) {
-  return checkouts.length > 0
+export const isCheckedOut = (checkouts, item) => {
+  return !!checkouts.find(checkout => checkout.id == item.id)
 }
-
-function isCheckedOut(checkouts, id) {
-  return !!checkouts.find(checkout => checkout.id == id)
-}
-
-function isProducts(table) {
-  return table == TableType.PRODUCTS
-}
-
-function hasIncompleteDetails(checkouts, customer) {
-  return (checkouts.length == 0) || (customer == null)
-}
-
-export {
-  productCols,
-  customerCols,
-  Tabs,
-  hasCheckouts,
-  isCheckedOut,
-  isProducts,
-  hasIncompleteDetails
+export const isIncompleteOrder = (checkouts, customer) => {
+  return isEmpty(checkouts) || isNil(customer)
 }

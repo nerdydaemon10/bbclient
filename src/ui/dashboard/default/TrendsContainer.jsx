@@ -2,15 +2,15 @@ import { BiBox, BiCalendar, BiCartAlt, BiCreditCardAlt, BiDollar, BiGroup, BiLin
 import { TrendCard } from "../../common/index.jsx"
 import { Fragment } from "react"
 import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
-import StringHelper from "../../../util/helpers/StringHelper.js"
+import { toPeso } from "../../../util/helper.js"
 
 function TrendsContainer() {
   const { data } = useFetchSummariesQuery()
   
-  const totalSales = StringHelper.toPesoCurrency(data?.transactions_total.total_sales ?? 0.00)
-  const todaySales = StringHelper.toPesoCurrency(data?.transactions_total.today_sales ?? 0.00)
-  const totalCommission = StringHelper.toPesoCurrency(data?.transactions_total.total_commission ?? 0.00)
-
+  const totalSales = toPeso(data?.transactions_total.total_sales ?? 0.00)
+  const todaySales = toPeso(data?.transactions_total.today_sales ?? 0.00)
+  const totalCommission = toPeso(data?.transactions_total.total_commission ?? 0.00)
+  
   const orders = data?.orders ?? 0
   const inventory = data?.inventory ?? 0
   const customers = data?.customers ?? 0

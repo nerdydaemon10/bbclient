@@ -1,24 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from "react"
+import { Fragment } from "react"
+
 import CreateModal from "./CreateModal.jsx"
-import CustomerStyle from "./CustomersStyle.jsx"
 import CustomersTable from "./CustomersTable.jsx"
 import RemoveModal from "./RemoveModal.jsx"
 import UpdateModal from "./UpdateModal.jsx"
+import GlobalStyle from "./GlobalStyle.jsx"
 
-function CustomersView() {  
+function CustomersView() {
   return (
-    <React.Fragment>
-      <CustomerStyle />
+    <Fragment>
+      <GlobalStyle />
       <TitleSection />
       <CustomersTable />
       <CreateModal />
       <UpdateModal />
       <RemoveModal />
-    </React.Fragment>
+    </Fragment>
   )
 }
-
 function TitleSection() {
   return (
     <div className="title-section">
@@ -27,6 +27,5 @@ function TitleSection() {
     </div>
   )
 }
-
 
 export default CustomersView

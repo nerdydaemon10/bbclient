@@ -10,7 +10,7 @@ import GenericMessage from "../../util/classes/GenericMessage.js"
 import ProductCategory from "../../util/classes/ProductCategory.js"
 import { ProductParam } from "../../util/params.js"
 import { useCreateProductMutation } from "../../data/services/products.js"
-import InputHelper from "../../util/helpers/InputHelper.js"
+import { getErrorByName } from "../../util/helper.js"
 
 function CreateModal() {
   const dispatch = useDispatch()
@@ -41,10 +41,10 @@ function CreateModal() {
 
   return (
     <Modal 
-      title="Create Product"
+      title="Create Product"  
       isLoading={isLoading}
       isOpen={isCreateModalOpen} 
-      onClose={handleClose}
+      onClose={handleClose} 
       onConfirm={handleConfirm}
     >
       <div className="row mb-2">
@@ -55,7 +55,7 @@ function CreateModal() {
             name="name"
             value={product.name}
             onChange={handleChange}
-            feedback={InputHelper.getErrorByName(error, "name")}
+            feedback={getErrorByName(error, "name")}
           />
         </div>
         <div className="col-6">
@@ -65,7 +65,7 @@ function CreateModal() {
             name="description"
             value={product.description}
             onChange={handleChange}
-            feedback={InputHelper.getErrorByName(error, "description")}
+            feedback={getErrorByName(error, "description")}
           />
         </div>
       </div>
@@ -78,7 +78,7 @@ function CreateModal() {
             value={product.category_id}
             onChange={handleChange}
             onRender={(option) => ProductCategory.toCategory(option)}
-            feedback={InputHelper.getErrorByName(error, "category_id", "category")}
+            feedback={getErrorByName(error, "category_id", "category")}
           />
         </div>
         <div className="col-6">
@@ -88,7 +88,7 @@ function CreateModal() {
             name="quantity"
             value={product.quantity}
             onChange={handleChange}
-            feedback={InputHelper.getErrorByName(error,"quantity")}
+            feedback={getErrorByName(error,"quantity")}
             />
         </div>
       </div>
@@ -100,7 +100,7 @@ function CreateModal() {
             name="srp"
             value={product.srp}
             onChange={handleChange}
-            feedback={InputHelper.getErrorByName(error, "srp")}
+            feedback={getErrorByName(error, "srp")}
           />
         </div>
         <div className="col-6">
@@ -110,7 +110,7 @@ function CreateModal() {
             name="member_price"
             value={product.member_price}
             onChange={handleChange}
-            feedback={InputHelper.getErrorByName(error, "member_price")}
+            feedback={getErrorByName(error, "member_price")}
           />
         </div>
       </div>

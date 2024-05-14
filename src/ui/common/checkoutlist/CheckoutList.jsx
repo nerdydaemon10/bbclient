@@ -1,9 +1,9 @@
 import { isEmpty } from "lodash"
-import StringHelper from "../../../util/helpers/StringHelper.js"
 import Button from "../buttons/Button.jsx"
 import CheckoutListStyle from "./CheckoutListStyle.jsx"
 import { BiMinus, BiPlus } from "react-icons/bi"
 import ProductCategory from "../../../util/classes/ProductCategory.js"
+import { toPcs, toPeso, truncate } from "../../../util/helper.js"
 
 function CheckoutList({className, checkouts, isControlsDisabled, isOdd, onDecrement, onIncrement}) {
   return (
@@ -32,12 +32,12 @@ function CheckoutList({className, checkouts, isControlsDisabled, isOdd, onDecrem
   )
 }
 function CheckoutItem({count, checkout, isControlsDisabled, isOdd=true, onDecrement, onIncrement}) {
-  const name = StringHelper.truncate(checkout.name)
-  const code = StringHelper.truncate(checkout.product_code)
-  const srp = StringHelper.toPesoCurrency(checkout.srp)
+  const name = truncate(checkout.name)
+  const code = truncate(checkout.product_code)
+  const srp = toPeso(checkout.srp)
   const category = ProductCategory.toCategory(checkout.category_id)
-  const total = StringHelper.toPesoCurrency(checkout.srp * checkout.quantity)
-  const quantity = StringHelper.toPcs(checkout.quantity)
+  const total = toPeso(checkout.srp * checkout.quantity)
+  const quantity = toPcs(checkout.quantity)
   
   return (
     <li className={`checkout-list-item ${isControlsDisabled ? "" : "d-flex flex-row justify-content-between gap-2"} border rounded ${isOdd ? "is-odd" : "is-even" } p-2`}>
@@ -69,7 +69,7 @@ function EmptyItem() {
   return (
     <li className="w-100 h-100 d-flex justify-content-center align-items-center text-center p-2">
       <div>
-        <h6 className="text-body-primary mb-0">Checkouts are empty.</h6>
+        <h6 className="text-body-primary mb-0">Checkouts are empty</h6>
         <p className="text-body-secondary fs-7">Press <em>&apos;checkout&apos;</em> to some products.</p>
       </div>
     </li>

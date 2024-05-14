@@ -119,9 +119,3 @@ export const paymentMethods = [1, 2]
 export const rowsPerPages = [15, 50, 100]
 export const orderStatuses = ["pending", "approved", "rejected"]
 export const productCategories = [1, 2, 3, 4, 5, 6, 7, 8]
-export const buildSq = () => {
-  return {
-    per_page: first(rowsPerPages),
-    page: 1
-  }
-}

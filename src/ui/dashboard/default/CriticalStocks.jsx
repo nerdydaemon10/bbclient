@@ -2,8 +2,8 @@ import { isNil } from "lodash"
 import { useFetchCriticalProductsQuery } from "../../../data/services/products.js"
 import { Table } from "../../common/Table.jsx"
 import { Button } from "../../common/index.jsx"
-import StringHelper from "../../../util/helpers/StringHelper.js"
 import ProductCategory from "../../../util/classes/ProductCategory.js"
+import { toStocks } from "../../../util/helper.js"
 
 function CriticalStocks() {
   const { isLoading, isFetching, data, error } = useFetchCriticalProductsQuery()
@@ -13,7 +13,7 @@ function CriticalStocks() {
       accessor: "quantity",
       type: "integer",
       sortable: true,
-      render: (item) => <span>{StringHelper.toStocks(item.quantity)}</span>
+      render: (item) => <span>{toStocks(item.quantity)}</span>
     },
     {
       name: "Code",
@@ -42,11 +42,7 @@ function CriticalStocks() {
           {ProductCategory.toCategory(item.category_id)}
         </span>
       )
-    },
-    {
-      name: "Action",
-      render: (item) => <Button className="btn btn-sm">Restock</Button>
-    },
+    }
   ]
   
   return (

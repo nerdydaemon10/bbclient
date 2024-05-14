@@ -1,17 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
-import DateHelper from "../../../util/helpers/DateHelper.js"
-import StringHelper from "../../../util/helpers/StringHelper.js"
 import { DELAY_MILLIS } from "../../../util/Config.jsx"
-import { noSearchResults } from "../../../util/helper.jsx"
+import { toDate, toPcs, toPeso } from "../../../util/helper.js"
 import { Button, TableHeaders, TablePagination, TableStatus } from "../../common"
 import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
 import PaymentMethod from "../../../util/classes/PaymentMethod.js"
 import { BiBlock, BiCheck } from "react-icons/bi"
 import OrderStatus from "../../../util/classes/OrderStatus.js"
 import { nextPage, openModal, previousPage, setOrder, setSq } from "../../redux/ordersSlice.js"
-import { debounce, delay, isEmpty, isNil, size } from "lodash"
+import { debounce, delay, isEmpty, isNil, size, truncate } from "lodash"
 import ModalType from "../../../util/classes/ModalType.js"
 import { Fragment, useCallback, useEffect, useState } from "react"
 import { useFetchOrdersQuery } from "../../../data/services/orders.js"
@@ -115,11 +113,6 @@ function TableContent({sq, data, error, isFetching}) {
                 colSpan={colSpan} 
                 message={GenericMessage.ORDERS_ERROR} 
               />
-            ) : noSearchResults(sq, data) ? (
-              <TableStatus 
-                colSpan={colSpan} 
-                message={GenericMessage.ORDERS_NO_MATCH} 
-              />
             ) : isEmpty(data) ? (
               <TableStatus 
                 colSpan={colSpan} 
@@ -141,14 +134,14 @@ function TableContent({sq, data, error, isFetching}) {
 }
 
 function TableItem({item, onApprove, onReject}) {
-  const ref = StringHelper.truncate(item.reference_number)
-  const customer = StringHelper.truncate(item.customer.full_name)
-  const amountDue = StringHelper.toPesoCurrency(item.amount_due)
-  const totalItems = StringHelper.toPcs(item.number_of_items)
+  const ref = truncate(item.reference_number)
+  const customer = truncate(item.customer.full_name)
+  const amountDue = toPeso(item.amount_due)
+  const totalItems = toPcs(item.number_of_items)
   const status = OrderStatus.toObject(item.status)
   const paymentMethod = PaymentMethod.toMethod(item.payment_method)
-  const salesperson = StringHelper.truncate(item.employee.full_name)
-  const dateCreated = DateHelper.toIsoStandard(item.created_at)
+  const salesperson = truncate(item.employee.full_name)
+  const dateCreated = toDate(item.created_at)
 
   return (
     <tr>

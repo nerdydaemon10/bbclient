@@ -13,9 +13,9 @@ import { Button, Flex, LinkButton } from "../index"
 import DashboardNavbar from "./DashboardNavbar.jsx"
 import { currentRoute } from "./util.js"
 import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
-import StringHelper from "../../../util/helpers/StringHelper.js"
 import { isNil, truncate } from "lodash"
 import { useLogoutMutation } from "../../../data/services/auth.js"
+import { toCount } from "../../../util/helper.js"
 
 function Dashboard({routesData, children}) {
 	return (
@@ -146,7 +146,7 @@ function Badge({data, routeData, isPending, isSelected}) {
 					"Empty"
 				) : isNil(data[key]) ? (
 					"Empty"
-				) : StringHelper.toCount(data[key])
+				) : toCount(data[key])
 			}
 		</span>
 	)

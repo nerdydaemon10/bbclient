@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
-import DateHelper from "../../../util/helpers/DateHelper.js"
-import StringHelper from "../../../util/helpers/StringHelper.js"
 import { DELAY_MILLIS, orderStatuses } from "../../../util/Config.jsx"
-import { noSearchResults } from "../../../util/helper.jsx"
+import { toDateTime, toPcs, toPeso, truncate } from "../../../util/helper.js"
 import { SelectInput, TableHeaders, TablePagination, TableStatus } from "../../common"
 import { Fragment, useCallback, useEffect, useState } from "react"
 import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
@@ -112,11 +110,6 @@ function TableContent({sq, data, error, isFetching}) {
                 colSpan={colSpan} 
                 message={GenericMessage.ORDERS_ERROR} 
               />
-            ) : noSearchResults(sq, data) ? (
-              <TableStatus 
-                colSpan={colSpan} 
-                message={GenericMessage.ORDERS_NO_MATCH} 
-              />
             ) : isEmpty(data) ? (
               <TableStatus 
                 colSpan={colSpan} 
@@ -132,14 +125,14 @@ function TableContent({sq, data, error, isFetching}) {
   )
 }
 function TableItem({item}) {
-  const ref = StringHelper.truncate(item.reference_number)
-  const customer = StringHelper.truncate(item.customer.full_name)
-  const amountDue = StringHelper.toPesoCurrency(item.amount_due)
-  const totalItems = StringHelper.toPcs(item.number_of_items)
+  const ref = truncate(item.reference_number)
+  const customer = truncate(item.customer.full_name)
+  const amountDue = toPeso(item.amount_due)
+  const totalItems = toPcs(item.number_of_items)
   const status = OrderStatus.toObject(item.status)
   const paymentMethod = PaymentMethod.toMethod(item.payment_method)
-  const salesperson = StringHelper.truncate(item.employee.full_name)
-  const dateCreated = DateHelper.toIsoStandard(item.created_at)
+  const salesperson = truncate(item.employee.full_name)
+  const dateCreated = toDateTime(item.created_at)
 
   return (
     <tr>

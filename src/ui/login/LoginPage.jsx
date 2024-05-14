@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom"
 
 import { TextFieldInput, PasswordFieldInput, Button } from "../common"
 import { isEmpty } from "lodash"
-import InputHelper from "../../util/helpers/InputHelper.js"
 import { useLoginMutation } from "../../data/services/auth.js"
+import { getError, getErrorByName } from "../../util/helper.js"
 
 function LoginPage() {
   const [login, { isLoading, isSuccess, data, error }] = useLoginMutation()
@@ -49,7 +49,7 @@ function LoginPage() {
             placeholder="Username"
             value={credentials.username}
             onChange={handleChange}
-            feedback={InputHelper.getErrorByName(error, "username")}
+            feedback={getErrorByName(error, "username")}
             ref={usernameRef}
           />
           <PasswordFieldInput
@@ -58,7 +58,7 @@ function LoginPage() {
             placeholder="Password"
             value={credentials.password}
             onChange={handleChange}
-            feedback={InputHelper.getErrorByName(error, "password")}
+            feedback={getErrorByName(error, "password")}
           />
           <Button
             isLoading={isLoading}
@@ -77,7 +77,7 @@ function LoginPage() {
 }
 
 function ErrorAlert({error}) {
-  const message = InputHelper.getErrorByMessage(error)
+  const message = getError(error)
 
   return (
     !isEmpty(message) && (

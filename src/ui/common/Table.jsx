@@ -1,20 +1,11 @@
-import { isEmpty, isNil, orderBy, size, sortBy, truncate } from "lodash"
+import { isEmpty, isNil, orderBy, size } from "lodash"
 import { rowsPerPages } from "../../util/Config.jsx"
 import Button from "./buttons/Button.jsx"
 import SelectInput from "./inputs/SelectInput.jsx"
-import { BiSort, BiSortAZ, BiSortZA } from "react-icons/bi"
+import { BiSortAZ, BiSortZA } from "react-icons/bi"
 import moment from "moment"
 import { useEffect, useState } from "react"
-
-/*columns = [
-  {
-    name: "Full Name",
-    accessor: "full_name",
-    type: "string",
-    sortable: true,
-    render: (item) => {}
-  }
-]*/
+import { truncate } from "../../util/helper.js"
 
 export function Table({name, columns, data, error, sq, isFetching}) {
   const colSpan = size(columns)
@@ -39,6 +30,7 @@ export function Table({name, columns, data, error, sq, isFetching}) {
       return moment(item[col.accessor]).format("X")
     if (col.type == "datetime")
       return moment(item[col.accessor]).format("X")
+    
     return item[col.accessor]
   }
 
@@ -73,12 +65,10 @@ export function Table({name, columns, data, error, sq, isFetching}) {
     if (isNil(col.type))
       return item[col.accessor]
     if (col.type == "string")
-      return truncate(item[col.accessor], { length: 24 })
+      return truncate(item[col.accessor])
     if (col.type == "date")
-      //return moment(item[col.accessor]).format("YYYY-MM-DD")
       return moment(item[col.accessor]).format("MMM, DD YYYY")
     if (col.type == "datetime")
-      //return moment(item[col.accessor]).format("YYYY-MM-DD, h:mm:ss a")
       return moment(item[col.accessor]).format("MMM, DD YYYY, h:mm a")
     return item[col.accessor]
   }

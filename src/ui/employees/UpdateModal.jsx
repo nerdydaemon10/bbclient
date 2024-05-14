@@ -7,7 +7,7 @@ import ModalType from "../../util/classes/ModalType.js"
 import GenericMessage from "../../util/classes/GenericMessage.js"
 import { closeModal, setEmployee } from "../redux/employeesSlice.js"
 import { useUpdateEmployeeMutation } from "../../data/services/employees.js"
-import InputHelper from "../../util/helpers/InputHelper.js"
+import { getErrorByName } from "../../util/helper"
 
 function UpdateModal() {
   const dispatch = useDispatch()
@@ -50,7 +50,7 @@ function UpdateModal() {
           name="full_name"
           value={employee.full_name}
           onChange={handleChange}
-          feedback={InputHelper.getErrorByName(error, "full_name")}
+          feedback={getErrorByName(error, "full_name")}
         />
         <TextFieldInput 
           label="Username"
@@ -58,7 +58,7 @@ function UpdateModal() {
           name="username"
           value={employee.username}
           onChange={handleChange}
-          feedback={InputHelper.getErrorByName(error, "userna")}
+          feedback={getErrorByName(error, "userna")}
         />
         <PasswordFieldInput 
           label="Password"
@@ -66,7 +66,7 @@ function UpdateModal() {
           name="password"
           value={employee.password}
           onChange={handleChange}
-          feedback={InputHelper.getErrorByName(error, "password")}
+          feedback={getErrorByName(error, "password")}
         />
       </div>
     </Modal>

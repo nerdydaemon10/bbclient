@@ -7,7 +7,7 @@ import { useCreateEmployeeMutation } from "../../data/services/employees.js"
 import { Modal, PasswordFieldInput, TextFieldInput } from "../common"
 import { ModalType, GenericMessage } from "../../util/classes"
 import { closeModal } from "../redux/employeesSlice.js"
-import { InputHelper } from "../../util/helpers"
+import { getErrorByName } from "../../util/helper.js"  
 import { EmployeeParam } from "../../util/params.js"
 
 function CreateModal() {
@@ -53,7 +53,7 @@ function CreateModal() {
           placeholder="e.g., Juan Dela Cruz"
           value={employee.full_name}
           onChange={handleChange}
-          feedback={InputHelper.getErrorByName(error, "full_name")}
+          feedback={getErrorByName(error, "full_name")}
         />
         <TextFieldInput 
           label="Username"
@@ -61,7 +61,7 @@ function CreateModal() {
           placeholder="e.g., @juan10"
           value={employee.username}
           onChange={handleChange}
-          feedback={InputHelper.getErrorByName(error, "username")}
+          feedback={getErrorByName(error, "username")}
         />
         <PasswordFieldInput 
           label="Password"
@@ -69,7 +69,7 @@ function CreateModal() {
           placeholder="Input password..."
           value={employee.password}
           onChange={handleChange}
-          feedback={InputHelper.getErrorByName(error, "password")}
+          feedback={getErrorByName(error, "password")}
         />
       </div>
     </Modal>

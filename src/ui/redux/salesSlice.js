@@ -1,7 +1,7 @@
 import { createSelector, createSlice, isAnyOf } from "@reduxjs/toolkit"
 import { rowsPerPages } from "../../util/Config.jsx"
 import { first, isEmpty, isNil } from "lodash"
-import { computeSum, isEntitySelected } from "../../util/helper.jsx"
+import { computeCheckouts, isEntitySelected } from "../../util/helper.js"
 import { sales } from "../../data/services/sales.js"
 import moment from "moment"
 import { employees } from "../../data/services/employees.js"
@@ -87,7 +87,7 @@ export const selectTotalCommission = createSelector([selectSales], (sales) => {
 })
 export const selectTotalSales = createSelector([selectSales], (sales) => {
   if (isEmpty(sales)) return 0.00
-  return sales.reduce((accum, sale) => accum + computeSum(sale.checkouts), 0.00)
+  return sales.reduce((accum, sale) => accum + computeCheckouts(sale.checkouts), 0.00)
 })
 
 export const {

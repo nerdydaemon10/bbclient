@@ -78,7 +78,7 @@ function SalesChart() {
     <div className="card">
       <div className="card-header d-flex justify-content-between align-items-center">
         <h6 className="card-title fs-7 mb-0">
-          Critical Stocks
+          Total Sales
         </h6>
         <OptionInput 
           name="interval" 

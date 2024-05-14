@@ -8,7 +8,7 @@ import ModalType from "../../util/classes/ModalType.js"
 import GenericMessage from "../../util/classes/GenericMessage.js"
 import ProductCategory from "../../util/classes/ProductCategory.js"
 import { useUpdateProductMutation } from "../../data/services/products.js"
-import InputHelper from "../../util/helpers/InputHelper.js"
+import { getErrorByName } from "../../util/helper"
 
 function UpdateModal() {
   const dispatch = useDispatch()
@@ -49,7 +49,7 @@ function UpdateModal() {
             label="Name"
             name="name"
             placeholder="e.g., Coffee Power"
-            feedback={InputHelper.getErrorByName(error, "name")}
+            feedback={getErrorByName(error, "name")}
             value={product.name}
             onChange={handleChange}
           />
@@ -59,7 +59,7 @@ function UpdateModal() {
             label="Description"
             name="description"
             placeholder="e.g., 100 grams, with free spoon"
-            feedback={InputHelper.getErrorByName(error, "description")}
+            feedback={getErrorByName(error, "description")}
             value={product.description}
             onChange={handleChange}
           />
@@ -71,7 +71,7 @@ function UpdateModal() {
             label="Category"
             name="category_id"
             options={productCategories}
-            feedback={InputHelper.getErrorByName(error, "category_id", "category")}
+            feedback={getErrorByName(error, "category_id", "category")}
             value={product.category_id}
             onChange={handleChange}
             onRender={(option) => ProductCategory.toCategory(option)}
@@ -82,7 +82,7 @@ function UpdateModal() {
             label="Quantity"
             name="quantity"
             placeholder="e.g., 75"
-            feedback={InputHelper.getErrorByName(error, "quantity")}
+            feedback={getErrorByName(error, "quantity")}
             value={product.quantity}
             onChange={handleChange}
           />
@@ -94,7 +94,7 @@ function UpdateModal() {
             label="SRP"
             name="srp"
             placeholder="e.g., 80.00"
-            feedback={InputHelper.getErrorByName(error, "srp")}
+            feedback={getErrorByName(error, "srp")}
             value={product.srp}
             onChange={handleChange}
           />
@@ -104,7 +104,7 @@ function UpdateModal() {
             label="Member Price"
             name="member_price"
             placeholder="e.g., 90.00"
-            feedback={InputHelper.getErrorByName(error, "member_price")}
+            feedback={getErrorByName(error, "member_price")}
             value={product.member_price}
             onChange={handleChange}
           />

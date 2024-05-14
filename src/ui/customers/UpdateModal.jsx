@@ -7,7 +7,7 @@ import { closeModal, setCustomer } from "../redux/customersSlice.js"
 import ModalType from "../../util/classes/ModalType.js"
 import GenericMessage from "../../util/classes/GenericMessage.js"
 import { useUpdateCustomerMutation } from "../../data/services/customers.js"
-import InputHelper from "../../util/helpers/InputHelper.js"
+import { getErrorByName } from "../../util/helper.js"
 
 function UpdateModal() {
   const dispatch = useDispatch()
@@ -49,7 +49,7 @@ function UpdateModal() {
             label="Full Name"
             name="full_name"
             placeholder="e.g., Juan Dela Cruz"
-            feedback={InputHelper.getErrorByName(error, "full_name")}
+            feedback={getErrorByName(error, "full_name")}
             value={customer.full_name}
             onChange={handleChange}
           />
@@ -59,7 +59,7 @@ function UpdateModal() {
             label="Address"
             name="address"
             placeholder="e.g., Brgy. 143, Quezon City"
-            feedback={InputHelper.getErrorByName(error, "address")}
+            feedback={getErrorByName(error, "address")}
             value={customer.address}
             onChange={handleChange}
           />
@@ -71,7 +71,7 @@ function UpdateModal() {
             label="Phone Number"
             name="phone_number"
             placeholder="e.g., 0945665634943"
-            feedback={InputHelper.getErrorByName(error, "phone_number")}
+            feedback={getErrorByName(error, "phone_number")}
             value={customer.phone_number}
             onChange={handleChange}
           />
@@ -81,7 +81,7 @@ function UpdateModal() {
             label="Email Address"
             name="email_address"
             placeholder="e.g., juandelacruz@gmail.com"
-            feedback={InputHelper.getErrorByName(error, "email_address")}
+            feedback={getErrorByName(error, "email_address")}
             value={customer.email_address}
             onChange={handleChange}
           />

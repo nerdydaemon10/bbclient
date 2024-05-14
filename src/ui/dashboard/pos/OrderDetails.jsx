@@ -9,8 +9,7 @@ import { enqueueSnackbar } from "notistack"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { PosContext } from "./PosProvider.jsx"
 import { DELAY_MILLIS } from "../../../util/Config.jsx"
-import { computeSum } from "../../../util/helper.jsx"
-import StringHelper from "../../../util/helpers/StringHelper.js"
+import { computeSum, toPeso } from "../../../util/helper.js"
 
 function OrderDetails() {
   const dispatch = useDispatch()
@@ -95,7 +94,7 @@ function TabContainer({tab, checkouts, customer}) {
               onIncrement={handleIncrement}
             />
             <ReceiptList
-              receipts={[{name: "Total", value: StringHelper.toPesoCurrency(computeSum(checkouts))}]
+              receipts={[{name: "Total", value: toPeso(computeSum(checkouts))}]
             } />
           </>
         ) : tab === "is-customer" ? (

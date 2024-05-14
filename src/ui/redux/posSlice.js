@@ -1,121 +1,110 @@
 import { first } from "lodash"
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { produce } from "immer"
+import { createSlice, isAnyOf } from "@reduxjs/toolkit"
 
-import { Tabs } from "../dashboard/pos/Util.jsx"
-import { OrderService } from "../../data/services"
+import { TabsData } from "../dashboard/pos/Util.jsx"
+import { TableType } from "../../util/classes"
 import { PaymentMethodsData, rowsPerPages } from "../../util/Config.jsx"
-import { TableType, FetchType } from "../../util/classes"
+import { compareEntity } from "../../util/helper.js"
+import orders from "../../data/services/orders.js"
 
-const createOrder = createAsyncThunk(
-  "pos/createOrder", 
-  async (order, thunkAPI) => {
-  try {
-    const response = await OrderService.create(order)
-    return response
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data)
-  }
-})
+const checkoutsTab = first(TabsData).value
 
-const buildCheckout = (product) => {
-  return {
-    id: product.id,
-    product_code: product.product_code,
-    category_id: product.category_id,
-    name: product.name,
-    description: product.description,
-    srp: product.srp,
-    member_price: product.member_price,
-    stocks: product.quantity, 
-    quantity: 1
-  }
-}
-
-const defaultState = {
-  products: {
-    searchQuery: {
-      name: "", 
-      category_id: "",
-      per_page: rowsPerPages[0].id, 
-      page: 1
-    },
-    fetchResponse: {
-      isLoading: true,
-      data: [], 
-      meta: { current_page: 0, last_page: 0 },
-      error: null
-    }
+const initialState = {
+  productsSq: {
+    search: "",
+    category_id: "",
+    per_page: first(rowsPerPages), 
+    page: 1,
   },
-  customers: {
-    searchQuery: {
-      full_name: "", 
-      category_id: "", 
-      per_page: rowsPerPages[0].id, 
-      page: 1
-    },
-    fetchResponse: {
-      isLoading: true, 
-      data: [], 
-      meta: { current_page: 0, last_page: 0 },
-      error: null
-    }
-  },
-  createOrderResponse: {
-    isLoading: false, 
-    isSuccess: false, 
-    data: null, 
-    error: null 
+  customersSq: {
+    search: "",
+    per_page: first(rowsPerPages), 
+    page: 1,
   },
   paymentMethod: first(PaymentMethodsData).value,
   customer: null,
   table: TableType.PRODUCTS,
-  tab: first(Tabs).value,
+  tab: checkoutsTab,
   checkouts: []
 }
-
-const initialState = { ...defaultState }
 
 const posSlice = createSlice({
   name: "pos",
   initialState,
   reducers: {
-    resetStates: (state) => {
-      state.checkouts = [],
-      state.customer = null,
-      state.createOrderResponse = { ...defaultState.createOrderResponse }
-    },
-    setSearchQuery: (state, action) => {
-      if (state.table == TableType.PRODUCTS) {
-        state.products.searchQuery = action.payload
-      } else {
-        state.customers.searchQuery = action.payload
-      }
-    },
-    setFetchResponse: (state, action) => {
-      const { type, ...fetchResponse } = action.payload
+    setSq: (state, action) => {
+      const e = action.payload.target
 
-      if (type == FetchType.PRODUCTS) {
-        state.products.fetchResponse = fetchResponse
+      if (state.table == TableType.PRODUCTS)
+        state.productsSq = produce(state.productsSq, draft => draft[e.name] = e.value)
+      if (state.table == TableType.CUSTOMERS)
+        state.customersSq = produce(state.customersSq, draft => draft[e.name] = e.value)
+    },
+    previousPage: (state,) => {
+      if (state.table == TableType.PRODUCTS) {
+        state.productsSq = produce(state.productsSq, draft => { 
+          draft.page = draft.page > 1 ? draft.page - 1  : 1 
+        })
       }
-      if (type == FetchType.CUSTOMERS) {
-        state.customers.fetchResponse = fetchResponse
+      if (state.table == TableType.CUSTOMERS) {
+        state.customersSq = produce(state.customersSq, draft => { 
+          draft.page = draft.page > 1 ? draft.page - 1  : 1 
+        })
       }
     },
-    addToCheckout: (state, action) => {
-      state.checkouts.push(buildCheckout(action.payload))
+    nextPage: (state, action) => {
+      const meta = action.payload
+
+      if (state.table == TableType.PRODUCTS) {
+        state.productsSq = produce(state.productsSq, draft => {
+          draft.page = draft.page < meta.last_page ? draft.page + 1 : meta.last_page 
+        })
+      }
+      if (state.table == TableType.CUSTOMERS) {
+        state.customersSq = produce(state.customersSq, draft => { 
+          draft.page = draft.page < meta.last_page ? draft.page + 1 : meta.last_page 
+        })
+      }
+    },
+    checkout: (state, action) => {
+      const product = action.payload
+      const checkoutsTab = first(TabsData).value
+
+      if (state.tab != checkoutsTab) state.tab = checkoutsTab
+
+      state.checkouts = produce(state.checkouts, draft => {
+        draft.push({
+          id: product.id,
+          product_code: product.product_code,
+          category_id: product.category_id,
+          name: product.name,
+          description: product.description,
+          srp: product.srp,
+          member_price: product.member_price,
+          stocks: product.quantity, 
+          quantity: 1
+        })
+      })
     },
     decrementQty: (state, action) => {
+      const id = action.payload
+
       state.checkouts = state.checkouts.map(checkout => {
-        if (checkout.id != action.payload) return checkout
-        if (checkout.quantity > 0) checkout.quantity = checkout.quantity - 1
-        return checkout
+        if (checkout.id != id) return checkout
+        if (checkout.quantity == 0) return checkout
+
+        return produce(checkout, draft => { draft.quantity -= 1 })
       }).filter(checkout => checkout.quantity > 0)
     },
     incrementQty: (state, action) => {
+      const id = action.payload 
+
       state.checkouts = state.checkouts.map(checkout => {
-        if (checkout.id != action.payload) return checkout
-        if (checkout.quantity < checkout.stocks) checkout.quantity = checkout.quantity + 1
-        return checkout
+        if (checkout.id != id) return checkout
+        if (checkout.quantity >= checkout.stocks) return checkout
+
+        return produce(checkout, draft => { draft.quantity += 1 })
       })
     },
     toggleTable: (state) => {
@@ -127,57 +116,46 @@ const posSlice = createSlice({
       state.tab = action.payload
     },
     setCustomer: (state, action) => {
-      state.customer = action.payload
-    },
-    unsetCustomer: (state) => {
-      state.customer = null
+      if (compareEntity(state.customer, action.payload))
+        state.customer = null
+      else
+        state.customer = action.payload
     },
     setPaymentMethod: (state, action) => {
       state.paymentMethod = action.payload
     }
   },
-  extraReducers: (builder) => {
-    builder
-    // create
-    .addCase(createOrder.pending, (state) => {
-      state.createOrderResponse = {
-        isLoading: true,
-        isSuccess: false,
-        data: null,
-        error: null
-      }
-    })
-    .addCase(createOrder.fulfilled, (state, action) => {
-      state.createOrderResponse = {
-        isLoading: false,
-        isSuccess: true,
-        data: action.payload,
-        error: null
-      }
-    })
-    .addCase(createOrder.rejected, (state, action) => {
-      state.createOrderResponse = {
-        isLoading: false,
-        isSuccess: false,
-        data: null,
-        error: action.payload
-      }
+  extraReducers: (builder) => { 
+    builder.addMatcher(
+      isAnyOf(orders.endpoints.createOrder.matchFulfilled), (state) => {
+      state.checkouts = []
+      state.customer = null
+      state.paymentMethod = first(PaymentMethodsData).value
+
+      if (state.tab != checkoutsTab) 
+        state.tab = checkoutsTab
+      if (state.table != TableType.PRODUCTS) 
+        state.table = TableType.PRODUCTS
     })
   }
 })
 
+export const selectSq = (state) => {
+  return state.table == TableType.PRODUCTS 
+    ? state.productsSq 
+    : state.customersSq
+}
+
 export const {
-  setSearchQuery,
-  setFetchResponse,
-  addToCheckout,
+  setSq,
+  previousPage,
+  nextPage,
+  checkout,
   incrementQty,
   decrementQty,
   toggleTable,
   setTab,
   setCustomer,
-  unsetCustomer,
-  setPaymentMethod,
-  resetStates
+  setPaymentMethod
 } = posSlice.actions
-export { createOrder }
 export default posSlice.reducer

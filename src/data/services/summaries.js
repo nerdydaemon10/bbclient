@@ -1,4 +1,4 @@
-import { params } from "../../util/helper.jsx"
+import { params } from "../../util/helper.js"
 import client from "./client.js"
 
 export const summaries = client.injectEndpoints({

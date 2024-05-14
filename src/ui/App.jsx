@@ -1,36 +1,15 @@
-import { isEmpty, isNil } from "lodash"
-import { Fragment, useEffect } from "react"
+import { isNil } from "lodash"
+import { Fragment } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 
 import LoginPage from "./login/LoginPage.jsx"
 import { Role } from "../util/classes"
 import { local } from "../util"
 import AdminPage from "./admin/AdminPage.jsx"
-import EmployeePage from "./employee/EmployeePage.jsx"
-import store from "./redux/store.js"
-import auth from "../data/services/auth.js"
+import EmployeePage from "./employee/EmployeePage.jsx"	
 
 function App() {
-	//local.clear()
-	const user = local.get("user")
-
-	return (
-		<Routes>
-			<Route path="/" element={
-				isNil(user) 
-					? <LoginPage />
-					: <Navigate to={`/${user.role}`} replace />
-			} />
-			<Route path="/admin/*" element={
-				!isNil(user)
-					? <AdminPage />
-					: <Navigate to="/" replace />
-			} />
-		</Routes>
-  )
-}
-function Apps() {
-	store.dispatch(auth.endpoints.verify.initiate())
+	//store.dispatch(auth.endpoints.verify.initiate())
 
 	return (
 		<Routes>

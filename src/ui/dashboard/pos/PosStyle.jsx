@@ -5,57 +5,47 @@ const PosStyle = createGlobalStyle`
   grid-template-columns: 1fr 1fr 320px;
   grid-template-rows: max-content max-content 1fr max-content;
   grid-template-areas: 
-    "title-container title-container title-container"
-    "filtering-container filtering-container tabs-container"
-    "table-container table-container tab-container"
-    "pagination-container pagination-container place-order-btn-container";
+    "title title title"
+    "table-filter table-filter tabs"
+    "table-data table-data tab"
+    "table-pagination table-pagination place-order-btn";
 }
 
-/*--TITLE-CONTAINER--*/
-.title-container {
-  grid-area: title-container;
+/*--TITLE--*/
+.title {
+  grid-area: title;
 }
-
-/* --FILTERING-CONTAINER-- */
-.filtering-container {
-  grid-area: filtering-container;
+/*--TABLE-FILTER--*/
+.table-filter { 
+  grid-area: table-filter;
 }
-.filtering-container.is-products-table {
-  display: flex;
-}
-.filtering-container.is-customers-table {
-  display: block;
-}
-
-/*--TABLE-CONTAINER--*/
-.table-container {
-  grid-area: table-container;
+/*--TABLE-DATA--*/
+.table-data {
+  grid-area: table-data;
   overflow: auto !important;
 }
-
-/*--PAGINATION-CONTAINER--*/
-.pagination-container {
-  grid-area: pagination-container;
+/*--TABLE-PAGINATION--*/
+.table-pagination {
+  grid-area: table-pagination;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-/* --TABS-CONTAINER-- */
-.tabs-container {
-  grid-area: tabs-container;
+/* --TABS-- */
+.tabs {
+  grid-area: tabs;
 }
-
-/* --TAB-CONTAINER-- */
-.tab-container {
-  grid-area: tab-container;
+/* --TAB-- */
+.tab {
+  grid-area: tab;
   display: grid;
   row-gap: 0;
   overflow: hidden;
 }
-
-/* --TAB-CONTAINER:IS-CHECKOUTS-- */
-.tab-container.is-checkouts {
+/* --TAB:IS-CHECKOUTS-- */
+.tab, 
+.tab.is-checkouts {
   grid-template-columns: 1fr;
   grid-template-rows: 1fr max-content;
   grid-template-areas: 
@@ -67,12 +57,12 @@ const PosStyle = createGlobalStyle`
   grid-area: checkout-list;
   overflow-y: auto;
 }
-/*--CHECKOUT-DETAILS--*/
+/*--RECEIPT-LIST--*/
 .receipt-list {
   grid-area: receipt-list;
 }
-/* --TAB-CONTAINER:IS-ORDER-INFO-- */
-.tab-container.is-customer {
+/* --TAB:IS-CUSTOMER-- */
+.tab.is-customer {
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   grid-template-areas: 
@@ -92,9 +82,9 @@ const PosStyle = createGlobalStyle`
   text-align: center;
 }
 
-/* --PLACE-ORDER-BTN-CONTAINER-- */
-.place-order-btn-container {
-  grid-area: place-order-btn-container;
+/* --PLACE-ORDER-BTN-- */
+.place-order-btn {
+  grid-area: place-order-btn;
 }
 `
 

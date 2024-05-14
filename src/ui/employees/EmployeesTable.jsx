@@ -4,10 +4,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { debounce, delay, isEmpty, isNil, size } from "lodash"
 
 import { Fallback, GenericMessage, ModalType, Role, User } from "../../util/classes"
-import { StringHelper, DateHelper } from "../../util/helpers"
 import { DELAY_MILLIS } from "../../util/Config.jsx"
 import { BiPlusCircle, BiSolidCheckCircle } from "react-icons/bi"
-import { isEntitySelected, noSearchResults } from "../../util/helper.jsx"
+import { isEntitySelected, toDateTime, truncate } from "../../util/helper.js"
 import { useFetchEmployeesQuery } from "../../data/services/employees.js"
 import { Button, TablePagination, TableStatus, SearchFieldInput, TableHeaders } from "../common"
 import { nextPage, openModal, previousPage, setEmployee, setSq } from "../redux/employeesSlice.js"
@@ -124,11 +123,6 @@ function TableContent({sq, data, error, isFetching}) {
                 colSpan={colSpan} 
                 message={GenericMessage.EMPLOYEES_ERROR} 
               />
-            ) : noSearchResults(sq, data) ? (
-              <TableStatus 
-                colSpan={colSpan} 
-                message={GenericMessage.EMPLOYEES_NO_MATCH} 
-              />
             ) : isEmpty(data) ? (
               <TableStatus 
                 colSpan={colSpan} 
@@ -150,13 +144,13 @@ function TableContent({sq, data, error, isFetching}) {
   )
 }
 function TableItem({item, isUser, onUpdate, onRemove}) {
-  const fullName = StringHelper.truncate(item.full_name)
-  const username = `@${StringHelper.truncate(item.username)}`
+  const fullName = truncate(item.full_name)
+  const username = `@${truncate(item.username)}`
   const role = Role.toRole(item.role_id)
   const isAdmin = Role.isAdmin(item.role_id)
   const status =  User.toObject(item.status)
-  const loggedIn = DateHelper.toDateTime(item.last_login_at)
-  const loggedOut = DateHelper.toDateTime(item.last_login_at)
+  const loggedIn = toDateTime(item.last_login_at)
+  const loggedOut = toDateTime(item.last_login_at)
   
   return (
     <tr>

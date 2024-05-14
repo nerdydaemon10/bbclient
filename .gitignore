@@ -28,14 +28,12 @@ README.md
 vite.config.jsx
 vite.config.js
 package.json
+package-lock.json
 
 .eslintrc.cjs
 #index.js
 
 # Custom
-# src/ui/common/checkoutlist
-# src/ui/common/buttons
-# src/ui/common/modal
-# src/ui/common/receipt
-# src/ui/common/TableUtils.jsx
-# src/ui/common/dashboard
+index.html
+Dockerfile
+docker.compose.yml
