@@ -16,7 +16,7 @@ const colSpan = size(columns)
 function SalesTable() {
   const dispatch = useDispatch()
   const { sq } = useSelector((state) => state.sales)
-  
+
   const { isLoading, isFetching, data, error } = useContext(SalesContext)
   const meta = Fallback.checkMeta(data)
 
