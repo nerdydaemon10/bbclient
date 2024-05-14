@@ -5,15 +5,15 @@ const PosStyle = createGlobalStyle`
   grid-template-columns: 1fr 1fr 320px;
   grid-template-rows: max-content max-content 1fr max-content;
   grid-template-areas: 
-    "title title title"
+    "title-section title-section title-section"
     "table-filter table-filter tabs"
     "table-data table-data tab"
     "table-pagination table-pagination place-order-btn";
 }
 
-/*--TITLE--*/
-.title {
-  grid-area: title;
+/*--TITLE-SECTION-*/
+.title-section {
+  grid-area: title-section;
 }
 /*--TABLE-FILTER--*/
 .table-filter { 
@@ -27,9 +27,6 @@ const PosStyle = createGlobalStyle`
 /*--TABLE-PAGINATION--*/
 .table-pagination {
   grid-area: table-pagination;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 /* --TABS-- */

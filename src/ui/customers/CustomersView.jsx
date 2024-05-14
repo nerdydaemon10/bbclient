@@ -5,12 +5,12 @@ import CreateModal from "./CreateModal.jsx"
 import CustomersTable from "./CustomersTable.jsx"
 import RemoveModal from "./RemoveModal.jsx"
 import UpdateModal from "./UpdateModal.jsx"
-import GlobalStyle from "./GlobalStyle.jsx"
+import CustomersStyle from "./CustomersStyle.jsx"
 
 function CustomersView() {
   return (
     <Fragment>
-      <GlobalStyle />
+      <CustomersStyle />
       <TitleSection />
       <CustomersTable />
       <CreateModal />

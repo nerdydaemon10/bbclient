@@ -1,6 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 
-const GlobalStyle = createGlobalStyle`
+const CustomersStyle = createGlobalStyle`
 .dashboard-main {
   grid-template-columns: 1fr;
   grid-template-rows: max-content max-content 1fr max-content;
@@ -11,15 +11,12 @@ const GlobalStyle = createGlobalStyle`
     "table-pagination";
 }
 /* --TITLE-SECTION- */
-.title-sction {
-  grid-area: title;
+.title-section {
+  grid-area: title-section;
 }
 /*--TABLE-FILTER--*/
 .table-filter {
   grid-area: table-filter;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 /*--TABLE-DATA-*/
 .table-data {
@@ -29,9 +26,6 @@ const GlobalStyle = createGlobalStyle`
 /* --TABLE-PAGINATION- */
 .table-pagination {
   grid-area: table-pagination;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }`
 
-export default GlobalStyle
+export default CustomersStyle

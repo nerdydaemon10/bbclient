@@ -1,19 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Fragment, useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { debounce, delay, isEmpty, isNil, size } from "lodash"
+import { debounce, delay, isNil } from "lodash"
 
-import { Fallback, GenericMessage, ModalType, Role, User } from "../../util/classes"
+import { Fallback, ModalType, Role } from "../../util/classes"
 import { DELAY_MILLIS } from "../../util/Config.jsx"
-import { BiPlusCircle, BiSolidCheckCircle } from "react-icons/bi"
-import { isEntitySelected, toDateTime, truncate } from "../../util/helper.js"
+import { BiPlusCircle } from "react-icons/bi"
 import { useFetchEmployeesQuery } from "../../data/services/employees.js"
-import { Button, TablePagination, TableStatus, SearchFieldInput, TableHeaders } from "../common"
+import { Button, TablePagination, SearchFieldInput } from "../common"
 import { nextPage, openModal, previousPage, setEmployee, setSq } from "../redux/employeesSlice.js"
 import { local } from "../../util"
-
-const columns = ["Full Name", "Username", "Role", "Status", "Date/Logged In", "Date/Logged Out", "Action"]
-const colSpan = size(columns)
+import { Table } from "../common/Table.jsx"
+import { FullNameRenderer, StatusRenderer } from "./Util.jsx"
 
 function EmployeesTable() {
   const dispatch = useDispatch()
@@ -44,17 +42,17 @@ function EmployeesTable() {
   
   return (
     <Fragment>
-      <TableFiltering 
+      <TableFilter
         search={sq.search}
         onChange={handleChange}
       />
-      <TableContent
+      <TableData
         sq={sq}
         data={isNil(data) ? [] : data.data}
         error={error}
         isFetching={isLoading || isFetching}
       />
-      <TablePagination 
+      <TablePagination
         meta={meta}
         rowsPerPage={sq.per_page}
         isFetching={isLoading || isFetching}
@@ -65,7 +63,7 @@ function EmployeesTable() {
     </Fragment>
   )
 }
-function TableFiltering({search, onChange}) {
+function TableFilter({search, onChange}) {
   const dispatch = useDispatch()
   
   const handleClick = () => {
@@ -73,27 +71,21 @@ function TableFiltering({search, onChange}) {
   }
 
   return (
-    <div className="table-filtering">
-      <div className="row gx-2">
-        <div className="col-6">
-          <SearchFieldInput
-            placeholder="Search by Employee..."
-            name="search"
-            value={search}
-            onChange={onChange}
-          />
-        </div>
-        <div className="col-6">
-          <Button variant="light" onClick={handleClick}>
-            <BiPlusCircle className="me-1" />
-            Create Employee
-          </Button>
-        </div>
-      </div>
+    <div className="table-filter d-flex gap-2">
+      <SearchFieldInput
+        placeholder="Search by Employee..."
+        name="search"
+        value={search}
+        onChange={onChange}
+      />
+      <Button variant="light" onClick={handleClick}>
+        <BiPlusCircle className="me-1" />
+        Create Employee
+      </Button>
     </div>
   )
 }
-function TableContent({sq, data, error, isFetching}) {
+function TableData({sq, data, error, isFetching}) {
   const dispatch = useDispatch()
 
   const user = local.get("user")
@@ -107,81 +99,80 @@ function TableContent({sq, data, error, isFetching}) {
     delay(() => dispatch(openModal(ModalType.REMOVE)), DELAY_MILLIS)
   }
 
-  return (
-    <div className="table-wrapper table-content">
-      <table className="table">
-        <TableHeaders columns={columns} />
-        <tbody>
-          {
-            isFetching ? (
-              <TableStatus 
-                colSpan={colSpan} 
-                message={GenericMessage.EMPLOYEES_FETCHING} 
-              />
-            ) : error ? (
-              <TableStatus 
-                colSpan={colSpan} 
-                message={GenericMessage.EMPLOYEES_ERROR} 
-              />
-            ) : isEmpty(data) ? (
-              <TableStatus 
-                colSpan={colSpan} 
-                message={GenericMessage.EMPLOYEES_EMPTY} 
-              />
-            ) : data.map((item, index) => (
-              <TableItem 
-                key={index} 
-                item={item}
-                isUser={isEntitySelected(item, user)}
-                onUpdate={() => handleUpdate(item)}
-                onRemove={() => handleRemove(item)}
-              />
-            ))
-          }
-        </tbody>
-      </table>
-    </div>
-  )
-}
-function TableItem({item, isUser, onUpdate, onRemove}) {
-  const fullName = truncate(item.full_name)
-  const username = `@${truncate(item.username)}`
-  const role = Role.toRole(item.role_id)
-  const isAdmin = Role.isAdmin(item.role_id)
-  const status =  User.toObject(item.status)
-  const loggedIn = toDateTime(item.last_login_at)
-  const loggedOut = toDateTime(item.last_login_at)
-  
-  return (
-    <tr>
-      <td>
-        {fullName}
-        {isUser && <span className="ms-1">(You)</span>}
-        {isAdmin && <span className="ms-1"><BiSolidCheckCircle /></span>}
-      </td>
-      <td>{username}</td>
-      <td>
+  const columns = [
+    {
+      name: "Full Name",
+      accessor: "full_name",
+      type:"string",
+      format: "string",
+      sortable: true,
+      render: (item) => <FullNameRenderer item={item} user={user} />
+    },
+    {
+      name: "Username",
+      accessor: "username",
+      type:"string",
+      sortable: true,
+      render: (item) => `@${item.username}`
+    },
+    {
+      name: "Role",
+      accessor: "role_id",
+      type:"string",
+      sortable: true,
+      render: (item) => (
         <span className="badge text-bg-light">
-          {role}
+          {Role.toRole(item.role_id)}
         </span>
-      </td>
-      <td>
-        <span className={`badge ${status.badge}`}>
-          <span className="me-1">{status.icon}</span>
-          {status.name}
-        </span>
-      </td>
-      <td>{loggedIn}</td>
-      <td>{loggedOut}</td>
-      <td className="hstack gap-1">
-        <Button size="sm" onClick={onUpdate}>
-          Update
-        </Button>
-        <Button variant="light" size="sm" isDisabled={isUser} onClick={onRemove}>
-          Remove
-        </Button>
-      </td>
-    </tr>
+      )
+    },
+    {
+      name: "Status",
+      accessor: "status",
+      type:"string",
+      sortable: true,
+      render: (item) => <StatusRenderer item={item} /> 
+    },
+    { 
+      name: "Date/Logged In",
+      accessor: "last_login_at",
+      type:"datetime",
+      format: "datetime",
+      sortable: true
+    },
+    {
+      name: "Date/Logged Out",
+      accessor: "last_login_at",
+      type:"datetime",
+      format: "datetime",
+      sortable: true
+    },
+    {
+      name: "Action",
+      render: (item) => (
+        <div className="hstack gap-1">
+          <Button variant="dark" size="sm" onClick={() => handleUpdate(item)}>
+            Update
+          </Button>
+          <Button variant="light" size="sm" onClick={() => handleRemove(item)}>
+            Remove
+          </Button>
+        </div>
+      )
+    },
+  ]
+
+  return (
+    <div className="table-wrapper table-data">
+      <Table
+        name="employees" 
+        columns={columns}
+        sq={sq}
+        data={data}
+        error={error}
+        isFetching={isFetching}
+      />
+    </div>
   )
 }
 

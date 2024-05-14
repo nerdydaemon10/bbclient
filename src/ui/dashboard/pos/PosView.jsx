@@ -13,7 +13,7 @@ function PosView() {
   return (
     <Fragment>
       <PosStyle />
-      <Title />
+      <TitleSection />
       <PosTable />
       <OrderSide />
     </Fragment>
@@ -23,18 +23,18 @@ function PosView() {
 
 function PosTable() {
   const { table } = useSelector((state) => state.pos)
-
+  
   if (table == TableType.PRODUCTS)
     return (<ProductsTable />)
 
   return (<CustomersTable />)
 }
 
-function Title() {
+function TitleSection() {
   const user = local.get("user")
   
   return (
-    <div className="title">
+    <div className="title-section">
       <h3 className="text-body-primary fw-bold mb-0">POS System</h3>
       <p className="text-body-secondary fw-normal mb-0">Hello {user.full_name}, Welcome Back!</p>
     </div>

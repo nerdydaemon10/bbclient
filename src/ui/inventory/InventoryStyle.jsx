@@ -2,33 +2,27 @@ import { createGlobalStyle } from "styled-components"
 
 const InventoryStyle = createGlobalStyle`
 .dashboard-main {
-    grid-template-columns: 1fr;
-    grid-template-rows: max-content max-content 1fr max-content;
-    grid-template-areas: 
-      "title-container"
-      "filtering-container"
-      "table-container"
-      "pagination-container";
+  grid-template-columns: 1fr;
+  grid-template-rows: max-content max-content 1fr max-content;
+  grid-template-areas: 
+    "title-section"
+    "table-filter"
+    "table-data"
+    "table-pagination";
 }
 
-.title-container {
-    grid-area: title-container;
+.title-section {
+  grid-area: title-section;
 }
-.filtering-container {
-    grid-area: filtering-container;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.table-filter {
+  grid-area: table-filter;
 }
-.table-container {
-    grid-area: table-container;
-    overflow: auto !important;
+.table-data {
+  grid-area: table-data;
+  overflow: auto !important;
 }
-.pagination-container {
-    grid-area: pagination-container;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.table-pagination {
+  grid-area: table-pagination;
 }`
 
 export default InventoryStyle

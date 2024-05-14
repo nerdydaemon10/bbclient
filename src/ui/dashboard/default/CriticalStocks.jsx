@@ -11,14 +11,14 @@ function CriticalStocks() {
     {
       name: "Stocks",
       accessor: "quantity",
-      type: "integer",
+      type: "number",
       sortable: true,
       render: (item) => <span>{toStocks(item.quantity)}</span>
     },
     {
       name: "Code",
       accessor: "product_code",
-      type: "integer",
+      type: "number",
       sortable: true
     },
     {

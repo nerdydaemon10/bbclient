@@ -19,7 +19,6 @@ function EmployeesView() {
     </Fragment>
   )
 }
-
 function TitleSection() {
   return (
     <div className="title-section">

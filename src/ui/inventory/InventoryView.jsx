@@ -9,7 +9,7 @@ function InventoryView() {
   return (
     <Fragment>
       <InventoryStyle />
-      <TitleContainer />
+      <TitleSection />
       <ProductsTable />
       <CreateModal />
       <UpdateModal />
@@ -18,9 +18,9 @@ function InventoryView() {
   )
 }
 
-function TitleContainer() {
+function TitleSection() {
   return (
-    <div className="title-container">
+    <div className="title-section">
       <h3 className="text-body-primary fw-bold mb-0">Inventory</h3>
       <p className="text-body-secondary mb-0">View list of products in inventory</p>
     </div>

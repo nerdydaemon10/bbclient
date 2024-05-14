@@ -2,7 +2,7 @@ import { isEmpty } from "lodash"
 import moment from "moment"
 
 // String
-export const truncate = (string, max=24) => {
+export const truncate = (string, max=30) => {
   if (!string) {
     return ""
   }
@@ -30,7 +30,7 @@ export const toStocks = (arg) => {
   if (number == 1) return `${number} stock`
   if (number > 1) return `${number} stocks`
 
-  return "Empty Stocks"
+  return "No Stocks"
 }
 export const toPcs = (integer) => {
   const number = Number(integer)
@@ -74,11 +74,11 @@ export const getErrorByName = (error, key, alter=null) => {
 // Date
 export const toDate = (dateString) => {
   if (isEmpty(dateString)) return "N/A"
-  return moment(dateString).format("YYYY-MM-DD")
+  return moment(dateString).format("MMM, DD YYYY")
 }
 export const toDateTime = (dateString) => {
   if (isEmpty(dateString)) return "N/A"
-  return moment(dateString).format("YYYY-MM-DD, h:mm:ss a")
+  return moment(dateString).format("MMM, DD YYYY, h:mm a")
 }
 
 // Object

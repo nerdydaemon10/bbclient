@@ -18,7 +18,7 @@ function CustomersTable() {
   const { sq } = useSelector((state) => state.customers)
   const [sqtemp, setSqtemp] = useState(sq)
 
-  const { data, error, isLoading, isFetching } = useFetchCustomersQuery(sqtemp)
+  const { isLoading, isFetching, data, error } = useFetchCustomersQuery(sqtemp)
   const meta = Fallback.checkMeta(data)
 
   const debouncer = useCallback(debounce((sqtemp) => {
@@ -68,25 +68,19 @@ function TableFilter({search, onChange}) {
   const handleClick = () => {
     dispatch(openModal(ModalType.CREATE))
   }
-
+  
   return (
-    <div className="table-filter">
-      <div className="row gx-2">
-        <div className="col-6">
-          <SearchFieldInput
-            name="search"
-            value={search}
-            onChange={onChange}
-            placeholder="Search by Customer..."
-          />
-        </div>
-        <div className="col-6">
-          <Button variant="light" onClick={handleClick}>
-            <BiPlusCircle className="me-1" />
-            Create Customer
-          </Button>
-        </div>
-      </div>
+    <div className="table-filter d-flex gap-2">
+      <SearchFieldInput
+        name="search"
+        value={search}
+        onChange={onChange}
+        placeholder="Search by Customer..."
+      />
+      <Button variant="light" onClick={handleClick}>
+        <BiPlusCircle className="me-1" />
+        Create Customer
+      </Button>
     </div>
   )
 }
@@ -108,36 +102,42 @@ function TableData({sq, data, error, isFetching}) {
       name: "Full Name",
       accessor: "full_name",
       type:"string",
+      format: "string",
       sortable: true
     },
     {
       name: "Address",
       accessor: "address",
       type:"string",
+      format: "string",
       sortable: true
     },
     {
       name: "Phone Number",
       accessor: "phone_number",
       type:"string",
+      format: "string",
       sortable: true
     },
     {
       name: "Email Address",
       accessor: "email_address",
       type:"string",
+      format: "string",
       sortable: true
     },
     { 
       name: "Date Created",
       accessor: "created_at",
-      type:"date",
+      type:"datetime",
+      format: "datetime",
       sortable: true
     },
     {
       name: "Date Modified",
       accessor: "updated_at",
       type:"datetime",
+      format: "datetime",
       sortable: true
     },
     {

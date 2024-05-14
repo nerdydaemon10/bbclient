@@ -1,11 +1,11 @@
-import { isEmpty, isNil, orderBy, size } from "lodash"
+import { get, isEmpty, isNil, orderBy, size } from "lodash"
 import { rowsPerPages } from "../../util/Config.jsx"
 import Button from "./buttons/Button.jsx"
 import SelectInput from "./inputs/SelectInput.jsx"
 import { BiSortAZ, BiSortZA } from "react-icons/bi"
 import moment from "moment"
 import { useEffect, useState } from "react"
-import { truncate } from "../../util/helper.js"
+import { toCount, toDate, toDateTime, toPcs, toPeso, toStocks, truncate } from "../../util/helper.js"
 
 export function Table({name, columns, data, error, sq, isFetching}) {
   const colSpan = size(columns)
@@ -22,16 +22,15 @@ export function Table({name, columns, data, error, sq, isFetching}) {
   }
 
   const tranform = (item, col) => {
-    if (col.type == "integer")
-      return Number(item[col.accessor])
-    if (col.type == "string")
-      return item[col.accessor]
-    if (col.type == "date")
-      return moment(item[col.accessor]).format("X")
-    if (col.type == "datetime")
-      return moment(item[col.accessor]).format("X")
-    
-    return item[col.accessor]
+    const value = get(item, col.accessor)
+
+    if (isNil(col.type)) return value
+    if (col.type == "number") return Number(value)
+    if (col.type == "string") return value
+    if (col.type == "date") return moment(value).format("X")
+    if (col.type == "datetime") return moment(value).format("X")
+      
+    return value
   }
 
   const hasRenderer = (column) => {
@@ -60,17 +59,20 @@ export function Table({name, columns, data, error, sq, isFetching}) {
   useEffect(() => {
     setDt(data)
   }, [data])
-
+  
   const render = (item, col) => {
-    if (isNil(col.type))
-      return item[col.accessor]
-    if (col.type == "string")
-      return truncate(item[col.accessor])
-    if (col.type == "date")
-      return moment(item[col.accessor]).format("MMM, DD YYYY")
-    if (col.type == "datetime")
-      return moment(item[col.accessor]).format("MMM, DD YYYY, h:mm a")
-    return item[col.accessor]
+    const value = get(item, col.accessor)
+
+    if (isNil(col.format)) return value
+    if (col.format == "string") return truncate(value)
+    if (col.format == "stocks") return toStocks(value)
+    if (col.format == "pcs") return toPcs(value)
+    if (col.format == "count") return toCount(value)
+    if (col.format == "currency") return toPeso(value)
+    if (col.format == "date") return toDate(value)
+    if (col.format == "datetime") return toDateTime(value)
+
+    return value
   }
 
   return (
@@ -160,7 +162,7 @@ export function TablePagination({className, meta, rowsPerPage, isFetching, onCha
   const { current_page, last_page } = meta
   
   return (
-    <div className={`table-pagination-container d-flex align-items-center justify-content-between ${className}`}>
+    <div className={`table-pagination d-flex align-items-center justify-content-between ${className}`}>
       <div className="d-flex flex-row align-items-center gap-2">
         <label className="fw-medium fs-7 text-nowrap">Rows per page</label>
         <SelectInput

@@ -59,7 +59,7 @@ const salesSlice = createSlice({
     })
     builder.addMatcher(
       isAnyOf(sales.endpoints.downloadSales.matchFulfilled), (_, action) => {
-      console.log(action.payload)
+        
       const now = moment.now()
       const name = `SALES_REPORT_${now}.xlsx`
 

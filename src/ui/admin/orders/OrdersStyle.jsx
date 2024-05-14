@@ -5,37 +5,34 @@ const OrdersStyle = createGlobalStyle`
   grid-template-columns: 1fr;
   grid-template-rows: max-content max-content 1fr max-content;
   grid-template-areas: 
-    "title-container"
-    "filtering-container"
-    "table-container"
-    "pagination-container";
+    "title-section"
+    "table-filter"
+    "table-data"
+    "table-pagination";
 }
 
 /* --TITLE-CONTAINER-- */
-.title-container {
-  grid-area: title-container;
+.title-section {
+  grid-area: title-section;
 }
 
-/* --FILTERING-CONTAINER-- */
-.filtering-container {
-  grid-area: filtering-container;
+/* --TABLE-FILTER-- */
+.table-filter {
+  grid-area: table-filter;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 /* --TABLE-CONTAINER-- */
-.table-container {
-  grid-area: table-container;
+.table-data {
+  grid-area: table-data;
   overflow: auto !important;
 }
 
-/* --PAGINATION-CONTAINER-- */
-.pagination-container {
-  grid-area: pagination-container;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* --TABLE-PAGINATION-- */
+.table-pagination {
+  grid-area: table-pagination;
 }`
 
 export default OrdersStyle

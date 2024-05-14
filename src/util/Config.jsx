@@ -85,7 +85,7 @@ export const PaymentMethodsData = [
     value: 2
   }
 ]
-export const UserStatusesData = [
+export const StatusesData = [
   { key: "online", name: "Online", badge: "text-bg-dark", icon: <BiSolidCoffee /> },
   { key: "offline", name: "Offline", badge: "text-bg-light", icon: <BiCoffee /> },
 ]

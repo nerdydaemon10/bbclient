@@ -102,7 +102,7 @@ function TableItem({item, isSelected, onSelect}) {
   const salesperson = truncate(item.employee.full_name)
   const commission = toPeso(item.commission)
   const dateCreated = toDateTime(item.created_at)
-
+  
   return (
     <tr className={`${isSelected ? "is-selected" : ""}`}>
       <td>

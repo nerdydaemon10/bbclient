@@ -37,9 +37,9 @@ const posSlice = createSlice({
       const e = action.payload.target
 
       if (state.table == TableType.PRODUCTS)
-        state.productsSq = produce(state.productsSq, draft => draft[e.name] = e.value)
+        state.productsSq = produce(state.productsSq, draft => { draft[e.name] = e.value })
       if (state.table == TableType.CUSTOMERS)
-        state.customersSq = produce(state.customersSq, draft => draft[e.name] = e.value)
+        state.customersSq = produce(state.customersSq, draft => { draft[e.name] = e.value })
     },
     previousPage: (state,) => {
       if (state.table == TableType.PRODUCTS) {

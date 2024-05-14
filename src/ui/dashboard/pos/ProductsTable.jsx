@@ -10,7 +10,7 @@ import { debounce, isNil } from "lodash"
 import { useFetchProductsQuery } from "../../../data/services/products.js"
 import Fallback from "../../../util/classes/Fallback.js"
 import { Table } from "../../common/Table.jsx"
-import { toPeso } from "../../../util/helper.js"
+import { toPeso, toStocks } from "../../../util/helper.js"
 
 function ProductsTable() {
   const dispatch = useDispatch()
@@ -113,7 +113,7 @@ function TableData({sq, data, error, isFetching}) {
     {
       name: "Category",
       accessor: "category_id",
-      type: "integer",
+      type: "number",
       sortable: true,
       render: (item) => (
         <span className="badge text-bg-light">
@@ -124,8 +124,9 @@ function TableData({sq, data, error, isFetching}) {
     { 
       name: "Stocks",
       accessor: "quantity",
-      type: "integer",
-      sortable: true
+      type: "number",
+      sortable: true,
+      render: (item) => toStocks(item.quantity)
     },
     {
       name: "Price/SRP",
