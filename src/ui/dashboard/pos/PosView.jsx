@@ -8,6 +8,7 @@ import OrderSide from "./OrderSide.jsx"
 import TableType from "../../../util/classes/TableType.js"
 import CustomersTable from "./CustomersTable.jsx"
 import { useSelector } from "react-redux"
+import Fallback from "../../../util/classes/Fallback.js"
 
 function PosView() {
   return (
@@ -31,7 +32,7 @@ function PosTable() {
 }
 
 function TitleSection() {
-  const user = local.get("user")
+  const user = Fallback.checkUser(local.get("user"))
   
   return (
     <div className="title-section">

@@ -83,9 +83,11 @@ export const toDateTime = (dateString) => {
 
 // Object
 export const params = (sq) => {
-  const entries = isEmpty(sq) ? [] : Object.entries(sq)
+  const excludes = ["role"]
   
+  const entries = isEmpty(sq) ? [] : Object.entries(sq)
   const params = entries
+    .filter(([key, value]) => !excludes.includes(key))
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
 
   return params.join("&")

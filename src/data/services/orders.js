@@ -1,4 +1,4 @@
-import { isEmpty } from "lodash"
+import { isEmpty, isNil } from "lodash"
 import { params } from "../../util/helper.js"
 import client from "./client.js"
 
@@ -36,8 +36,8 @@ const orders = client.injectEndpoints({
       }
     }),
     fetchOrders: builder.query({
-      query: (sq, role="") => ({
-        url: isEmpty(role) ? `/orders` : `/${role}/orders`,
+      query: (sq) => ({
+        url: isEmpty(sq.role) ? "/orders" : `/${sq.role}/orders`,
         method: "GET",
         params: params(sq)
       }),

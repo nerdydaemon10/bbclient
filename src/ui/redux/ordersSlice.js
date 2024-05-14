@@ -3,9 +3,18 @@ import ModalType from "../../util/classes/ModalType.js"
 import { rowsPerPages } from "../../util/Config.jsx"
 import { first } from "lodash"
 import { OrderParam } from "../../util/params.js"
+import local from "../../util/local.js"
+import Fallback from "../../util/classes/Fallback.js"
+
+const user = Fallback.checkUser(local.get("user"))
 
 const initialState = {
-  sq: { search: "", status: "", per_page: first(rowsPerPages), page: 1 },
+  sq: { 
+    search: "", 
+    per_page: first(rowsPerPages), 
+    page: 1,
+    role: user.role
+  },
   order: OrderParam
 }
 

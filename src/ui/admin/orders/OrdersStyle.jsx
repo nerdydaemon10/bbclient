@@ -19,9 +19,6 @@ const OrdersStyle = createGlobalStyle`
 /* --TABLE-FILTER-- */
 .table-filter {
   grid-area: table-filter;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 /* --TABLE-CONTAINER-- */

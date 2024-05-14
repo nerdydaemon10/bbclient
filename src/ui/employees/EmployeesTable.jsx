@@ -88,7 +88,7 @@ function TableFilter({search, onChange}) {
 function TableData({sq, data, error, isFetching}) {
   const dispatch = useDispatch()
 
-  const user = local.get("user")
+  const user = Fallback.checkUser(local.get("user"))
 
   const handleUpdate = (employee) => {
     dispatch(setEmployee(employee))

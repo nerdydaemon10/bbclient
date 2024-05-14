@@ -9,9 +9,7 @@ import SalesView from "../sales/SalesView.jsx"
 import EmployeesView from "../employees/EmployeesView.jsx"
 import InventoryView from "../inventory/InventoryView.jsx"
 
-function AdminPage() {
-	//store.dispatch(employees.endpoints.fetchEmployees.initiate())
-
+function AdminPage() {	
 	return (
 		<Dashboard routesData={RoutesData}>
 			<Routes>

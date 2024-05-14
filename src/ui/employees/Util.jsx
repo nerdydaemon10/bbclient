@@ -5,7 +5,7 @@ import { compareEntity, truncate } from "../../util/helper.js"
 import Role from "../../util/classes/Role.js"
 import Status from "../../util/classes/Status.js"
 
-export function FullNameRenderer({item, user}) {
+export function FullNameRenderer({item, user}) {  
   const fullName = truncate(item.full_name)
 
   return (

@@ -88,17 +88,17 @@ function DashboardSidebar({routesData}) {
 }
 
 function SignOutButton() {
-	const [logout, { isLoading, isSuccess }] = useLogoutMutation()
+	const [logout, { isLoading, isSuccess, isError }] = useLogoutMutation()
 	const navigate = useNavigate()
 
 	const handleClick = () => {
 		logout()
 	}
 
+
 	useEffect(() => {
-		if (!isSuccess) return
-		navigate("/")
-	}, [isSuccess, navigate])
+		if (isSuccess || isError)	navigate("/")
+	}, [isSuccess, isError, navigate])
 	
 	return (
 		<Button 

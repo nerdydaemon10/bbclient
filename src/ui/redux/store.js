@@ -10,6 +10,7 @@ import client from "../../data/services/client.js"
 import employeesSlice from "./employeesSlice.js"
 import homeSlice from "./homeSlice.js"
 import local from "../../util/local.js"
+import { isNil } from "lodash"
 
 const reducer = combineReducers({
   [client.reducerPath]: client.reducer,
@@ -23,12 +24,17 @@ const reducer = combineReducers({
   employees: employeesSlice
 })
 
+const authMiddleware = (store) => (next) => (action) => {
+  if (isNil(action.payload)) return next(action)
+  if (isNil(action.payload.status)) return next(action)
+  if (action.payload.status == 401) local.clear()
+}
 
 const store = configureStore({
   reducer: reducer,
   middleware: getDefaultMiddleware => getDefaultMiddleware({ 
     serializableCheck: false 
-  }).concat(client.middleware),
+  }).concat(client.middleware, authMiddleware),
   devTools: true
 })
 

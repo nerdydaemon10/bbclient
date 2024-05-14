@@ -1,34 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { DELAY_MILLIS } from "../../../util/Config.jsx"
 import { toDate, toPcs, toPeso } from "../../../util/helper.js"
-import { Button, TableHeaders, TablePagination, TableStatus } from "../../common/index.jsx"
+import { Button, TablePagination } from "../../common/index.jsx"
 import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
 import PaymentMethod from "../../../util/classes/PaymentMethod.js"
 import { BiBlock, BiCheck } from "react-icons/bi"
 import OrderStatus from "../../../util/classes/OrderStatus.js"
 import { nextPage, openModal, previousPage, setOrder, setSq } from "../../redux/ordersSlice.js"
-import { debounce, delay, isEmpty, isNil, size, truncate } from "lodash"
+import { debounce, delay, isNil, truncate } from "lodash"
 import ModalType from "../../../util/classes/ModalType.js"
 import { Fragment, useCallback, useEffect, useState } from "react"
 import { useFetchOrdersQuery } from "../../../data/services/orders.js"
-import local from "../../../util/local.js"
 import Fallback from "../../../util/classes/Fallback.js"
 import { Table } from "../../common/Table.jsx"
-
-const columns = ["Ref. Number", "Amount Due", "Total Items", "Status", "Payment Method", "Customer", "Salesperson", "Date Ordered", "Action"]
-const colSpan = size(columns)
+import { Link } from "react-router-dom"
 
 function OrdersTable() {
-  const user = local.get("user")
-
   const dispatch = useDispatch()
 
   const { sq } = useSelector((state) => state.orders)
   const [sqtemp, setSqtemp] = useState(sq)
 
-  const { isLoading, isFetching, data, error } = useFetchOrdersQuery(sqtemp, user.role)
+  const { isLoading, isFetching, data, error } = useFetchOrdersQuery(sqtemp)
   const meta = Fallback.checkMeta(data)
   
   const debouncer = useCallback(debounce((sqtemp) => {
@@ -75,7 +69,7 @@ function OrdersTable() {
 }
 function TableFilter({search, onChange}) {
   return (
-    <div className="table-filter">
+    <div className="table-filter d-flex">
       <SearchFieldInput
         name="search"
         placeholder="Search by Order..."
@@ -104,7 +98,8 @@ function TableData({sq, data, error, isFetching}) {
       accessor: "reference_number",
       type: "string",
       format: "string",
-      sortable: true
+      sortable: true,
+      render: (item) => <RefNumberRenderer item={item} />
     },
     {
       name: "Customer",
@@ -154,6 +149,15 @@ function TableData({sq, data, error, isFetching}) {
       type: "datetime",
       format: "datetime",
       sortable: true
+    },
+    {
+      name: "Action",
+      render: (item) => (
+        <ActionRenderer 
+          onApprove={() => handleApprove(item)} 
+          onReject={() => handleReject(item)} 
+        />
+      )
     }
   ]
 
@@ -228,6 +232,13 @@ function TableItem({item, onApprove, onReject}) {
   )
 }
 
+function RefNumberRenderer({item}) {
+  const refNumber = truncate(item.reference_number)
+
+  return (
+    <Link>{refNumber}</Link>
+  )
+}
 function StatusRenderer({item}) {
   const status = OrderStatus.toObject(item.status)
 
@@ -244,6 +255,30 @@ function PaymentMethodRenderer({item}) {
   return (
     <span className="badge text-bg-light">
       {paymentMethod}
+    </span>
+  )
+}
+function ActionRenderer({onApprove, onReject}) {
+  return (
+    <span className="hstack gap-1">
+      <Button
+        variant="dark" 
+        size="sm"
+        onClick={onApprove}
+      >
+        <BiCheck 
+          className="me-1" 
+        />
+        Approve
+      </Button>
+      <Button
+        variant="light" 
+        size="sm"
+        onClick={onReject}
+      >
+        <BiBlock className="me-1" />
+        Reject
+      </Button>
     </span>
   )
 }
