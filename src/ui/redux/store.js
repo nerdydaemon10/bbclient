@@ -24,17 +24,12 @@ const reducer = combineReducers({
   employees: employeesSlice
 })
 
-const authMiddleware = (store) => (next) => (action) => {
-  if (isNil(action.payload)) return next(action)
-  if (isNil(action.payload.status)) return next(action)
-  if (action.payload.status == 401) local.clear()
-}
 
 const store = configureStore({
   reducer: reducer,
   middleware: getDefaultMiddleware => getDefaultMiddleware({ 
     serializableCheck: false 
-  }).concat(client.middleware, authMiddleware),
+  }).concat(client.middleware),
   devTools: true
 })
 

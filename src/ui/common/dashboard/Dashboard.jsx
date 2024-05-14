@@ -8,14 +8,14 @@ import {
 
 import "./Dashboard.css"
 import local from "../../../util/local.js"
-import { Role } from "../../../util/classes"
+import { Fallback, Role } from "../../../util/classes"
 import { Button, Flex, LinkButton } from "../index"
 import DashboardNavbar from "./DashboardNavbar.jsx"
 import { currentRoute } from "./util.js"
 import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
-import { isNil, truncate } from "lodash"
+import { isNil } from "lodash"
 import { useLogoutMutation } from "../../../data/services/auth.js"
-import { toCount } from "../../../util/helper.js"
+import { toCount, truncate } from "../../../util/helper.js"
 
 function Dashboard({routesData, children}) {
 	return (
@@ -30,10 +30,10 @@ function Dashboard({routesData, children}) {
 }
 
 function DashboardSidebar({routesData}) {
-	const user = local.get("user")
-	const fullName = truncate(user.full_name, { length: 24 })
+	const user = Fallback.checkUser(local.get("user"))
+	const fullName = truncate(user.full_name)
 	const role = Role.toRole(user.role)
-	
+
 	const location = useLocation()
 	const [route, setRoute] = useState(currentRoute(location))
 	const { data, isLoading, isFetching } = useFetchSummariesQuery()

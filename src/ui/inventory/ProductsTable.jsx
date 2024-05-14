@@ -234,44 +234,4 @@ function ActionRenderer({onUpdate, onRemove}) {
   )
 }
 
-function TableItem({item, onUpdate, onRemove}) {
-  const productCode = truncate(item.product_code)
-  const name = truncate(item.name)
-  const description = truncate(item.description)
-  const category = ProductCategory.toCategory(item.category_id)
-  const stocks = toStocks(item.quantity)
-  const srp = toPeso(item.srp)
-  const memberPrice = toPeso(item.member_price)
-  const createdBy = truncate(item.created_by)
-  const dateCreated = toDateTime(item.created_at)
-  const dateModified = toDateTime(item.updated_at)
-
-  return (
-    <tr>
-      <td>{productCode}</td>
-      <td>{name}</td>
-      <td>{description}</td>
-      <td>
-        <span className="badge text-bg-light">{category}</span>
-      </td>
-      <td>{stocks}</td>
-      <td>{srp}</td>
-      <td>{memberPrice}</td>
-      <td>{createdBy}</td>
-      <td>{dateCreated}</td>
-      <td>{dateModified}</td>
-      <td className="hstack gap-1">
-        <Button size="sm" onClick={onUpdate}>
-          Update
-        </Button>
-        <Button variant="light" size="sm" onClick={onRemove}>
-          Remove
-        </Button>
-      </td>
-    </tr>
-  )
-}
-
-
-
 export default ProductsTable

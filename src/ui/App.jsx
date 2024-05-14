@@ -1,6 +1,6 @@
 import { isEmpty, isNil } from "lodash"
 import { Fragment, useEffect } from "react"
-import { Navigate, Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes, useLocation } from "react-router-dom"
 
 import LoginPage from "./login/LoginPage.jsx"
 import { Role } from "../util/classes"
@@ -13,7 +13,7 @@ import { useSelector } from "react-redux"
 
 function App() {
 	const { isAuthenticated } = useSelector((state) => state.auth)
-
+	
 	useEffect(() => {
 		console.log(`isAuthenticated: ${isAuthenticated}`)
 	}, [isAuthenticated])
