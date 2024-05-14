@@ -142,7 +142,7 @@ function TableData({sq, data, error, isFetching}) {
     },
     {
       name: "Date/Logged Out",
-      accessor: "last_login_at",
+      accessor: "last_logout_at",
       type:"datetime",
       format: "datetime",
       sortable: true
