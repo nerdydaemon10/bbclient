@@ -21,6 +21,7 @@ const OrdersStyle = createGlobalStyle`
   grid-template-areas: 
     "table-data"
     "table-pagination";
+  overflow: auto !important;
 }
 
 /* --TABLE-DATA-- */

@@ -72,7 +72,6 @@ const posSlice = createSlice({
       const checkoutsTab = first(TabsData).value
 
       if (state.tab != checkoutsTab) state.tab = checkoutsTab
-
       state.checkouts = produce(state.checkouts, draft => {
         draft.push({
           id: product.id,

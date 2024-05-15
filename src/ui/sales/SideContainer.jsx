@@ -37,9 +37,9 @@ function SideContainer() {
 }
 
 function FilteringContainer() {
-  const dispatch = useDispatch()
   const { sq, salespersons } = useSelector((state) => state.sales)
-
+  const dispatch = useDispatch()
+  
   const handleChange = (e) => {
     dispatch(setSq(e))
   }

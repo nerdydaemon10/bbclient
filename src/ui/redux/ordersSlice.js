@@ -1,20 +1,27 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, isAnyOf } from "@reduxjs/toolkit"
 import ModalType from "../../util/classes/ModalType.js"
 import { rowsPerPages } from "../../util/Config.jsx"
 import { first, isNil } from "lodash"
 import local from "../../util/local.js"
 import Fallback from "../../util/classes/Fallback.js"
 import { compareEntity } from "../../util/helper.js"
+import { employees } from "../../data/services/employees.js"
 
 const user = Fallback.checkUser(local.get("user"))
 
 const initialState = {
-  sq: { 
-    search: "",
+  sq: {
+    employee_id: "",
+    customer: "",
+    start_date: "",
+    end_date: "",
+    status: "",
+    payment_method: "",
     per_page: first(rowsPerPages), 
     page: 1,
     role: user.role
   },
+  salespersons: [],
   modifyOrder: null,
   viewOrder: null,
   isApproveModalOpen: false,
@@ -62,6 +69,12 @@ const ordersSlice = createSlice({
       if (action.payload == ModalType.REJECT)
         state.isRejectModalOpen = false
     }
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      isAnyOf(employees.endpoints.fetchEmployees.matchFulfilled), (state, action) => {  
+      state.salespersons = action.payload.data
+    })
   }
 })
 

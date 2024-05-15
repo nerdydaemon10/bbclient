@@ -1,12 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import { CheckoutList, DateInput, SearchFieldInput, SelectInput } from "../../common/index.jsx"
+import { Button, CheckoutList, DateInput, SearchFieldInput, SelectInput } from "../../common/index.jsx"
 import { orderStatuses, paymentMethods } from "../../../util/Config.jsx"
 import { OrderStatus, PaymentMethod } from "../../../util/classes"
 import { isNil } from "lodash"
+import { setSq } from "../../redux/ordersSlice.js"
+import { BiRotateLeft } from "react-icons/bi"
 
 function OrdersSide() {
-  const { viewOrder } = useSelector((state) => state.orders)
+  const { sq, viewOrder } = useSelector((state) => state.orders)
   const hasViewOrder = !isNil(viewOrder)
 
   const title = !hasViewOrder
@@ -39,13 +41,13 @@ function OrdersSide() {
 }
 
 function FilterOrders() {
+  const { sq, salespersons } = useSelector((state) => state.orders)
   const dispatch = useDispatch()
-  const { sq, salespersons } = useSelector((state) => state.sales)
 
   const handleChange = (e) => {
     dispatch(setSq(e))
   }
-  
+
   return (
     <div className=" d-flex flex-column p-2 gap-2">
       <DateInput 
@@ -95,6 +97,11 @@ function FilterOrders() {
         onChange={handleChange}
         onRender={(option) => `${PaymentMethod.toMethod(option)}`}
       />
+      <hr className="mt-2 mb-2"/>
+      <Button variant="outline-dark">
+        <BiRotateLeft className="me-1" />
+        Reset Filter
+      </Button>
     </div>
   )
 }
