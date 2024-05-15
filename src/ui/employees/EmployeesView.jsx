@@ -23,7 +23,7 @@ function TitleSection() {
   return (
     <div className="title-section">
       <h3 className="text-body-primary fw-bold mb-0">Employees</h3>
-      <p className="text-body-secondary mb-0">Please add some description...</p>
+      <p className="text-body-secondary mb-0">View list of employees</p>
     </div>
   )
 }

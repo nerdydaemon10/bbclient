@@ -1,25 +1,14 @@
 import { isEmpty, isNil } from "lodash"
-import { Fragment, useEffect } from "react"
-import { Navigate, Route, Routes, useLocation } from "react-router-dom"
+import { Fragment } from "react"
+import { Navigate, Route, Routes } from "react-router-dom"
 
 import LoginPage from "./login/LoginPage.jsx"
 import { Role } from "../util/classes"
 import { local } from "../util"
 import AdminPage from "./admin/AdminPage.jsx"
 import EmployeePage from "./employee/EmployeePage.jsx"	
-import store from "./redux/store.js"
-import auth from "../data/services/auth.js"
-import { useSelector } from "react-redux"
 
 function App() {
-	const { isAuthenticated } = useSelector((state) => state.auth)
-	
-	useEffect(() => {
-		console.log(`isAuthenticated: ${isAuthenticated}`)
-	}, [isAuthenticated])
-
-	store.dispatch(auth.endpoints.verify.initiate())
-	
 	return (
 		<Routes>
 			<Route path="/" element={<LoginRoute />} />

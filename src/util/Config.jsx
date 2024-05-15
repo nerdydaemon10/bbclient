@@ -6,8 +6,9 @@ import {
   BiSolidShoppingBag, BiSolidUserCircle, BiUserCircle,
   BiSolidCoffee,
   BiCoffee,
+  BiMoney,
+  BiSolidTruck,
 } from "react-icons/bi"
-import { first } from "lodash"
 
 export const DELAY_MILLIS = 250
 export const RoutesData = [
@@ -74,14 +75,14 @@ export const ProductCategoriesData = [
 export const PaymentMethodsData = [
   {
     id: 1,
-    name: "Cash-On-Delivery",
-    icon: <BiWallet className="me-1" />,
+    name: "Cash",
+    icon: <BiMoney className="me-1" />,
     value: 1
   },
   {
     id: 2,
-    name: "Scan-To-Pay",
-    icon: <BiQr className="me-2" />,
+    name: "COD",
+    icon: <BiWallet className="me-2" />,
     value: 2
   }
 ]

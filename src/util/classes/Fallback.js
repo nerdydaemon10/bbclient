@@ -16,4 +16,4 @@ Fallback.checkUser = (user) => {
   if (isNil(user)) return fallback
   
   return user
-}
+}      

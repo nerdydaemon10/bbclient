@@ -23,7 +23,7 @@ function SalesView() {
       <ReceiptList 
         receipts={[
           hasSelectedUser(sq) && { name: "Salesp. Commission", value: toPeso(totalCommission)},
-          { name: "Total", value: toPeso(totalSales)}
+          { name: "Overall Total", value: toPeso(totalSales)}
         ]}
       />
     </SalesProvider>

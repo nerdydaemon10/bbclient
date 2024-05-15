@@ -7,10 +7,11 @@ import { useEffect } from "react"
 import { enqueueSnackbar } from "notistack"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { useRejectOrderMutation } from "../../../data/services/orders.js"
+import { isNil } from "lodash"
 
 function RejectModal() {
   const dispatch = useDispatch()
-  const { order, isRejectModalOpen } = useSelector((state) => state.orders)
+  const { modifyOrder, isRejectModalOpen } = useSelector((state) => state.orders)
   const [rejectOrder, { isLoading, isSuccess }] = useRejectOrderMutation()
 
   const handleClose = () => {
@@ -19,7 +20,7 @@ function RejectModal() {
   
   const handleConfirm = (e) => {
     e.preventDefault()
-    rejectOrder(order.id)
+    rejectOrder(modifyOrder.id)
   }
 
   useEffect(() => {
@@ -29,6 +30,8 @@ function RejectModal() {
     enqueueSnackbar(GenericMessage.ORDER_REJECTED)
   }, [isSuccess, dispatch])
 
+  if (isNil(modifyOrder)) return
+  
   return (
     <Modal  
       title="Reject Order"
@@ -38,7 +41,7 @@ function RejectModal() {
       onConfirm={handleConfirm}
     >
       <span className="text-body-secondary fs-7">
-        Do you want to reject order <b>#{order.reference_number}</b>?
+        Do you want to reject order <b>#{modifyOrder.reference_number}</b>?
       </span>
     </Modal>
   )

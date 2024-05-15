@@ -32,15 +32,3 @@ package-lock.json
 
 .eslintrc.cjs
 #index.js
-
-# Custom
-index.html
-Dockerfile
-docker.compose.yml
-
-# /src/data
-# /src/ui/employees
-# /src/util
-# /src/ui/employee
-# /src/ui/assets
-# /src/ui/admin

@@ -1,29 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import { paymentMethods, orderStatuses } from "../../util/Config.jsx"
-import OrderStatus from "../../util/classes/OrderStatus.js"
-import PaymentMethod from "../../util/classes/PaymentMethod.js"
-import { Button, CheckoutList, DateInput, SearchFieldInput, SelectInput } from "../common/index.jsx"
-import { setSq } from "../redux/salesSlice.js"
-import { BiDownload } from "react-icons/bi"
+import { CheckoutList, DateInput, SearchFieldInput, SelectInput } from "../../common/index.jsx"
+import { orderStatuses, paymentMethods } from "../../../util/Config.jsx"
+import { OrderStatus, PaymentMethod } from "../../../util/classes"
 import { isNil } from "lodash"
-import { useDownloadSalesMutation } from "../../data/services/sales.js"
 
-function SideContainer() {
-  const { sale } = useSelector((state) => state.sales)
-  const title = isNil(sale) ? "Filter Sales" : "Checkouts"
-  const content = isNil(sale) ? (
-    <FilteringContainer />
-  ) : (
-    <CheckoutList 
-      checkouts={sale.checkouts} 
-      isControlsDisabled
-      isOdd={false}
-    />
-  )
-  
+function OrdersSide() {
+  const { viewOrder } = useSelector((state) => state.orders)
+  const hasViewOrder = !isNil(viewOrder)
+
+  const title = !hasViewOrder
+    ? "Filter Orders" 
+    : "Checkouts"
+  let content = <FilterOrders />
+
+  if (hasViewOrder) {
+    content = (
+      <CheckoutList 
+        checkouts={viewOrder.checkouts} 
+        isControlsDisabled
+        isOdd={false} 
+      />
+    )
+  }
+
   return (
-    <div className="card side-container">
+    <div className="card orders-side">
       <div className="card-header p-2">
         <h6 className="card-title fw-semibold mb-0">
           {title}
@@ -36,14 +38,14 @@ function SideContainer() {
   )
 }
 
-function FilteringContainer() {
+function FilterOrders() {
   const dispatch = useDispatch()
   const { sq, salespersons } = useSelector((state) => state.sales)
 
   const handleChange = (e) => {
     dispatch(setSq(e))
   }
-
+  
   return (
     <div className=" d-flex flex-column p-2 gap-2">
       <DateInput 
@@ -93,29 +95,7 @@ function FilteringContainer() {
         onChange={handleChange}
         onRender={(option) => `${PaymentMethod.toMethod(option)}`}
       />
-      <hr className="mt-2 mb-2"/>
-      <ExportButton />
     </div>
   )
 }
-function ExportButton() {
-  const { sq } = useSelector((state) => state.sales)
-  const [downloadSales, { isLoading }] = useDownloadSalesMutation()
-  
-  const handleDownload = (sq) => {
-    downloadSales(sq)
-  }
-
-  return (
-    <Button
-      variant="outline-dark"
-      isLoading={isLoading}
-      onClick={() => handleDownload(sq)}
-    >
-      <BiDownload className="me-1" />
-      Export as Excel
-    </Button>
-  )
-}
-
-export default SideContainer
+export default OrdersSide

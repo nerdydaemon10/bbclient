@@ -17,7 +17,7 @@ function OrderSide() {
   const handleChange = (value) => {
     dispatch(setTab(value))
   }
-
+  
   const handleOrder = (id, paymentMethod, checkouts) => {
     createOrder({
       customer_id: id,
@@ -25,7 +25,7 @@ function OrderSide() {
       checkouts: checkouts
     })
   }
-
+  
   useEffect(() => {
     if (!isSuccess) return
     enqueueSnackbar(GenericMessage.ORDER_ADDED)

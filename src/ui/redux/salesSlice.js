@@ -12,7 +12,7 @@ const initialState = {
     customer: "",
     start_date: "",
     end_date: "",
-    status: "",
+    status: "approved",
     payment_method: "",
     per_page: first(rowsPerPages), 
     page: 1

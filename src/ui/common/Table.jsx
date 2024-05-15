@@ -7,7 +7,7 @@ import moment from "moment"
 import { useEffect, useState } from "react"
 import { toCount, toDate, toDateTime, toPcs, toPeso, toStocks, truncate } from "../../util/helper.js"
 
-export function Table({name, columns, data, error, sq, isFetching}) {
+export function Table({name, columns, data, error, sq, selected, isFetching}) {
   const colSpan = size(columns)
   const [accessor, setAccessor] = useState("")
   const [isAsc, setIsAsc] = useState(false)
@@ -120,7 +120,7 @@ export function Table({name, columns, data, error, sq, isFetching}) {
               message={`No ${name} in our records yet.`}
             />
           ) : dt.map((item, itemIndex) => (
-            <tr key={itemIndex}>
+            <tr key={itemIndex} className={selected?.id == item.id ? "is-selected" : ""}>
               {
                 columns.map((col, colIndex) => 
                   hasRenderer(col)

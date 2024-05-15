@@ -3,6 +3,7 @@ import OrdersTable from "./OrdersTable.jsx"
 import ApproveModal from "./ApproveModal.jsx"
 import RejectModal from "./RejectModal.jsx"
 import { Fragment } from "react"
+import OrdersSide from "./OrdersSide.jsx"
 
 function OrdersView() {
   return (
@@ -10,6 +11,7 @@ function OrdersView() {
       <OrdersStyle />
       <TitleSection />
       <OrdersTable />
+      <OrdersSide />
       <ApproveModal />
       <RejectModal />
     </Fragment>

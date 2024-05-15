@@ -9,8 +9,6 @@ import salesSlice from "./salesSlice.js"
 import client from "../../data/services/client.js"
 import employeesSlice from "./employeesSlice.js"
 import homeSlice from "./homeSlice.js"
-import local from "../../util/local.js"
-import { isNil } from "lodash"
 
 const reducer = combineReducers({
   [client.reducerPath]: client.reducer,
@@ -23,7 +21,6 @@ const reducer = combineReducers({
   sales: salesSlice,
   employees: employeesSlice
 })
-
 
 const store = configureStore({
   reducer: reducer,

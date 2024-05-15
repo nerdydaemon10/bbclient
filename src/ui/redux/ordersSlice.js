@@ -1,21 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit"
 import ModalType from "../../util/classes/ModalType.js"
 import { rowsPerPages } from "../../util/Config.jsx"
-import { first } from "lodash"
-import { OrderParam } from "../../util/params.js"
+import { first, isNil } from "lodash"
 import local from "../../util/local.js"
 import Fallback from "../../util/classes/Fallback.js"
+import { compareEntity } from "../../util/helper.js"
 
 const user = Fallback.checkUser(local.get("user"))
 
 const initialState = {
   sq: { 
-    search: "", 
+    search: "",
     per_page: first(rowsPerPages), 
     page: 1,
     role: user.role
   },
-  order: OrderParam
+  modifyOrder: null,
+  viewOrder: null,
+  isApproveModalOpen: false,
+  isRejectModalOpen: false
 }
 
 const ordersSlice = createSlice({
@@ -37,7 +40,15 @@ const ordersSlice = createSlice({
       state.sq = { ...sq, page: sq.page < meta.last_page ? sq.page + 1 : meta.last_page }
     },
     setOrder: (state, action) => {
-      state.order = action.payload
+      const { type, order } = action.payload
+
+      if (type == "modify") {
+        state.modifyOrder = order
+      }
+      if (type == "view") {
+        const isSelected = !isNil(state.viewOrder) && compareEntity(state.viewOrder, order)
+        state.viewOrder = isSelected ? null : order
+      }
     },
     openModal: (state, action) => {
       if (action.payload == ModalType.APPROVE)

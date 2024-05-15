@@ -28,3 +28,7 @@ export const OrderParam = {
   id: 0,
   reference_number: ""
 }
+export const POrder = {
+  id: 0,
+  reference_number: ""
+}
