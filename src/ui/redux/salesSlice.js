@@ -1,6 +1,6 @@
 import { createSelector, createSlice, isAnyOf } from "@reduxjs/toolkit"
 import { rowsPerPages } from "../../util/Config.jsx"
-import { first, isEmpty, isNil, size } from "lodash"
+import { first, isNil, size } from "lodash"
 import { computeCheckouts, computeQty, computeSales, isEntitySelected, toItems, toPeso, toQty } from "../../util/helper.js"
 import { sales } from "../../data/services/sales.js"
 import moment from "moment"

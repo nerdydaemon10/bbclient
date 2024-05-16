@@ -13,7 +13,7 @@ import { getErrorByName } from "../../util/helper"
 function UpdateModal() {
   const dispatch = useDispatch()
   const { product, isUpdateModalOpen } = useSelector((state) => state.inventory)
-  const [updateProduct, { isLoading, isSuccess, error}] = useUpdateProductMutation()
+  const [updateProduct, { isLoading, isSuccess, error }] = useUpdateProductMutation()
 
   const handleClose = () => {
     dispatch(closeModal(ModalType.UPDATE))

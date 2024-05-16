@@ -17,7 +17,6 @@ SaleService.exportAsExcel = async function(sq=null) {
   const response = await client.get('/admin/export', { responseType: "blob", params: params})
   return response.data
 }
-
 SaleService.findAll = async function(sq=null) {
   const params = sq ? {
     start_date: sq.date_start,
