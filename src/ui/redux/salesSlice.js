@@ -5,6 +5,7 @@ import { computeCheckouts, computeQty, computeSales, isEntitySelected, toItems, 
 import { sales } from "../../data/services/sales.js"
 import moment from "moment"
 import { employees } from "../../data/services/employees.js"
+import { produce } from "immer"
 
 const initialState = {
   sq: {
@@ -29,6 +30,9 @@ const salesSlice = createSlice({
     setSq: (state, action) => {
       const e = action.payload.target
       state.sq = { ...state.sq, [e.name]: e.value }
+    },
+    resetSq: (state) => {
+      state.sq = produce(initialState, draft => draft.sq)
     },
     previousPage: (state,) => {
       const sq = state.sq
@@ -94,27 +98,18 @@ export const selectReceipts = createSelector(
     const commission = sale.commission
 
     return [
-      { label: "Total Items/Qty", value: `${items}/${qty}`},
       { label: "Salesp. Commission", format: "currency", value: commission},
+      { label: "Total Items/Qty", value: `${items}/${qty}`},
       { label: "Order Total", format: "currency", value: orderTotal}
     ]
   })
 export const selectSq = (state) => state.sales.sq
 export const selectSale = (state) => state.sales.sale
 export const selectCheckoutsSize = createSelector((state) => state.sales.sale, (sale) => isNil(sale) ? 0 : size(sale.checkouts))
-export const selectSales = (state) => state.sales
-export const selectUsersResponse = (state) => state.fetchUsersResponse.data ?? []
-export const selectTotalCommission = createSelector([selectSales], (sales) => {
-  if (isEmpty(sales)) return 0.00
-  return sales.reduce((accum, sale) => accum + sale.commission, 0.00)
-})
-export const selectTotalSales = createSelector([selectSales], (sales) => {
-  if (isEmpty(sales)) return 0.00
-  return sales.reduce((accum, sale) => accum + computeCheckouts(sale.checkouts), 0.00)
-})
 
 export const {
   setSq,
+  resetSq,
   setTab,
   setSale
 } = salesSlice.actions

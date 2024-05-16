@@ -101,7 +101,7 @@ function FilterOrders() {
         onChange={handleChange}
         onRender={(option) => `${PaymentMethod.toMethod(option)}`}
       />
-      <hr className="mt-2 mb-2"/>
+      <hr className="mt-1 mb-1"/>
       <Button 
         variant="outline-dark"
         onClick={handleReset}

@@ -9,7 +9,7 @@ import { Fragment, useCallback, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { nextPage, previousPage } from "../redux/employeesSlice.js"
 import { DELAY_MILLIS } from "../../util/Config.jsx"
-import { useFetchOrdersQuery } from "../../data/services/orders.js"
+import { useFetchSalesQuery } from "../../data/services/sales.js"
 
 function SalesTable() {
   const dispatch = useDispatch()
@@ -17,7 +17,7 @@ function SalesTable() {
   const sq = useSelector(selectSq)
   const [sqtemp, setSqtemp] = useState(sq)
 
-  const { isLoading, isFetching, data, error } = useFetchOrdersQuery(sqtemp)
+  const { isLoading, isFetching, data, error } = useFetchSalesQuery(sqtemp)
   const meta = Fallback.checkMeta(data)
   
   const debouncer = useCallback(debounce((sqtemp) => {

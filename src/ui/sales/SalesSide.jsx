@@ -4,8 +4,8 @@ import { paymentMethods, orderStatuses } from "../../util/Config.jsx"
 import OrderStatus from "../../util/classes/OrderStatus.js"
 import PaymentMethod from "../../util/classes/PaymentMethod.js"
 import { Button, CheckoutList, DateInput, SearchFieldInput, SelectInput } from "../common/index.jsx"
-import { selectSale, selectCheckoutsSize, setSq } from "../redux/salesSlice.js"
-import { BiDownload } from "react-icons/bi"
+import { selectSale, selectCheckoutsSize, setSq, resetSq } from "../redux/salesSlice.js"
+import { BiDownload, BiRotateLeft } from "react-icons/bi"
 import { isNil } from "lodash"
 import { useDownloadSalesMutation } from "../../data/services/sales.js"
 
@@ -24,7 +24,7 @@ function SalesSide() {
       <div className="card-body overflow-y-auto p-0">
         {
           emptySale 
-          ? (<FilterSales />) 
+          ? (<FilterSales />)
           : (
             <CheckoutList
               checkouts={sale.checkouts} 
@@ -47,6 +47,11 @@ function FilterSales() {
   const handleChange = (e) => {
     dispatch(setSq(e))
   }
+
+  const handleReset = () => {
+    dispatch(resetSq())
+  }
+  
 
   return (
     <div className=" d-flex flex-column p-2 gap-2">
@@ -97,7 +102,15 @@ function FilterSales() {
         onChange={handleChange}
         onRender={(option) => `${PaymentMethod.toMethod(option)}`}
       />
-      <hr className="mt-2 mb-2"/>
+      <Button 
+        className="mt-1"
+        variant="outline-dark"
+        onClick={handleReset}
+      >
+        <BiRotateLeft className="me-1" />
+        Reset Filter
+      </Button>
+      <hr className="mt-1 mb-1"/>
       <ExportButton />
     </div>
   )
@@ -112,7 +125,7 @@ function ExportButton() {
 
   return (
     <Button
-      variant="outline-dark"
+      variant="dark"
       isLoading={isLoading}
       onClick={() => handleDownload(sq)}
     >
