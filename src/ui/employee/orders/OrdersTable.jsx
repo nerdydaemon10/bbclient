@@ -2,7 +2,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
 import { DELAY_MILLIS, orderStatuses } from "../../../util/Config.jsx"
-import { toDateTime, toPcs, toPeso, truncate } from "../../../util/helper.js"
+import { toDateTime, toItems, toPeso, truncate } from "../../../util/helper.js"
 import { SelectInput, TableHeaders, TablePagination, TableStatus } from "../../common"
 import { Fragment, useCallback, useEffect, useState } from "react"
 import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
@@ -128,7 +128,7 @@ function TableItem({item}) {
   const ref = truncate(item.reference_number)
   const customer = truncate(item.customer.full_name)
   const amountDue = toPeso(item.amount_due)
-  const totalItems = toPcs(item.number_of_items)
+  const totalItems = toItems(item.number_of_items)
   const status = OrderStatus.toObject(item.status)
   const paymentMethod = PaymentMethod.toMethod(item.payment_method)
   const salesperson = truncate(item.employee.full_name)

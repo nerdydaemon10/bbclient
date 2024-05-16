@@ -5,7 +5,7 @@ import SelectInput from "./inputs/SelectInput.jsx"
 import { BiSortAZ, BiSortZA } from "react-icons/bi"
 import moment from "moment"
 import { useEffect, useState } from "react"
-import { toCount, toDate, toDateTime, toPcs, toPeso, toStocks, truncate } from "../../util/helper.js"
+import { toCount, toDate, toDateTime, toItems, toPeso, toStocks, truncate } from "../../util/helper.js"
 
 export function Table({name, columns, data, error, sq, selected, isFetching}) {
   const colSpan = size(columns)
@@ -18,11 +18,11 @@ export function Table({name, columns, data, error, sq, selected, isFetching}) {
     if (accessor == col.accessor) setIsAsc(!isAsc)
     if (accessor != col.accessor) setIsAsc(true)
     setAccessor(col.accessor)
-    setDt(orderBy(data, [(item) => tranform(item, col)], [isAsc ? "asc" : "desc"]))
+    setDt(orderBy(data, [(item) => tranform(item, col)], [isAsc ? "desc" : "asc"]))
   }
 
   const tranform = (item, col) => {
-    const value = get(item, col.accessor)
+    const value = isNil(item.alias) ? get(item, col.accessor) : item.alias(item)
 
     if (isNil(col.type)) return value
     if (col.type == "number") return Number(value)
@@ -66,7 +66,7 @@ export function Table({name, columns, data, error, sq, selected, isFetching}) {
     if (isNil(col.format)) return value
     if (col.format == "string") return truncate(value)
     if (col.format == "stocks") return toStocks(value)
-    if (col.format == "pcs") return toPcs(value)
+    if (col.format == "items") return toItems(value)
     if (col.format == "count") return toCount(value)
     if (col.format == "currency") return toPeso(value)
     if (col.format == "date") return toDate(value)

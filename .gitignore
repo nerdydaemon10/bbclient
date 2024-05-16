@@ -32,3 +32,11 @@ package-lock.json
 
 .eslintrc.cjs
 #index.js
+
+# Custom
+# Dockerfile
+# docker.compose.yml
+# index.html
+# /src/ui/assets
+# /src/App.jsx
+# /src/main.jsx

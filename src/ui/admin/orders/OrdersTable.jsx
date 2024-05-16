@@ -5,13 +5,14 @@ import { Button, TablePagination } from "../../common/index.jsx"
 import PaymentMethod from "../../../util/classes/PaymentMethod.js"
 import OrderStatus from "../../../util/classes/OrderStatus.js"
 import { nextPage, openModal, previousPage, setOrder, setSq } from "../../redux/ordersSlice.js"
-import { debounce, delay, isNil, truncate } from "lodash"
+import { debounce, delay, isNil, size } from "lodash"
 import ModalType from "../../../util/classes/ModalType.js"
-import { Fragment, useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useFetchOrdersQuery } from "../../../data/services/orders.js"
 import Fallback from "../../../util/classes/Fallback.js"
 import { Table } from "../../common/Table.jsx"
 import { Link } from "react-router-dom"
+import { computeQty, toItems, toPeso, toQty, truncate } from "../../../util/helper.js"
 
 function OrdersTable() {
   const dispatch = useDispatch()
@@ -88,25 +89,18 @@ function TableData({sq, data, error, isFetching}) {
       render: (item) => <RefNumberRenderer item={item} onSelect={() => handleSelect(item)} />
     },
     {
-      name: "Customer",
-      accessor: "customer.full_name",
-      type: "string",
-      format: "string",
-      sortable: true
-    },
-    {
-      name: "Amount Due",
+      name: "Total",
       accessor: "amount_due",
       type: "number",
       format: "currency",
       sortable: true
     },
     {
-      name: "Total Items",
-      accessor: "number_of_items",
+      name: "Items/Qty",
       type: "number",
-      format: "pcs",
-      sortable: true
+      sortable: true,
+      alias: (item) => itemsQtyAliaser(item), 
+      render: (item) => <TotalItemsQtyRenderer item={item} />
     },
     {
       name: "Status",
@@ -116,37 +110,45 @@ function TableData({sq, data, error, isFetching}) {
       render: (item) => <StatusRenderer item={item} />
     },
     {
-      name: "Payment Method",
+      name: "Pay. Method",
       accessor: "payment_method",
       type: "number",
       sortable: true,
       render: (item) => <PaymentMethodRenderer item={item} />
     },
     {
-      name: "Salesperson",
-      accessor: "employee.full_name",
+      name: "Customer",
+      accessor: "customer.full_name",
       type: "string",
       format: "string",
       sortable: true
     },
     {
+      name: "Salesperson",
+      accessor: "employee.full_name",
+      type: "string",
+      sortable: true,
+      render: (item) => <SalespersonRenderer item={item} />
+    },
+    {
       name: "Date Ordered",
       accessor: "created_at",
-      type: "datetime",
-      format: "datetime",
+      type: "date",
+      format: "date",
       sortable: true
     },
     {
       name: "Action",
       render: (item) => (
         <ActionRenderer 
+          item={item}
           onApprove={() => handleApprove(item)} 
           onReject={() => handleReject(item)} 
         />
       )
     }
   ]
-
+  
   return (
     <div className="table-wrapper table-data">
       <Table
@@ -161,13 +163,24 @@ function TableData({sq, data, error, isFetching}) {
     </div>
   )
 }
-
 function RefNumberRenderer({item, onSelect}) {
   const refNumber = truncate(item.reference_number)
 
   return (
     <Link onClick={onSelect}>{refNumber}</Link>
   )
+}
+function itemsQtyAliaser(item) {
+  const items = size(item.checkouts)
+  const qty = computeQty(item.checkouts)
+
+  return items + qty
+}
+function TotalItemsQtyRenderer({item}) {
+  const items = toItems(size(item.checkouts))
+  const qty = toQty(computeQty(item.checkouts))
+
+  return `${items}/${qty}`
 }
 function StatusRenderer({item}) {
   const status = OrderStatus.toObject(item.status)
@@ -188,12 +201,27 @@ function PaymentMethodRenderer({item}) {
     </span>
   )
 }
-function ActionRenderer({onApprove, onReject}) {
+function SalespersonRenderer({item}) {
+  const salesperson = truncate(item.employee.full_name)
+  const commission = toPeso(item.commission)
+
+  return (
+    <div className="vstack">
+      <span className="text-body-primary">{salesperson}</span>
+      <span className="text-body-secondary">{commission} (Com.)</span>
+    </div>
+  )
+}
+
+function ActionRenderer({item, onApprove, onReject}) {
+  const statuses = ["approved", "rejected"]
+
   return (
     <span className="hstack gap-1">
       <Button
         variant="dark" 
         size="sm"
+        isDisabled={statuses.includes(item.status)}
         onClick={onApprove}
       >
         Approve
@@ -201,6 +229,7 @@ function ActionRenderer({onApprove, onReject}) {
       <Button
         variant="light" 
         size="sm"
+        isDisabled={statuses.includes(item.status)}
         onClick={onReject}
       >
         Reject

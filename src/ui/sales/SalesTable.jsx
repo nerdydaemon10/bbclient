@@ -1,24 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { TableHeaders, TablePagination, TableStatus } from "../common"
-import { isEntitySelected, toDateTime, toPcs, toPeso, truncate } from "../../util/helper.js"
-import { isEmpty, isNil, size } from "lodash"
-import { PaymentMethod, OrderStatus, GenericMessage, Fallback } from "../../util/classes/index.js"
+import { Table, TablePagination } from "../common"
+import { computeQty, toItems, toPeso, toQty, truncate } from "../../util/helper.js"
+import { debounce, isNil, size } from "lodash"
+import { PaymentMethod, OrderStatus, Fallback } from "../../util/classes/index.js"
 import { useDispatch, useSelector } from "react-redux"
-import { setSale, setSq } from "../redux/salesSlice.js"
-import { Fragment, useContext } from "react"
+import { selectSale, selectSq, setSale, setSq } from "../redux/salesSlice.js"
+import { Fragment, useCallback, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { nextPage, previousPage } from "../redux/employeesSlice.js"
-import { SalesContext } from "./SalesProvider.jsx"
-
-const columns = ["Ref. Number", "Amount Due", "Total Items", "Order Status", "Payment Method", "Customer", "Salesperson", "Commission", "Date Ordered"]
-const colSpan = size(columns)
+import { DELAY_MILLIS } from "../../util/Config.jsx"
+import { useFetchOrdersQuery } from "../../data/services/orders.js"
 
 function SalesTable() {
   const dispatch = useDispatch()
-  const { sq } = useSelector((state) => state.sales)
 
-  const { isLoading, isFetching, data, error } = useContext(SalesContext)
+  const sq = useSelector(selectSq)
+  const [sqtemp, setSqtemp] = useState(sq)
+
+  const { isLoading, isFetching, data, error } = useFetchOrdersQuery(sqtemp)
   const meta = Fallback.checkMeta(data)
+  
+  const debouncer = useCallback(debounce((sqtemp) => {
+    setSqtemp(sqtemp)
+  }, DELAY_MILLIS), [])
 
   const handleChange = (e) => {
     dispatch(setSq(e))
@@ -29,10 +33,14 @@ function SalesTable() {
   const handleNext = (meta) => {
     dispatch(nextPage(meta))
   }
+  
+  useEffect(() => {
+    debouncer(sq)
+  }, [debouncer, sq])
 
   return (
     <Fragment>
-      <TableContent
+      <TableData
         sq={sq}
         data={isNil(data) ? [] : data.data}
         error={error}
@@ -49,85 +57,137 @@ function SalesTable() {
     </Fragment>
   )
 }
-function TableContent({sq, data, error, isFetching}) {
-  const dispatch = useDispatch()
-  const { sale } = useSelector((state) => state.sales)
+function TableData({sq, data, error, isFetching}) {
+  const sale = useSelector(selectSale)
 
-  const handleSelect = (sale) => {
-    dispatch(setSale(sale))
+  const dispatch = useDispatch()
+
+  const handleSelect = (order) => {
+    dispatch(setSale(order))
   }
 
+  const columns = [
+    {
+      name: "Ref. Number",
+      accessor: "reference_number",
+      type: "string",
+      format: "string",
+      sortable: true,
+      render: (item) => <RefNumberRenderer item={item} onSelect={() => handleSelect(item)} />
+    },
+    {
+      name: "Order Total",
+      accessor: "amount_due",
+      type: "number",
+      format: "currency",
+      sortable: true
+    },
+    {
+      name: "Order Items/Qty",
+      type: "number",
+      sortable: true,
+      alias: (item) => itemsQtyAliaser(item), 
+      render: (item) => <TotalItemsQtyRenderer item={item} />
+    },
+    {
+      name: "Order Status",
+      accessor: "status",
+      type: "string",
+      sortable: true,
+      render: (item) => <StatusRenderer item={item} />
+    },
+    {
+      name: "Order Pay. Method",
+      accessor: "payment_method",
+      type: "number",
+      sortable: true,
+      render: (item) => <PaymentMethodRenderer item={item} />
+    },
+    {
+      name: "Ordered By",
+      accessor: "customer.full_name",
+      type: "string",
+      format: "string",
+      sortable: true
+    },
+    {
+      name: "Salesperson",
+      accessor: "employee.full_name",
+      type: "string",
+      sortable: true,
+      render: (item) => <SalespersonRenderer item={item} />
+    },
+    {
+      name: "Date Ordered",
+      accessor: "created_at",
+      type: "date",
+      format: "date",
+      sortable: true
+    }
+  ]
+
   return (
-    <div className="table-wrapper table-container">
-      <table className="table">
-        <TableHeaders columns={columns} />
-        <tbody>
-          {
-            isFetching ? (
-              <TableStatus 
-                colSpan={colSpan} 
-                message={GenericMessage.SALES_FETCHING} 
-              />
-            ) : error ? (
-              <TableStatus 
-                colSpan={colSpan} 
-                message={GenericMessage.SALES_ERROR} 
-              />
-            )  : isEmpty(data) ? (
-              <TableStatus 
-                colSpan={colSpan} 
-                message={GenericMessage.SALES_EMPTY} 
-              />
-            ) : data.map((item, index) => (
-              <TableItem 
-                key={index} 
-                item={item}
-                isSelected={isEntitySelected(sale, item)}
-                onSelect={() => handleSelect(item)}
-              />
-            ))
-          }
-        </tbody>
-      </table>
+    <div className="table-wrapper table-data">
+      <Table
+        name="sales" 
+        columns={columns}
+        sq={sq}
+        data={data}
+        error={error}
+        selected={sale}
+        isFetching={isFetching}
+      />
     </div>
   )
 }
-function TableItem({item, isSelected, onSelect}) {
-  const refNumber = truncate(item.reference_number, 15)
-  const amountDue = toPeso(item.amount_due)
-  const totalItems = toPcs(item.number_of_items)
-  const status = OrderStatus.toObject(item.status)
-  const paymentMethod = PaymentMethod.toMethod(item.payment_method)
-  const customer = truncate(item.customer?.full_name)
-  const salesperson = truncate(item.employee.full_name)
-  const commission = toPeso(item.commission)
-  const dateCreated = toDateTime(item.created_at)
-  
+function RefNumberRenderer({item, onSelect}) {
+  const refNumber = truncate(item.reference_number)
+
   return (
-    <tr className={`${isSelected ? "is-selected" : ""}`}>
-      <td>
-        <Link onClick={onSelect}>
-          {refNumber}
-        </Link>
-      </td>
-      <td>{amountDue}</td>
-      <td>{totalItems}</td>
-      <td>
-        <span className={`badge ${status.badge}`}>
-          {status.icon}
-          {status.name}
-        </span>
-      </td>
-      <td>
-        <span className="badge text-bg-light">
-          {paymentMethod}
-        </span>
-      </td>
-      <td>{customer}</td>
-      <td>{salesperson}</td>
-      <td>{commission}</td>
-      <td>{dateCreated}</td>
-    </tr>
+    <Link onClick={onSelect}>{refNumber}</Link>
   )
 }
+function itemsQtyAliaser(item) {
+  const items = size(item.checkouts)
+  const qty = computeQty(item.checkouts)
+
+  return items + qty
+}
+function TotalItemsQtyRenderer({item}) {
+  const items = toItems(size(item.checkouts))
+  const qty = toQty(computeQty(item.checkouts))
+
+  return `${items}/${qty}`
+}
+function StatusRenderer({item}) {
+  const status = OrderStatus.toObject(item.status)
+
+  return (
+    <span className={`badge ${status.badge}`}>
+      {status.icon}
+      {status.name}
+    </span>
+  )
+}
+function PaymentMethodRenderer({item}) {
+  const paymentMethod = PaymentMethod.toMethod(item.payment_method)
+
+  return (
+    <span className="badge text-bg-light">
+      {paymentMethod}
+    </span>
+  )
+}
+function SalespersonRenderer({item}) {
+  const salesperson = truncate(item.employee.full_name)
+  const commission = toPeso(item.commission)
+
+  return (
+    <div className="vstack">
+      <span className="text-body-primary">{salesperson}</span>
+      <span className="text-body-secondary">{commission} (Com.)</span>
+    </div>
+  )
+}
+
 export default SalesTable

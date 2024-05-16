@@ -4,11 +4,11 @@ import ProductsTable from "./ProductsTable.jsx"
 import local from "../../../util/local.js"
 import { Fragment } from "react"
 import PosStyle from "./PosStyle.jsx"
-import OrderSide from "./OrderSide.jsx" 
 import TableType from "../../../util/classes/TableType.js"
 import CustomersTable from "./CustomersTable.jsx"
 import { useSelector } from "react-redux"
 import Fallback from "../../../util/classes/Fallback.js"
+import PosSide from "./PosSide.jsx"
 
 function PosView() {
   return (
@@ -16,7 +16,7 @@ function PosView() {
       <PosStyle />
       <TitleSection />
       <PosTable />
-      <OrderSide />
+      <PosSide />
     </Fragment>
   )
 }
@@ -33,7 +33,7 @@ function PosTable() {
 
 function TitleSection() {
   const user = Fallback.checkUser(local.get("user"))
-  
+
   return (
     <div className="title-section">
       <h3 className="text-body-primary fw-bold mb-0">POS System</h3>

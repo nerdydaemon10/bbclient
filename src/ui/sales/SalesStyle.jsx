@@ -2,29 +2,28 @@ import { createGlobalStyle } from "styled-components"
 
 const SalesStyle = createGlobalStyle`
 .dashboard-main {
-  grid-template-columns: 1fr 320px;
-  grid-template-rows: max-content 1fr 1fr max-content;
+  grid-template-columns: 1fr var(--dashboard-side-width);
+  grid-template-rows: max-content 1fr max-content;
   grid-template-areas: 
-    "title-container title-container"
-    "table-container side-container"
-    "table-container side-container"
-    "pagination-container receipt-list";
+    "title-section title-section"
+    "table-data sales-side"
+    "table-pagination receipt-list";
 }
 
-.title-container {
-  grid-area: title-container;
+.title-section {
+  grid-area: title-section;
 }
-.side-container {
-  grid-area: side-container;
+.sales-side {
+  grid-area: sales-side;
   overflow-x: hidden;
   overflow-y: auto;
 }
-.table-container {
-  grid-area: table-container;
+.table-data {
+  grid-area: table-data;
   overflow: auto !important;
 }
-.pagination-container {
-  grid-area: pagination-container;
+.table-pagination {
+  grid-area: table-pagination;
   display: flex;
   align-items: center;
   justify-content: space-between;

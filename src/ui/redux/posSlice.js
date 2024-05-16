@@ -1,11 +1,11 @@
-import { first } from "lodash"
+import { first, size } from "lodash"
 import { produce } from "immer"
-import { createSlice, isAnyOf } from "@reduxjs/toolkit"
+import { createSelector, createSlice, isAnyOf } from "@reduxjs/toolkit"
 
 import { TabsData } from "../dashboard/pos/Util.jsx"
 import { TableType } from "../../util/classes"
 import { PaymentMethodsData, rowsPerPages } from "../../util/Config.jsx"
-import { compareEntity } from "../../util/helper.js"
+import { compareEntity, computeCheckouts, computeQty, toItems, toQty } from "../../util/helper.js"
 import orders from "../../data/services/orders.js"
 
 const checkoutsTab = first(TabsData).value
@@ -138,6 +138,19 @@ const posSlice = createSlice({
     })
   }
 })
+
+export const selectReceipts = createSelector(
+  (state) => state.pos.checkouts,
+  (checkouts) => {
+    const items = toItems(size(checkouts))
+    const qty = toQty(computeQty(checkouts))
+    const orderTotal = computeCheckouts(checkouts)
+    
+    return [
+      { label: "Total Items/Qty", value: `${items}/${qty}`},
+      { label: "Order Total", format: "currency", value: orderTotal }
+    ]
+  })
 
 export const selectSq = (state) => {
   return state.table == TableType.PRODUCTS 

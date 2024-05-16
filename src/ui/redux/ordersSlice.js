@@ -1,14 +1,14 @@
-import { createSlice, isAnyOf } from "@reduxjs/toolkit"
+import { createSelector, createSlice, isAnyOf } from "@reduxjs/toolkit"
 import ModalType from "../../util/classes/ModalType.js"
 import { rowsPerPages } from "../../util/Config.jsx"
-import { first, isNil } from "lodash"
+import { first, isNil, size } from "lodash"
 import local from "../../util/local.js"
 import Fallback from "../../util/classes/Fallback.js"
-import { compareEntity } from "../../util/helper.js"
+import { compareEntity, computeCheckouts, computeQty, toItems, toQty } from "../../util/helper.js"
 import { employees } from "../../data/services/employees.js"
+import { produce } from "immer"
 
 const user = Fallback.checkUser(local.get("user"))
-
 const initialState = {
   sq: {
     employee_id: "",
@@ -35,6 +35,9 @@ const ordersSlice = createSlice({
     setSq: (state, action) => {
       const e = action.payload.target
       state.sq = { ...state.sq, [e.name]: e.value }
+    },
+    resetSq: (state) => {
+      state.sq = produce(initialState, draft => draft.sq)
     },
     previousPage: (state,) => {
       const sq = state.sq
@@ -77,6 +80,24 @@ const ordersSlice = createSlice({
     })
   }
 })
+export const selectReceipts = createSelector(
+(state) => state.orders.viewOrder,
+(viewOrder) => {
+  if (isNil(viewOrder)) return []
 
-export const { setSq, previousPage, nextPage, setOrder, openModal, closeModal } = ordersSlice.actions
+  const items = toItems(size(viewOrder.checkouts))
+  const qty = toQty(computeQty(viewOrder.checkouts))
+  const orderTotal = computeCheckouts(viewOrder.checkouts)
+
+  return [
+    { label: "Total Items/Qty", value: `${items}/${qty}`},
+    { label: "Order Total", format: "currency", value: orderTotal }
+  ]
+})
+export const selectCheckoutSize = createSelector(
+  (state) => state.orders, 
+  (orders) => isNil(orders.viewOrder) ? 0 : size(orders.viewOrder.checkouts)
+)
+
+export const { setSq, resetSq, previousPage, nextPage, setOrder, openModal, closeModal } = ordersSlice.actions
 export default ordersSlice.reducer

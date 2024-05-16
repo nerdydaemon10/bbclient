@@ -3,7 +3,7 @@ import Button from "../buttons/Button.jsx"
 import CheckoutListStyle from "./CheckoutListStyle.jsx"
 import { BiMinus, BiPlus } from "react-icons/bi"
 import ProductCategory from "../../../util/classes/ProductCategory.js"
-import { toPcs, toPeso, truncate } from "../../../util/helper.js"
+import { toItems, toPeso, toQty, truncate } from "../../../util/helper.js"
 
 function CheckoutList({className, checkouts, isControlsDisabled, isOdd, onDecrement, onIncrement}) {
   return (
@@ -37,7 +37,7 @@ function CheckoutItem({count, checkout, isControlsDisabled, isOdd=true, onDecrem
   const srp = toPeso(checkout.srp)
   const category = ProductCategory.toCategory(checkout.category_id)
   const total = toPeso(checkout.srp * checkout.quantity)
-  const quantity = toPcs(checkout.quantity)
+  const quantity = toQty(checkout.quantity)
   
   return (
     <li className={`checkout-list-item ${isControlsDisabled ? "" : "d-flex flex-row justify-content-between gap-2"} border rounded ${isOdd ? "is-odd" : "is-even" } p-2`}>

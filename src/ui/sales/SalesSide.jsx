@@ -4,40 +4,44 @@ import { paymentMethods, orderStatuses } from "../../util/Config.jsx"
 import OrderStatus from "../../util/classes/OrderStatus.js"
 import PaymentMethod from "../../util/classes/PaymentMethod.js"
 import { Button, CheckoutList, DateInput, SearchFieldInput, SelectInput } from "../common/index.jsx"
-import { setSq } from "../redux/salesSlice.js"
+import { selectSale, selectCheckoutsSize, setSq } from "../redux/salesSlice.js"
 import { BiDownload } from "react-icons/bi"
 import { isNil } from "lodash"
 import { useDownloadSalesMutation } from "../../data/services/sales.js"
 
-function SideContainer() {
-  const { sale } = useSelector((state) => state.sales)
-  const title = isNil(sale) ? "Filter Sales" : "Checkouts"
-  const content = isNil(sale) ? (
-    <FilteringContainer />
-  ) : (
-    <CheckoutList 
-      checkouts={sale.checkouts} 
-      isControlsDisabled
-      isOdd={false}
-    />
-  )
-  
+function SalesSide() {
+  const sale = useSelector(selectSale)
+  const emptySale = isNil(sale)
+  const checkoutsSize = useSelector(selectCheckoutsSize)
+
   return (
-    <div className="card side-container">
+    <div className="card sales-side">
       <div className="card-header p-2">
         <h6 className="card-title fw-semibold mb-0">
-          {title}
+          {emptySale ? "Filter Sales" : `Checkouts (${checkoutsSize})`}
         </h6>
       </div>
       <div className="card-body overflow-y-auto p-0">
-        {content}
+        {
+          emptySale 
+          ? (<FilterSales />) 
+          : (
+            <CheckoutList
+              checkouts={sale.checkouts} 
+              isControlsDisabled
+              isOdd={false} 
+            />
+          )
+        }
       </div>
     </div>
   )
 }
 
-function FilteringContainer() {
-  const { sq, salespersons } = useSelector((state) => state.sales)
+function FilterSales() {
+  const sq = useSelector((state) => state.sales.sq)
+  const salespersons = useSelector((state) => state.sales.salespersons)
+
   const dispatch = useDispatch()
   
   const handleChange = (e) => {
@@ -118,4 +122,4 @@ function ExportButton() {
   )
 }
 
-export default SideContainer
+export default SalesSide

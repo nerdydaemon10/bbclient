@@ -179,7 +179,7 @@ function TableData({sq, data, error, isFetching}) {
       sortable: true
     },
     {
-      name: "Modifier",
+      name: "Actions",
       render: (item) => (
         <ActionRenderer 
           onUpdate={() => handleUpdate(item)} 

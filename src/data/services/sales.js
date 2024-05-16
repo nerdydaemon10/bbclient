@@ -10,7 +10,9 @@ export const sales = client.injectEndpoints({
       query: (sq) => ({
         url: `/admin/export`,
         method: "GET",
-        params: sq
+        params: sq,
+        responseHandler: async (response) => await response.blob(),
+        cache: "no-cache",
       })
     }),
     fetchSales: builder.query({

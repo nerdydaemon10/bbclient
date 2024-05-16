@@ -16,13 +16,11 @@ export const truncate = (string, max=30) => {
   return string
 }
 export const toPeso = (arg) => {
+  const number = Number(arg)
   const locales = "en-PH"
   const options = { style: "currency", currency: "PHP" }
 
-  // if (isEmpty(arg)) return "0.00".toLocaleString(locales, options)
-  // if (isNaN(arg)) return "0.00".toLocaleString(locales, options)
-
-  return arg.toLocaleString(locales, options)
+  return number.toLocaleString(locales, options)
 }
 export const toStocks = (arg) => {
   const number = Number(arg)
@@ -32,13 +30,20 @@ export const toStocks = (arg) => {
 
   return "No Stocks"
 }
-export const toPcs = (integer) => {
+export const toItems = (integer) => {
   const number = Number(integer)
 
-  if (number == 1) return `${number}pc`
-  if (number > 1) return `${number}pcs`
+  if (number == 0) return "No Items"
+  if (number == 1) return `${number} Item`
 
-  return "No Items"
+  return `${number} Items`
+}
+export const toQty = (integer) => {
+  const number = Number(integer)
+
+  if (number == 0) return "No Items"
+
+  return `${number}qty`
 }
 export const toCount = (arg, max=999) => {
   const number = Number(arg)
@@ -108,15 +113,30 @@ export const compareEntity = (entity, entity2) => {
 }
 
 // Computation
-
 export const computeCheckout = (checkout) => {
-  return checkout.srp * checkout.quantity
+  const srp = Number(checkout.srp)
+  const quantity = Number(checkout.quantity)
+  
+  return srp * quantity
 }
 export const computeCheckouts = (checkouts) => {
   return isEmpty(checkouts)
     ? 0.00
     : checkouts.reduce((accum, checkout) => 
-        accum + computeCheckout(checkout), 
-        0.00
-      )
+      accum + computeCheckout(checkout), 
+      0.00
+    )
+}
+export const computeSales = (sales) => {
+  return isEmpty(sales)
+    ? 0.00
+    : sales.reduce((accum, sale) => 
+      accum + computeCheckouts(sale.checkouts), 
+      0.00
+    )
+}
+export const computeQty = (checkouts) => {
+  return isEmpty(checkouts)
+    ? 0
+    : checkouts.reduce((accum, checkout) =>  accum + checkout.quantity, 0)
 }

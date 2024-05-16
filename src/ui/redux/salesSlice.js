@@ -1,7 +1,7 @@
 import { createSelector, createSlice, isAnyOf } from "@reduxjs/toolkit"
 import { rowsPerPages } from "../../util/Config.jsx"
-import { first, isEmpty, isNil } from "lodash"
-import { computeCheckouts, isEntitySelected } from "../../util/helper.js"
+import { first, isEmpty, isNil, size } from "lodash"
+import { computeCheckouts, computeQty, computeSales, isEntitySelected, toItems, toPeso, toQty } from "../../util/helper.js"
 import { sales } from "../../data/services/sales.js"
 import moment from "moment"
 import { employees } from "../../data/services/employees.js"
@@ -59,7 +59,7 @@ const salesSlice = createSlice({
     })
     builder.addMatcher(
       isAnyOf(sales.endpoints.downloadSales.matchFulfilled), (_, action) => {
-        
+
       const now = moment.now()
       const name = `SALES_REPORT_${now}.xlsx`
 
@@ -78,7 +78,30 @@ const salesSlice = createSlice({
   }
 })
 
-export const selectSale = (state) => state.sale
+export const selectReceipts = createSelector(
+  (state) => state.sales,
+  (state) => {
+    const sale = state.sale
+    const sales = state.sales
+    const totalSales = computeSales(sales)
+
+    if (isNil(sale))
+      return [{ label: "Total Sales", format: "currency", value: totalSales }]
+    
+    const items = toItems(size(sale.checkouts))
+    const qty = toQty(computeQty(sale.checkouts))
+    const orderTotal = computeCheckouts(sale.checkouts)
+    const commission = sale.commission
+
+    return [
+      { label: "Total Items/Qty", value: `${items}/${qty}`},
+      { label: "Salesp. Commission", format: "currency", value: commission},
+      { label: "Order Total", format: "currency", value: orderTotal}
+    ]
+  })
+export const selectSq = (state) => state.sales.sq
+export const selectSale = (state) => state.sales.sale
+export const selectCheckoutsSize = createSelector((state) => state.sales.sale, (sale) => isNil(sale) ? 0 : size(sale.checkouts))
 export const selectSales = (state) => state.sales
 export const selectUsersResponse = (state) => state.fetchUsersResponse.data ?? []
 export const selectTotalCommission = createSelector([selectSales], (sales) => {

@@ -1,41 +1,41 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import { Button, CheckoutList, DateInput, SearchFieldInput, SelectInput } from "../../common/index.jsx"
+import { Button, CheckoutList, DateInput, ReceiptList, SearchFieldInput, SelectInput } from "../../common/index.jsx"
 import { orderStatuses, paymentMethods } from "../../../util/Config.jsx"
 import { OrderStatus, PaymentMethod } from "../../../util/classes"
 import { isNil } from "lodash"
-import { setSq } from "../../redux/ordersSlice.js"
+import { resetSq, selectCheckoutSize, selectReceipts, setSq } from "../../redux/ordersSlice.js"
 import { BiRotateLeft } from "react-icons/bi"
 
 function OrdersSide() {
-  const { sq, viewOrder } = useSelector((state) => state.orders)
-  const hasViewOrder = !isNil(viewOrder)
-
-  const title = !hasViewOrder
-    ? "Filter Orders" 
-    : "Checkouts"
-  let content = <FilterOrders />
-
-  if (hasViewOrder) {
-    content = (
-      <CheckoutList 
-        checkouts={viewOrder.checkouts} 
-        isControlsDisabled
-        isOdd={false} 
-      />
-    )
-  }
+  const viewOrder = useSelector((state) => state.orders.viewOrder)
+  const checkoutsSize = useSelector(selectCheckoutSize)
+  const receipts = useSelector(selectReceipts)
+  const emptyViewOrder = isNil(viewOrder)
 
   return (
-    <div className="card orders-side">
-      <div className="card-header p-2">
-        <h6 className="card-title fw-semibold mb-0">
-          {title}
-        </h6>
+    <div className={`orders-side d-grid gap-2 ${emptyViewOrder ? "" : "has-view-order"}`}>
+      <div className="card">
+        <div className="card-header p-2">
+          <h6 className="card-title fw-semibold mb-0">
+            {emptyViewOrder ? "Filter Orders" : `Checkouts (${checkoutsSize})`}
+          </h6>
+        </div>
+        <div className="card-body overflow-y-auto p-0">
+          {
+            emptyViewOrder 
+            ? (<FilterOrders />) 
+            : (
+              <CheckoutList
+                checkouts={viewOrder.checkouts} 
+                isControlsDisabled
+                isOdd={false} 
+              />
+            )
+          }
+        </div>
       </div>
-      <div className="card-body overflow-y-auto p-0">
-        {content}
-      </div>
+      {!emptyViewOrder && (<ReceiptList receipts={receipts} />)}
     </div>
   )
 }
@@ -48,6 +48,10 @@ function FilterOrders() {
     dispatch(setSq(e))
   }
 
+  const handleReset = () => {
+    dispatch(resetSq())
+  }
+  
   return (
     <div className=" d-flex flex-column p-2 gap-2">
       <DateInput 
@@ -98,7 +102,10 @@ function FilterOrders() {
         onRender={(option) => `${PaymentMethod.toMethod(option)}`}
       />
       <hr className="mt-2 mb-2"/>
-      <Button variant="outline-dark">
+      <Button 
+        variant="outline-dark"
+        onClick={handleReset}
+      >
         <BiRotateLeft className="me-1" />
         Reset Filter
       </Button>

@@ -2,7 +2,7 @@ import { createGlobalStyle } from "styled-components";
 
 const OrdersStyle = createGlobalStyle`
 .dashboard-main {
-  grid-template-columns: 1fr 275px;
+  grid-template-columns: 1fr var(--dashboard-side-width);
   grid-template-rows: max-content 1fr;
   grid-template-areas: 
     "title-section title-section"
@@ -40,6 +40,32 @@ const OrdersStyle = createGlobalStyle`
   grid-area: orders-side;
   overflow-x: hidden;
   overflow-y: auto;
-}`
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: "card";
+}
+/* --ORDERS-SIDE.HAS-VIEW-ORDER-- */
+.orders-side.has-view-order {
+  overflow-x: hidden;
+  overflow-y: auto;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr max-content;
+  grid-template-areas: 
+    "card"
+    "receipt-list";
+}
+
+/* --ORDERS-SIDE-- */
+.card {
+  grid-area: card;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* --ORDERS-SIDE-- */
+.receipt-list {
+  grid-area: receipt-list;
+}
+`
 
 export default OrdersStyle

@@ -9,7 +9,7 @@ import { useCreateOrderMutation } from "../../../data/services/orders.js"
 import { enqueueSnackbar } from "notistack"
 import GenericMessage from "../../../util/classes/GenericMessage.js"
 
-function OrderSide() {
+function PosSide() {
   const dispatch = useDispatch()
   const { tab, customer, paymentMethod, checkouts } = useSelector((state) => state.pos)
   const [createOrder, { isLoading, isSuccess }] = useCreateOrderMutation()
@@ -82,4 +82,4 @@ function PlaceOrderButton({isLoading, isDisabled, onOrder}) {
   )
 }
 
-export default OrderSide
+export default PosSide

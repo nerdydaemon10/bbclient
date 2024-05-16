@@ -1,12 +1,11 @@
 import { Fragment } from "react"  
 import { CheckoutList, ReceiptList } from "../../common/index.jsx"
 import { useDispatch, useSelector } from "react-redux"
-import { decrementQty, incrementQty } from "../../redux/posSlice.js"
-import { computeCheckouts, toPeso } from "../../../util/helper"
+import { decrementQty, incrementQty, selectReceipts } from "../../redux/posSlice.js"
 
 function CheckoutsTab() {
-  const { checkouts } = useSelector((state) => state.pos)
-  const total = computeCheckouts(checkouts)
+  const checkouts = useSelector((state) => state.pos.checkouts)
+  const receipts = useSelector(selectReceipts)
   const dispatch = useDispatch()
 
   const handleDecrement = (id) => {
@@ -15,7 +14,7 @@ function CheckoutsTab() {
   const handleIncrement = (id) => {
     dispatch(incrementQty(id))
   }
-
+  
   return (
     <Fragment>
       <CheckoutList
@@ -24,10 +23,7 @@ function CheckoutsTab() {
         onIncrement={handleIncrement}
       />
       <ReceiptList
-        receipts={[{
-          name: "Total", 
-          value: toPeso(total)
-        }]}
+        receipts={receipts}
       />
     </Fragment>
   )
