@@ -5,6 +5,15 @@
 .fs-8 {
   font-size: 0.90rem !important;
 }
+.fs-9 {
+  font-size: 0.85rem !important;
+}
+.fs-10 {
+  font-size: 0.80rem !important;
+}
+.fs-11 {
+  font-size: 0.75rem !important;
+}
 /*--LINE-HEIGHT--*/
 .lh-0 {
   line-height: 0;

@@ -76,28 +76,28 @@ function TableData({sq, data, error, isFetching}) {
       render: (item) => <RefNumberRenderer item={item} onSelect={() => handleSelect(item)} />
     },
     {
-      name: "Order Total",
+      name: "Order/Total",
       accessor: "amount_due",
       type: "number",
       format: "currency",
       sortable: true
     },
     {
-      name: "Order Items/Qty",
+      name: "Order/(Items/Qty)",
       type: "number",
       sortable: true,
       alias: (item) => itemsQtyAliaser(item), 
       render: (item) => <TotalItemsQtyRenderer item={item} />
     },
     {
-      name: "Order Status",
+      name: "Order/Status",
       accessor: "status",
       type: "string",
       sortable: true,
       render: (item) => <StatusRenderer item={item} />
     },
     {
-      name: "Order Pay. Method",
+      name: "Order/Pay. Method",
       accessor: "payment_method",
       type: "number",
       sortable: true,
@@ -185,7 +185,9 @@ function SalespersonRenderer({item}) {
   return (
     <div className="vstack">
       <span className="text-body-primary">{salesperson}</span>
-      <span className="text-body-secondary">{commission} (Com.)</span>
+      <span className="text-body-secondary">
+        {commission} <span className="fs-10">(Commission)</span>
+      </span>
     </div>
   )
 }

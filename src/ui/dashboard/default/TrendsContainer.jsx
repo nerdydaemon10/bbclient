@@ -7,7 +7,7 @@ import { toPeso } from "../../../util/helper.js"
 function TrendsContainer() {
   const { data } = useFetchSummariesQuery()
   
-  const totalSales = toPeso(data?.transactions_total.total_sales ?? 0.00)
+  const overallSales = toPeso(data?.transactions_total.overall_sales ?? 0.00)
   const todaySales = toPeso(data?.transactions_total.today_sales ?? 0.00)
   const totalCommission = toPeso(data?.transactions_total.total_commission ?? 0.00)
   
@@ -20,16 +20,16 @@ function TrendsContainer() {
     <Fragment>
       <div className="trends-container gap-2">
         <TrendCard
+          title="Overall Sales"
+          count={overallSales}
+          description="Total sales overtime"
+          icon={<BiLineChart />}
+        />
+        <TrendCard
           title="Today Sales"
           count={todaySales}
           description="Total sales today"
           icon={<BiDollar />}
-        />
-        <TrendCard
-          title="Total Sales"
-          count={totalSales}
-          description="Total sales overtime"
-          icon={<BiLineChart />}
         />
         <TrendCard
           title="Orders"
