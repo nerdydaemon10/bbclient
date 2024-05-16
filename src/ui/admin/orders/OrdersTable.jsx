@@ -110,7 +110,7 @@ function TableData({sq, data, error, isFetching}) {
       render: (item) => <StatusRenderer item={item} />
     },
     {
-      name: "Pay. Method",
+      name: "Payment Method",
       accessor: "payment_method",
       type: "number",
       sortable: true,

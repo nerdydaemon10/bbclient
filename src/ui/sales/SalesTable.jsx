@@ -76,28 +76,28 @@ function TableData({sq, data, error, isFetching}) {
       render: (item) => <RefNumberRenderer item={item} onSelect={() => handleSelect(item)} />
     },
     {
-      name: "Order/Total",
+      name: "Total",
       accessor: "amount_due",
       type: "number",
       format: "currency",
       sortable: true
     },
     {
-      name: "Order/(Items/Qty)",
+      name: "Items/Qty",
       type: "number",
       sortable: true,
       alias: (item) => itemsQtyAliaser(item), 
       render: (item) => <TotalItemsQtyRenderer item={item} />
     },
     {
-      name: "Order/Status",
+      name: "Status",
       accessor: "status",
       type: "string",
       sortable: true,
       render: (item) => <StatusRenderer item={item} />
     },
     {
-      name: "Order/Pay. Method",
+      name: "Payment Method",
       accessor: "payment_method",
       type: "number",
       sortable: true,

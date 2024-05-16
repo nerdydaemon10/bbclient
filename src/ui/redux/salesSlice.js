@@ -100,7 +100,7 @@ export const selectReceipts = createSelector(
     return [
       { label: "Salesp. Commission", format: "currency", value: commission},
       { label: "Total Items/Qty", value: `${items}/${qty}`},
-      { label: "Order Total", format: "currency", value: orderTotal}
+      { label: "Total", format: "currency", value: orderTotal}
     ]
   })
 export const selectSq = (state) => state.sales.sq

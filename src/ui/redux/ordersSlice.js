@@ -91,7 +91,7 @@ export const selectReceipts = createSelector(
 
   return [
     { label: "Total Items/Qty", value: `${items}/${qty}`},
-    { label: "Order Total", format: "currency", value: orderTotal }
+    { label: "Total", format: "currency", value: orderTotal }
   ]
 })
 export const selectCheckoutSize = createSelector(
