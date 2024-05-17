@@ -62,7 +62,7 @@ function CustomersTable() {
 }
 function TableFilter({search, onChange}) {
   return (
-    <div className="table-filter d-flex gap-2">
+    <div className="table-filter d-block gap-2">
       <SearchFieldInput
         name="search"
         placeholder="Search by Customer..."

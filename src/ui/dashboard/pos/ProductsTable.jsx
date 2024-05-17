@@ -10,7 +10,7 @@ import { debounce, isNil } from "lodash"
 import { useFetchProductsQuery } from "../../../data/services/products.js"
 import Fallback from "../../../util/classes/Fallback.js"
 import { Table } from "../../common/Table.jsx"
-import { toPeso, toStocks } from "../../../util/helper.js"
+import { toStocks, truncate } from "../../../util/helper.js"
 
 function ProductsTable() {
   const dispatch = useDispatch()
@@ -96,6 +96,7 @@ function TableData({sq, data, error, isFetching}) {
       name: "Code",
       accessor: "product_code",
       type:"string",
+      format:"string",
       sortable: true
     },
     {
@@ -103,37 +104,29 @@ function TableData({sq, data, error, isFetching}) {
       accessor: "name",
       type:"string",
       sortable: true,
-      render: (item) => (
-        <div className="vstack">
-          <span className="text-body-primary">{item.name}</span>
-          <span className="text-body-secondary">{item.description}</span>   
-        </div>
-      )
+      render: (item) => <NameRenderer item={item} />
     },
     {
       name: "Category",
       accessor: "category_id",
       type: "number",
       sortable: true,
-      render: (item) => (
-        <span className="badge text-bg-light">
-          {ProductCategory.toCategory(item.category_id)}
-        </span>
-      )
+      render: (item) => <StatusRenderer item={item} />
     },
     { 
       name: "Stocks",
       accessor: "quantity",
       type: "number",
+      format: "stocks",
       sortable: true,
       render: (item) => toStocks(item.quantity)
     },
     {
       name: "Price/SRP",
       accessor: "srp",
-      type:"integer",
-      sortable: true,
-      render: (item) => toPeso(item.srp)
+      type:"number",
+      format: "currency",
+      sortable: true
     },
     {
       name: "Action",
@@ -160,6 +153,24 @@ function TableData({sq, data, error, isFetching}) {
         isFetching={isFetching}
       />
     </div>
+  )
+}
+function NameRenderer({item}) {
+  const name = truncate(item.name)
+  const description = truncate(item.description)
+
+  return (
+    <div className="vstack">
+      <span className="text-body-primary">{name}</span>
+      <span className="text-body-secondary">{description}</span>
+    </div>
+  )
+}
+function StatusRenderer({item}) {
+  const category = ProductCategory.toCategory(item.category_id)
+
+  return (
+    <span className="badge text-bg-light">{category}</span>
   )
 }
 

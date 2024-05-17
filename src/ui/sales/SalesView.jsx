@@ -4,20 +4,20 @@ import SalesTable from "./SalesTable.jsx"
 import { ReceiptList } from "../common/index.jsx"
 import { useSelector } from "react-redux"
 import { selectReceipts } from "../redux/salesSlice.js"
-import SalesProvider from "./SalesProvider.jsx"
 import SalesSide from "./SalesSide.jsx"
+import { Fragment } from "react"
 
 function SalesView() {
   const receipts = useSelector(selectReceipts)
 
   return (
-    <SalesProvider>
+    <Fragment>
       <SalesStyle />
       <TitleSection />
       <SalesTable />
       <SalesSide />
       <ReceiptList receipts={receipts} />
-    </SalesProvider>
+    </Fragment>
   )
 }
 

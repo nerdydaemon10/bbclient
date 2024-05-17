@@ -1,7 +1,6 @@
 import { isNil } from "lodash"
 import { useFetchCriticalProductsQuery } from "../../../data/services/products.js"
 import { Table } from "../../common/Table.jsx"
-import { Button } from "../../common/index.jsx"
 import ProductCategory from "../../../util/classes/ProductCategory.js"
 import { toStocks } from "../../../util/helper.js"
 

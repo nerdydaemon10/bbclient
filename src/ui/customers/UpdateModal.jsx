@@ -30,7 +30,7 @@ function UpdateModal() {
 
   useEffect(() => {
     if (!isSuccess) return
-
+    
       dispatch(closeModal(ModalType.UPDATE))
       enqueueSnackbar(GenericMessage.CUSTOMER_UPDATED)
   }, [isSuccess])

@@ -88,7 +88,7 @@ const posSlice = createSlice({
     },
     decrementQty: (state, action) => {
       const id = action.payload
-
+      
       state.checkouts = state.checkouts.map(checkout => {
         if (checkout.id != id) return checkout
         if (checkout.quantity == 0) return checkout
@@ -148,7 +148,7 @@ export const selectReceipts = createSelector(
     
     return [
       { label: "Total Items/Qty", value: `${items}/${qty}`},
-      { label: "Order Total", format: "currency", value: orderTotal }
+      { label: "Total", format: "currency", value: orderTotal }
     ]
   })
 

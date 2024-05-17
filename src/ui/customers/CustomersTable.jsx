@@ -143,14 +143,10 @@ function TableData({sq, data, error, isFetching}) {
     {
       name: "Action",
       render: (item) => (
-        <div className="hstack gap-1">
-          <Button variant="dark" size="sm" onClick={() => handleUpdate(item)}>
-            Update
-          </Button>
-          <Button variant="light" size="sm" onClick={() => handleRemove(item)}>
-            Remove
-          </Button>
-        </div>
+        <ActionRenderer 
+          onUpdate={() => handleUpdate(item)} 
+          onRemove={() => handleRemove(item)} 
+        />
       )
     },
   ]
@@ -168,5 +164,16 @@ function TableData({sq, data, error, isFetching}) {
     </div>
   )
 }
-
+function ActionRenderer({onUpdate, onRemove}) {
+  return (
+    <div className="hstack gap-1">
+      <Button variant="dark" size="sm" onClick={onUpdate}>
+        Update
+      </Button>
+      <Button variant="light" size="sm" onClick={onRemove}>
+        Remove
+      </Button>
+    </div>
+  )
+}
 export default CustomersTable

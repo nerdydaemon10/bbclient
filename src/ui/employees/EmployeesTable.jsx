@@ -3,15 +3,15 @@ import { Fragment, useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { debounce, delay, isNil } from "lodash"
 
-import { Fallback, ModalType, Role } from "../../util/classes"
+import { Fallback, ModalType, Role, Status } from "../../util/classes"
 import { DELAY_MILLIS } from "../../util/Config.jsx"
-import { BiPlusCircle } from "react-icons/bi"
+import { BiPlusCircle, BiSolidCheckCircle } from "react-icons/bi"
 import { useFetchEmployeesQuery } from "../../data/services/employees.js"
 import { Button, TablePagination, SearchFieldInput } from "../common"
 import { nextPage, openModal, previousPage, setEmployee, setSq } from "../redux/employeesSlice.js"
 import { local } from "../../util"
 import { Table } from "../common/Table.jsx"
-import { FullNameRenderer, StatusRenderer } from "./Util.jsx"
+import { compareEntity, truncate } from "../../util/helper.js"
 
 function EmployeesTable() {
   const dispatch = useDispatch()
@@ -173,6 +173,27 @@ function TableData({sq, data, error, isFetching}) {
         isFetching={isFetching}
       />
     </div>
+  )
+}
+function FullNameRenderer({item, user}) {  
+  const fullName = truncate(item.full_name)
+
+  return (
+    <Fragment>
+      {fullName}
+      {compareEntity(item, user) && <span className="ms-1">(You)</span>}
+      {Role.isAdmin(item.role_id) && <span className="ms-1"><BiSolidCheckCircle/></span>}
+    </Fragment>
+  )
+}
+function StatusRenderer({item}) {
+  const status =  Status.toObject(item.status)
+  
+  return (
+    <span className={`badge ${status.badge}`}>
+      <span className="me-1">{status.icon}</span>
+      {status.name}
+    </span>
   )
 }
 

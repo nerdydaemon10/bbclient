@@ -7,7 +7,6 @@ import {
   BiSolidCoffee,
   BiCoffee,
   BiMoney,
-  BiSolidTruck,
 } from "react-icons/bi"
 
 export const DELAY_MILLIS = 250

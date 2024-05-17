@@ -2,13 +2,10 @@ import { createSelector, createSlice, isAnyOf } from "@reduxjs/toolkit"
 import ModalType from "../../util/classes/ModalType.js"
 import { rowsPerPages } from "../../util/Config.jsx"
 import { first, isNil, size } from "lodash"
-import local from "../../util/local.js"
-import Fallback from "../../util/classes/Fallback.js"
 import { compareEntity, computeCheckouts, computeQty, toItems, toQty } from "../../util/helper.js"
 import { employees } from "../../data/services/employees.js"
 import { produce } from "immer"
 
-const user = Fallback.checkUser(local.get("user"))
 const initialState = {
   sq: {
     employee_id: "",
@@ -18,8 +15,7 @@ const initialState = {
     status: "",
     payment_method: "",
     per_page: first(rowsPerPages), 
-    page: 1,
-    role: user.role
+    page: 1
   },
   salespersons: [],
   modifyOrder: null,
@@ -84,12 +80,17 @@ export const selectReceipts = createSelector(
 (state) => state.orders.viewOrder,
 (viewOrder) => {
   if (isNil(viewOrder)) return []
-
+  
   const items = toItems(size(viewOrder.checkouts))
   const qty = toQty(computeQty(viewOrder.checkouts))
   const orderTotal = computeCheckouts(viewOrder.checkouts)
 
   return [
+    { 
+      label: "Salesp.  Commission", 
+      format: "currency", 
+      value: viewOrder.commission
+    },
     { label: "Total Items/Qty", value: `${items}/${qty}`},
     { label: "Total", format: "currency", value: orderTotal }
   ]

@@ -13,7 +13,7 @@ const client = createApi({
     baseUrl: BASE_URL,
     prepareHeaders: (headers) => {
       const token = local.get("token")
-
+      
       headers.set("Accept", "application/json")
       headers.set("x-api-key", X_API_KEY)
       headers.set("Authorization", `Bearer ${token}`)
@@ -24,4 +24,8 @@ const client = createApi({
   endpoints: () => ({})
 })
 
+export const roleBaseUrl = (url) => {
+  const user = local.get("user")
+  return `/${user.role}${url}`
+}
 export default client

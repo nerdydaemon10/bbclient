@@ -1,20 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import GenericMessage from "../../../util/classes/GenericMessage.js"
-import { DELAY_MILLIS, orderStatuses } from "../../../util/Config.jsx"
-import { toDateTime, toItems, toPeso, truncate } from "../../../util/helper.js"
-import { SelectInput, TableHeaders, TablePagination, TableStatus } from "../../common"
-import { Fragment, useCallback, useEffect, useState } from "react"
-import SearchFieldInput from "../../common/inputs/SearchFieldInput.jsx"
+import { DELAY_MILLIS } from "../../../util/Config.jsx"
+import { TablePagination } from "../../common/index.jsx"
 import PaymentMethod from "../../../util/classes/PaymentMethod.js"
 import OrderStatus from "../../../util/classes/OrderStatus.js"
-import { nextPage, previousPage, setSq } from "../../redux/ordersSlice.js"
-import { debounce, isEmpty, isNil, size } from "lodash"
+import { nextPage, previousPage, setOrder, setSq } from "../../redux/ordersSlice.js"
+import { debounce, isNil, size } from "lodash"
+import { useCallback, useEffect, useState } from "react"
 import { useFetchOrdersQuery } from "../../../data/services/orders.js"
 import Fallback from "../../../util/classes/Fallback.js"
-
-const columns = ["Ref. Number", "Amount Due", "Total Items", "Status", "Payment Method", "Customer", "Salesperson", "Date Ordered"]
-const colSpan = size(columns)
+import { Table } from "../../common/Table.jsx"
+import { Link } from "react-router-dom"
+import { computeQty, toItems, toPeso, toQty, truncate } from "../../../util/helper.js"
 
 function OrdersTable() {
   const dispatch = useDispatch()
@@ -38,19 +35,14 @@ function OrdersTable() {
   const handleNext = (meta) => {
     dispatch(nextPage(meta))
   }
-
+  
   useEffect(() => {
     debouncer(sq)
   }, [debouncer, sq])
 
   return (
-    <Fragment>
-      <TableFiltering 
-        name={sq.name}
-        status={sq.status}
-        onChange={handleChange}
-      />
-      <TableContent
+    <div className="orders-table d-grid gap-2">
+      <TableData
         sq={sq}
         data={isNil(data) ? [] : data.data}
         error={error}
@@ -64,100 +56,128 @@ function OrdersTable() {
         onPrevious={handlePrevious}
         onNext={() => handleNext(meta)}
       />
-    </Fragment>
-  )
-}
-function TableFiltering({name, status, onChange}) {
-  return (
-    <div className="filtering-container">
-      <div className="row gx-2">
-        <div className="col-6">
-          <SearchFieldInput
-            name="name"
-            placeholder="Search by Order..."
-            value={name}
-            onChange={onChange}
-          />
-        </div>
-        <div className="col-6">
-          <SelectInput
-            name="status"
-            options={orderStatuses}
-            isOptional
-            value={status}
-            onChange={onChange}
-            onRender={(option) => OrderStatus.toStatus(option)}
-          />
-        </div>
-      </div>
     </div>
   )
 }
-function TableContent({sq, data, error, isFetching}) {
+function TableData({sq, data, error, isFetching}) {
+  const { viewOrder } = useSelector((state) => state.orders)
+
+  const dispatch = useDispatch()
+
+  const handleSelect = (order) => {
+    dispatch(setOrder({type: "view", order}))
+  }
+
+  const columns = [
+    {
+      name: "Ref. Number",
+      accessor: "reference_number",
+      type: "string",
+      format: "string",
+      sortable: true,
+      render: (item) => <RefNumberRenderer item={item} onSelect={() => handleSelect(item)} />
+    },
+    {
+      name: "Customer",
+      accessor: "customer.full_name",
+      type: "string",
+      format: "string",
+      sortable: true
+    },
+    {
+      name: "Total",
+      accessor: "amount_due",
+      type: "number",
+      format: "currency",
+      sortable: true
+    },
+    {
+      name: "Items/Qty",
+      type: "number",
+      sortable: true,
+      alias: (item) => itemsQtyAliaser(item), 
+      render: (item) => <TotalItemsQtyRenderer item={item} />
+    },
+    {
+      name: "Status",
+      accessor: "status",
+      type: "string",
+      sortable: true,
+      render: (item) => <StatusRenderer item={item} />
+    },
+    {
+      name: "Payment Method",
+      accessor: "payment_method",
+      type: "number",
+      sortable: true,
+      render: (item) => <PaymentMethodRenderer item={item} />
+    },
+    {
+      name: "Salesp. Commission",
+      accessor: "commission",
+      type: "number",
+      format: "currency",
+      sortable: true
+    },
+    {
+      name: "Date Ordered",
+      accessor: "created_at",
+      type: "date",
+      format: "date",
+      sortable: true
+    }
+  ]
+  
   return (
-    <div className="table-wrapper table-container">
-      <table className="table">
-        <TableHeaders columns={columns} />
-        <tbody>
-          {
-            isFetching ? (
-              <TableStatus 
-                colSpan={colSpan} 
-                message={GenericMessage.ORDERS_FETCHING} 
-              />
-            ) : error ? (
-              <TableStatus 
-                colSpan={colSpan} 
-                message={GenericMessage.ORDERS_ERROR} 
-              />
-            ) : isEmpty(data) ? (
-              <TableStatus 
-                colSpan={colSpan} 
-                message={GenericMessage.ORDERS_EMPTY} 
-              />
-            ) : data.map((item, index) => (
-              <TableItem key={index} item={item} />
-            ))
-          }
-        </tbody>
-      </table>
+    <div className="table-wrapper table-data">
+      <Table
+        name="orders" 
+        columns={columns}
+        sq={sq}
+        data={data}
+        error={error}
+        selected={viewOrder}
+        isFetching={isFetching}
+      />
     </div>
   )
 }
-function TableItem({item}) {
-  const ref = truncate(item.reference_number)
-  const customer = truncate(item.customer.full_name)
-  const amountDue = toPeso(item.amount_due)
-  const totalItems = toItems(item.number_of_items)
-  const status = OrderStatus.toObject(item.status)
-  const paymentMethod = PaymentMethod.toMethod(item.payment_method)
-  const salesperson = truncate(item.employee.full_name)
-  const dateCreated = toDateTime(item.created_at)
+function RefNumberRenderer({item, onSelect}) {
+  const refNumber = truncate(item.reference_number)
 
   return (
-    <tr>
-      <td>
-        <a href="#">
-          {ref}
-        </a>
-      </td>
-      <td>{amountDue}</td>
-      <td>{totalItems}</td>
-      <td>
-        <span className={`badge ${status.badge}`}>
-          {status.icon}
-          {status.name}
-        </span>
-      </td>
-      <td>
-        <span className="badge text-bg-light">
-          {paymentMethod}
-        </span>
-      </td>
-      <td>{customer}</td>
-      <td>{salesperson}</td>
-      <td>{dateCreated}</td>
-    </tr>
+    <Link onClick={onSelect}>{refNumber}</Link>
+  )
+}
+function itemsQtyAliaser(item) {
+  const items = size(item.checkouts)
+  const qty = computeQty(item.checkouts)
+
+  return items + qty
+}
+function TotalItemsQtyRenderer({item}) {
+  const items = toItems(size(item.checkouts))
+  const qty = toQty(computeQty(item.checkouts))
+
+  return `${items}/${qty}`
+}
+function StatusRenderer({item}) {
+  const status = OrderStatus.toObject(item.status)
+  
+  return (
+    <span className={`badge ${status.badge}`}>
+      {status.icon}
+      {status.name}
+    </span>
+  )
+}
+function PaymentMethodRenderer({item}) {
+  const paymentMethod = PaymentMethod.toMethod(item.payment_method)
+
+  return (
+    <span className="badge text-bg-light">
+      {paymentMethod}
+    </span>
   )
 }
 

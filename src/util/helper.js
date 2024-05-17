@@ -15,6 +15,9 @@ export const truncate = (string, max=30) => {
 
   return string
 }
+export const substring = (string, max=3) => {
+  return string.substring(0, max)
+}
 export const toPeso = (arg) => {
   const number = Number(arg)
   const locales = "en-PH"

@@ -76,6 +76,13 @@ function TableData({sq, data, error, isFetching}) {
       render: (item) => <RefNumberRenderer item={item} onSelect={() => handleSelect(item)} />
     },
     {
+      name: "Customer",
+      accessor: "customer.full_name",
+      type: "string",
+      format: "string",
+      sortable: true
+    },
+    {
       name: "Total",
       accessor: "amount_due",
       type: "number",
@@ -102,13 +109,6 @@ function TableData({sq, data, error, isFetching}) {
       type: "number",
       sortable: true,
       render: (item) => <PaymentMethodRenderer item={item} />
-    },
-    {
-      name: "Ordered By",
-      accessor: "customer.full_name",
-      type: "string",
-      format: "string",
-      sortable: true
     },
     {
       name: "Salesperson",
@@ -186,7 +186,7 @@ function SalespersonRenderer({item}) {
     <div className="vstack">
       <span className="text-body-primary">{salesperson}</span>
       <span className="text-body-secondary">
-        {commission} <span className="fs-10">(Commission)</span>
+        {commission} <span className="fs-11">(Commission)</span>
       </span>
     </div>
   )

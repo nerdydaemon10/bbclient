@@ -7,10 +7,10 @@ import { toPeso } from "../../../util/helper.js"
 function TrendsContainer() {
   const { data } = useFetchSummariesQuery()
   
-  const overallSales = toPeso(data?.transactions_total.overall_sales ?? 0.00)
-  const todaySales = toPeso(data?.transactions_total.today_sales ?? 0.00)
-  const totalCommission = toPeso(data?.transactions_total.total_commission ?? 0.00)
-  
+  const overallSales = toPeso(data?.total_transactions.overall_sales ?? 0.00)
+  const todaySales = toPeso(data?.total_transactions.today_sales ?? 0.00)
+  const totalCommission = toPeso(data?.total_transactions.total_commission ?? 0.00)
+
   const orders = data?.orders ?? 0
   const inventory = data?.inventory ?? 0
   const customers = data?.customers ?? 0
@@ -32,13 +32,13 @@ function TrendsContainer() {
           icon={<BiDollar />}
         />
         <TrendCard
-          title="Orders"
+          title="Approved Orders"
           count={orders}
           description="Number of orders"
           icon={<BiCartAlt />}
         />
         <TrendCard
-          title="Bookings"
+          title="Pending Orders"
           count={0}
           description="Number of booked trainings"
           icon={<BiCalendar />}

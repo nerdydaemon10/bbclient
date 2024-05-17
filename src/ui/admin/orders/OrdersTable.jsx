@@ -89,6 +89,13 @@ function TableData({sq, data, error, isFetching}) {
       render: (item) => <RefNumberRenderer item={item} onSelect={() => handleSelect(item)} />
     },
     {
+      name: "Customer",
+      accessor: "customer.full_name",
+      type: "string",
+      format: "string",
+      sortable: true
+    },
+    {
       name: "Total",
       accessor: "amount_due",
       type: "number",
@@ -110,18 +117,11 @@ function TableData({sq, data, error, isFetching}) {
       render: (item) => <StatusRenderer item={item} />
     },
     {
-      name: "Payment Method",
+      name: "Pay. Method",
       accessor: "payment_method",
       type: "number",
       sortable: true,
       render: (item) => <PaymentMethodRenderer item={item} />
-    },
-    {
-      name: "Customer",
-      accessor: "customer.full_name",
-      type: "string",
-      format: "string",
-      sortable: true
     },
     {
       name: "Salesperson",
@@ -184,7 +184,7 @@ function TotalItemsQtyRenderer({item}) {
 }
 function StatusRenderer({item}) {
   const status = OrderStatus.toObject(item.status)
-
+  
   return (
     <span className={`badge ${status.badge}`}>
       {status.icon}
@@ -208,11 +208,12 @@ function SalespersonRenderer({item}) {
   return (
     <div className="vstack">
       <span className="text-body-primary">{salesperson}</span>
-      <span className="text-body-secondary">{commission} (Com.)</span>
+      <span className="text-body-secondary">
+        {commission} <span className="fs-11">(Commission)</span>
+      </span>
     </div>
   )
 }
-
 function ActionRenderer({item, onApprove, onReject}) {
   const statuses = ["approved", "rejected"]
 

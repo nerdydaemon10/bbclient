@@ -17,6 +17,7 @@ import OptionInput from "../../common/inputs/OptionInput.jsx"
 import { setInterval } from "../../redux/homeSlice.js"
 import { useCallback, useEffect, useState } from "react"
 import { DELAY_MILLIS, IntervalsData } from "../../../util/Config.jsx"
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -105,7 +106,6 @@ function SalesChart() {
                 datasets: [
                   {
                     label: "Total Sales",
-
                     data: values,
                     borderColor: "rgb(50, 50, 50)",
                     backgroundColor: "rgba(40, 44, 52, 0.5)",

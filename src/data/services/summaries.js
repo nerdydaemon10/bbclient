@@ -1,15 +1,15 @@
 import { params } from "../../util/helper.js"
-import client from "./client.js"
+import client, { roleBaseUrl } from "./client.js"
 
 export const summaries = client.injectEndpoints({
   endpoints: builder => ({
     fetchSummaries: builder.query({
-      query: () => `/admin/summary`,
+      query: () => roleBaseUrl("/summary"),
       providesTags: ["List", "Summary"]
     }),
     fetchChart: builder.query({
       query: (sq) => ({ 
-       url: `/admin/chart/sales`,
+       url: roleBaseUrl("/chart/sales"),
        params: params(sq)
       }),
       providesTags: ["List", "Chart"],
