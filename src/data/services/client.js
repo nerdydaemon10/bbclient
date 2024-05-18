@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-
-import local from "../../util/local.js"
+import secureLocalStorage from "react-secure-storage"
 
 const X_API_KEY = import.meta.env.VITE_X_API_KEY
 const BASE_URL = import.meta.env.VITE_BASE_URL
@@ -12,7 +11,7 @@ const client = createApi({
   baseQuery: fetchBaseQuery({ 
     baseUrl: BASE_URL,
     prepareHeaders: (headers) => {
-      const token = local.get("token")
+      const token = secureLocalStorage.getItem("token")
       
       headers.set("Accept", "application/json")
       headers.set("x-api-key", X_API_KEY)
@@ -25,7 +24,7 @@ const client = createApi({
 })
 
 export const roleBaseUrl = (url) => {
-  const user = local.get("user")
+  const user = secureLocalStorage.getItem("user")
   return `/${user.role}${url}`
 }
 export default client

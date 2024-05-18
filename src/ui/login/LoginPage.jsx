@@ -28,7 +28,7 @@ function LoginPage() {
   useEffect(() => {
     usernameRef.current.focus()
   }, [])
-
+  
   useEffect(() => {
     if (!isSuccess) return
       navigate(`/${data.user.role}`)

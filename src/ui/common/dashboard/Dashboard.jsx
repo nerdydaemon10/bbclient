@@ -7,15 +7,15 @@ import {
 } from "react-icons/bi"
 
 import "./Dashboard.css"
-import local from "../../../util/local.js"
-import { Fallback, Role } from "../../../util/classes"
+import { Role } from "../../../util/classes"
 import { Button, Flex, LinkButton } from "../index"
 import DashboardNavbar from "./DashboardNavbar.jsx"
 import { currentRoute } from "./util.js"
 import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
 import { isNil } from "lodash"
 import { useLogoutMutation } from "../../../data/services/auth.js"
-import { toCount, truncate } from "../../../util/helper.js"
+import { checkUser, toCount, truncate } from "../../../util/helper.js"
+import secureLocalStorage from "react-secure-storage"
 
 function Dashboard({routesData, children}) {
 	return (
@@ -30,7 +30,7 @@ function Dashboard({routesData, children}) {
 }
 
 function DashboardSidebar({routesData}) {
-	const user = Fallback.checkUser(local.get("user"))
+	const user = checkUser(secureLocalStorage.getItem("user"))
 	const fullName = truncate(user.full_name)
 	const role = Role.toRole(user.role)
 

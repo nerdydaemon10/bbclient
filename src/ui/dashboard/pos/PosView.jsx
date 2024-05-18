@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-//import OrderDetails from "./OrderDetails.jsx"
 import ProductsTable from "./ProductsTable.jsx"
-import local from "../../../util/local.js"
 import { Fragment } from "react"
 import PosStyle from "./PosStyle.jsx"
 import TableType from "../../../util/classes/TableType.js"
 import CustomersTable from "./CustomersTable.jsx"
 import { useSelector } from "react-redux"
-import Fallback from "../../../util/classes/Fallback.js"
 import PosSide from "./PosSide.jsx"
+import { checkUser } from "../../../util/helper.js"
+import secureLocalStorage from "react-secure-storage"
 
 function PosView() {
   return (
@@ -32,7 +31,7 @@ function PosTable() {
 }
 
 function TitleSection() {
-  const user = Fallback.checkUser(local.get("user"))
+  const user = checkUser(secureLocalStorage.getItem("user"))
 
   return (
     <div className="title-section">

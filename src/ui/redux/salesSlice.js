@@ -1,7 +1,7 @@
 import { createSelector, createSlice, isAnyOf } from "@reduxjs/toolkit"
 import { rowsPerPages } from "../../util/Config.jsx"
 import { first, isNil, size } from "lodash"
-import { computeCheckouts, computeQty, computeSales, isEntitySelected, toItems, toPeso, toQty } from "../../util/helper.js"
+import { compareEntity, computeCheckouts, computeQty, computeSales, toItems, toQty } from "../../util/helper.js"
 import { sales } from "../../data/services/sales.js"
 import moment from "moment"
 import { employees } from "../../data/services/employees.js"
@@ -45,7 +45,7 @@ const salesSlice = createSlice({
       state.sq = { ...sq, page: sq.page < meta.last_page ? sq.page + 1 : meta.last_page }
     },
     setSale: (state, action) => {
-      const isSelected = !isNil(state.sale) && isEntitySelected(state.sale, action.payload)
+      const isSelected = !isNil(state.sale) && compareEntity(state.sale, action.payload)
       state.sale = isSelected ? null : action.payload
     },
     setTab: (state, action) => {

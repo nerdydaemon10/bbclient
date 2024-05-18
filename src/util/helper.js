@@ -1,56 +1,54 @@
-import { isEmpty } from "lodash"
+import { isEmpty, isNil } from "lodash"
 import moment from "moment"
+import { CURRENCY, LOCALE } from "./Config.jsx"
 
 // String
-export const truncate = (string, max=30) => {
-  if (!string) {
-    return ""
-  }
+export const truncate = (str, max=30) => {
+  if (isNil(str)) return ""
+  if (isEmpty(str)) return ""
+  
+  const length = str.length
+  const isExceed = length > max
 
-  const length = string.length
-  const exceed = length > max
+  if (isExceed) return str.slice(0, max - 3) + "..."
 
-  if (exceed) 
-    return string.slice(0, max - 3) + "..."
-
-  return string
+  return str
 }
-export const substring = (string, max=3) => {
-  return string.substring(0, max)
+export const cut = (str, max=3) => {
+  return str.substring(0, max)
 }
 export const toPeso = (arg) => {
   const number = Number(arg)
-  const locales = "en-PH"
-  const options = { style: "currency", currency: "PHP" }
+  const options = {style: "currency", currency: CURRENCY}
 
-  return number.toLocaleString(locales, options)
+  return number.toLocaleString(LOCALE, options)
 }
-export const toStocks = (arg) => {
-  const number = Number(arg)
-
-  if (number == 1) return `${number} stock`
-  if (number > 1) return `${number} stocks`
-
-  return "No Stocks"
-}
-export const toItems = (integer) => {
+export const toStocks = (integer) => {
   const number = Number(integer)
+
+  if (number == 0) return "No Stocks"
+  if (number == 1) return `${number} Stock`
+
+  return `${number} Stocks`
+}
+export const toItems = (arg) => {
+  const number = Number(arg)
 
   if (number == 0) return "No Items"
   if (number == 1) return `${number} Item`
 
   return `${number} Items`
 }
-export const toQty = (integer) => {
-  const number = Number(integer)
+export const toQty = (arg) => {
+  const number = Number(arg)
 
   if (number == 0) return "No Items"
 
-  return `${number}qty`
+  return `${number} qty`
 }
 export const toCount = (arg, max=999) => {
   const number = Number(arg)
-  
+
   if (number == 0) return "0"
   if (number > max) return `${max}+`
 
@@ -59,8 +57,8 @@ export const toCount = (arg, max=999) => {
 
 // Error
 export const getError = (error) => {
-  if (isEmpty(error)) return ""
-  if (isEmpty(error.data)) return ""
+  if (isNil(error)) return ""
+  if (isNil(error.data)) return ""
   if (isEmpty(error.data.message)) return ""
 
   return error.data.message
@@ -70,9 +68,9 @@ export const getErrorByName = (error, key, alter=null) => {
     ? key.replace("_", " ") 
     : alter
 
-  if (isEmpty(error)) return ""
-  if (isEmpty(error.data)) return ""
-  if (isEmpty(error.data.errors)) return ""
+  if (isNil(error)) return ""
+  if (isNil(error.data)) return ""
+  if (isNil(error.data.errors)) return ""
   if (isEmpty(error.data.errors[key]))
     return { state: "is-valid", message: `The ${name} looks good!` }
 
@@ -80,46 +78,40 @@ export const getErrorByName = (error, key, alter=null) => {
 }
 
 // Date
-export const toDate = (dateString) => {
-  if (isEmpty(dateString)) return "N/A"
-  return moment(dateString).format("MMM, DD YYYY")
+export const toDate = (datestr) => {
+  if (isNil(datestr)) return "N/A"
+  if (isEmpty(datestr)) return "N/A"
+
+  return moment(datestr).format("MMM, DD YYYY")
 }
-export const toDateTime = (dateString) => {
-  if (isEmpty(dateString)) return "N/A"
-  return moment(dateString).format("MMM, DD YYYY, h:mm a")
+export const toDateTime = (datestr) => {
+  if (isNil(datestr)) return "N/A"
+  if (isEmpty(datestr)) return "N/A"
+
+  return moment(datestr).format("MMM, DD YYYY, h:mm a")
 }
 
 // Object
 export const params = (sq) => {
-  const excludes = ["role"]
-  
   const entries = isEmpty(sq) ? [] : Object.entries(sq)
-  const params = entries
-    .filter(([key, value]) => !excludes.includes(key))
-    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+  const params = entries.map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
 
   return params.join("&")
 }
 
 // Compare
-export function isEntitySelected(entity, entity2) {
-  if (isEmpty(entity)) return false
-  if (isEmpty(entity2)) return false
+export const compareEntity = (entity, other) => {
+  if (isNil(entity)) return false
+  if (isNil(other)) return false
 
-  return entity.id == entity2.id
-}
-export const compareEntity = (entity, entity2) => {
-  if (isEmpty(entity)) return false
-  if (isEmpty(entity2)) return false
-
-  return entity.id == entity2.id
+  return entity.id == other.id
 }
 
-// Computation
+// Computes
 export const computeCheckout = (checkout) => {
   const srp = Number(checkout.srp)
   const quantity = Number(checkout.quantity)
-  
+
   return srp * quantity
 }
 export const computeCheckouts = (checkouts) => {
@@ -143,3 +135,20 @@ export const computeQty = (checkouts) => {
     ? 0
     : checkouts.reduce((accum, checkout) =>  accum + checkout.quantity, 0)
 }
+
+// Checks (Fallback)
+export const checkMeta = (data) => {
+  const fallback = { current_page: 1, last_page: 1 }
+
+  if (isNil(data)) return fallback
+  if (isNil(data.meta)) return fallback
+
+  return data.meta
+}
+export const checkUser = (user) => {
+  const fallback = { id: 0, full_name: "", role: "" }
+
+  if (isNil(user)) return fallback
+  
+  return user
+}      

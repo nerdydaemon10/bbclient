@@ -4,9 +4,9 @@ import { Navigate, Route, Routes } from "react-router-dom"
 
 import LoginPage from "./login/LoginPage.jsx"
 import { Role } from "../util/classes"
-import { local } from "../util"
 import AdminPage from "./admin/AdminPage.jsx"
 import EmployeePage from "./employee/EmployeePage.jsx"	
+import secureLocalStorage from "react-secure-storage"
 
 function App() {
 	return (
@@ -27,8 +27,8 @@ function App() {
 }
 
 function LoginRoute() {
-	const token = local.get("token")
-	const user = local.get("user")
+	const token = secureLocalStorage.getItem("token")
+	const user = secureLocalStorage.getItem("user")
 
 	const isUnauthenticated = isNil(token) || isEmpty(token)
 
@@ -38,9 +38,9 @@ function LoginRoute() {
 	return <Navigate to={`/${user.role}`} />
 }
 function PrivateRoute({roles, children}) {
-	const token = local.get("token")
-	const user = local.get("user")
-	
+	const token = secureLocalStorage.getItem("token")
+	const user = secureLocalStorage.getItem("user")
+
 	const isUnauthenticated = isNil(token) || isEmpty(token)
 	const isUnauthorized = isNil(user) || isEmpty(user) || !roles.includes(user.role)
 

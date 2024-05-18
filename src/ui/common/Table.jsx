@@ -135,21 +135,7 @@ export function Table({name, columns, data, error, sq, selected, isFetching}) {
     </table>
   )
 }
-
-export function TableHeaders({columns}) {
-  return (
-    <thead>
-      <tr>
-        {columns.map((column, index) => (
-          <th key={index}>
-            {column}
-          </th>
-        ))}
-      </tr>
-    </thead>
-  )
-}
-export function TableStatus({colSpan, message}) {
+function TableStatus({colSpan, message}) {
   return (
     <tr>
       <td className="table-status" colSpan={colSpan}>

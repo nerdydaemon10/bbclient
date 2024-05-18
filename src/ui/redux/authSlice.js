@@ -1,18 +1,17 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit"
 
-import local from "../../util/local.js"
 import auth from "../../data/services/auth.js"
 import { isEmpty, isNil } from "lodash"
-
-const token = local.get("token")
+import secureLocalStorage from "react-secure-storage"
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: {  
-    isAuthenticated: !isNil(token) || !isEmpty(token)
-  },
+  initialState: { isAuthorized: true },
   reducers: {
-    deAuthenticated: (state) => state.isAuthenticated = false
+    deAuthorize: (state) => {
+      state.isAuthorized = false
+      secureLocalStorage.clear()
+    }
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -20,22 +19,22 @@ const authSlice = createSlice({
       const { token, user } = action.payload
 
       state.isAuthenticated = !isNil(token) || !isEmpty(token)
-      
-      local.set("token", token)
-      local.set("user", user)
+
+      secureLocalStorage.setItem("token", token)
+      secureLocalStorage.setItem("user", user)
     })
     builder.addMatcher(
     isAnyOf(auth.endpoints.logout.matchFulfilled), (state, action) => {
       state.isAuthenticated = false
-      local.clear()
+      secureLocalStorage.clear()
     })
     builder.addMatcher(
     isAnyOf(auth.endpoints.logout.matchRejected), (state, action) => {
       state.isAuthenticated = false
-      local.clear()
+      secureLocalStorage.clear()
     })
   }
 })
 
-export const { deAuthenticated } = authSlice.actions
+export const { deAuthorize } = authSlice.actions
 export default authSlice.reducer

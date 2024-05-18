@@ -9,9 +9,9 @@ import { BiPlusCircle, BiSolidCheckCircle } from "react-icons/bi"
 import { useFetchEmployeesQuery } from "../../data/services/employees.js"
 import { Button, TablePagination, SearchFieldInput } from "../common"
 import { nextPage, openModal, previousPage, setEmployee, setSq } from "../redux/employeesSlice.js"
-import { local } from "../../util"
 import { Table } from "../common/Table.jsx"
-import { compareEntity, truncate } from "../../util/helper.js"
+import { checkUser, compareEntity, truncate } from "../../util/helper.js"
+import secureLocalStorage from "react-secure-storage"
 
 function EmployeesTable() {
   const dispatch = useDispatch()
@@ -88,7 +88,7 @@ function TableFilter({search, onChange}) {
 function TableData({sq, data, error, isFetching}) {
   const dispatch = useDispatch()
 
-  const user = Fallback.checkUser(local.get("user"))
+  const user = checkUser(secureLocalStorage.getItem("user"))
 
   const handleUpdate = (employee) => {
     dispatch(setEmployee(employee))

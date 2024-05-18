@@ -1,9 +1,9 @@
 import { Fragment } from "react"
-import local from "../../../util/local.js"
 import HomeStyle from "./HomeStyle.jsx"
 import TrendsContainer from "./TrendsContainer.jsx"
 import ChartsContainer from "./ChartsContainer.jsx"
-import Fallback from "../../../util/classes/Fallback.js"
+import secureLocalStorage from "react-secure-storage"
+import { checkUser } from "../../../util/helper.js"
 
 function HomeView() {
   return (
@@ -17,7 +17,7 @@ function HomeView() {
 }
 
 function TitleContainer() {
-  const user = Fallback.checkUser(local.get("user"))
+  const user = checkUser(secureLocalStorage.getItem("user"))
   
   return (
     <div className="title-container">

@@ -2,7 +2,7 @@ import { isEmpty, isNil } from "lodash"
 
 function get(key) {
 	const stringify = localStorage.getItem(key)
-	
+
 	if (isNil(stringify)) return null
 	if (isEmpty(stringify)) return null
 	
