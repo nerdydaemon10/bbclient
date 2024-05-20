@@ -5,13 +5,12 @@ import { debounce, delay, isNil } from "lodash"
 import { ModalType, ProductCategory } from "../../util/classes"
 import { productCategories } from "../../util/Config.jsx"
 import { BiPlusCircle } from "react-icons/bi"
-import { truncate } from "../../util/helper.js"
+import { checkMeta, truncate } from "../../util/helper.js"
 import { Button, SearchFieldInput, SelectInput } from "../common"
 import { Fragment, useCallback, useEffect, useState } from "react"
 import { Table, TablePagination } from "../common/Table.jsx"
 import { DELAY_MILLIS } from "../../util/Config.jsx"
 import { useFetchProductsQuery } from "../../data/services/products.js"
-import Fallback from "../../util/classes/Fallback.js"
 import { nextPage, openModal, previousPage, setProduct, setSq } from "../redux/inventorySlice.js"
 
 function ProductsTable() {
@@ -25,7 +24,7 @@ function ProductsTable() {
   }, DELAY_MILLIS), [])
 
   const { isLoading, isFetching, data, error } = useFetchProductsQuery(sqtemp)
-  const meta = Fallback.checkMeta(data)
+  const meta = checkMeta(data)
 
   const handleChange = (e) => {
     dispatch(setSq(e))

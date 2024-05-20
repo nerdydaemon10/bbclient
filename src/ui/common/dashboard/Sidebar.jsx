@@ -1,37 +1,17 @@
-
-import { useEffect, useState } from "react"
+import secureLocalStorage from "react-secure-storage"
+import { checkSummariesCounts, checkUser, toCount, truncate } from "../../../util/helper.js"
+import Role from "../../../util/classes/Role.js"
 import { useLocation, useNavigate } from "react-router-dom"
-import { 
-	BiLogIn, BiShieldQuarter, 
-	BiSolidCoffeeBean
-} from "react-icons/bi"
-
-import "./Dashboard.css"
-import { Role } from "../../../util/classes"
-import { Button, LinkButton } from "../index"
-import DashboardNavbar from "./Navbar.jsx"
-import { currentRoute } from "./util.js"
+import { useEffect, useState } from "react"
+import { currentRoute, isSelected } from "./util.js"
+import { BiLogIn, BiShieldQuarter, BiSolidCoffeeBean } from "react-icons/bi"
+import LinkButton from "../buttons/LinkButton.jsx"
 import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
 import { isNil } from "lodash"
 import { useLogoutMutation } from "../../../data/services/auth.js"
-import { checkUser, toCount, truncate } from "../../../util/helper.js"
-import secureLocalStorage from "react-secure-storage"
-import Sidebar from "./Sidebar.jsx"
-import Navbar from "./Navbar.jsx"
+import Button from "../buttons/Button.jsx"
 
-function Dashboard({items, children}) {
-	return (
-		<div className="dashboard d-grid vh-100">
-			<Sidebar items={items} />
-			<Navbar items={items} />
-			<DashboardMain>
-				{children}
-			</DashboardMain>
-		</div>
-	)
-}
-
-function DashboardSidebar({items}) {
+function Sidebar({items}) {
 	const user = checkUser(secureLocalStorage.getItem("user"))
 	const fullName = truncate(user.full_name)
 	const role = Role.toRole(user.role)
@@ -40,13 +20,15 @@ function DashboardSidebar({items}) {
 	const [route, setRoute] = useState(currentRoute(location))
 	const { data, isLoading, isFetching } = useFetchSummariesQuery()
 
+	const counts = checkSummariesCounts(data)
+
 	useEffect(() => {
     setRoute(currentRoute(location))
 	}, [location])
 
 	return (
 		<div className="dashboard-sidebar d-grid border-end">
-			<div className="dashboard-sidebar-header d-grid border-end d-flex flex-row jusitfy-content-center align-items-center gap-2">
+			<div className="dashboard-sidebar-header border-bottom d-flex flex-row justify-content-center align-items-center gap-2">
 				<span className="badge bg-dark">
 					<BiSolidCoffeeBean size={16} />
 				</span>
@@ -58,10 +40,10 @@ function DashboardSidebar({items}) {
 					items.filter(item => item.isSidebarItem).map((item, index) => (
 						<SidebarItem 
 							key={index}
-							data={data}
-							item={item}
-							isPending={isLoading || isFetching}
+              isPending={isLoading || isFetching}
 							isSelected={isSelected(item.key, route)}
+              item={item}
+							data={counts}
 						/>
 					))
 				}
@@ -82,7 +64,6 @@ function DashboardSidebar({items}) {
 		</div>
 	)
 }
-
 function SignOutButton() {
 	const [logout, { isLoading, isSuccess, isError }] = useLogoutMutation()
 	const navigate = useNavigate()
@@ -90,7 +71,7 @@ function SignOutButton() {
 	const handleClick = () => {
 		logout()
 	}
-	
+
 	useEffect(() => {
 		if (isSuccess || isError)	navigate("/")
 	}, [isSuccess, isError, navigate])
@@ -106,32 +87,37 @@ function SignOutButton() {
 		</Button>
 	)
 }
-
-function SidebarItem({data, routeData, isPending, isSelected, onClick}) {
+function SidebarItem({isPending, isSelected, item, data, onClick}) {
 	const variant = isSelected ? "dark" : "light"
-	const icon = isSelected ? routeData.icon.active : routeData.icon.inactive
+	const icon = isSelected ? item.icon.active : item.icon.inactive
 
 	return (
 		<li>
 			<LinkButton 
-				to={routeData.route} 
+				to={item.route} 
 				variant={variant}
 				isFullWidth
 				onClick={onClick}
 			>
 				<div className="d-flex flex-row align-items-center justify-content-start fs-7 fw-medium gap-1">
 					{icon}
-					{routeData.name}
-					{routeData.hasCounter && <Badge data={data} routeData={routeData} isPending={isPending} isSelected={isSelected} />}
+					{item.name}
+					{item.hasCounter && (
+            <Badge 
+              isPending={isPending} 
+              isSelected={isSelected}
+              item={item}
+              data={data} 
+            />
+          )}
 				</div>
 			</LinkButton>
 		</li>
 	)
 }
-function Badge({data, routeData, isPending, isSelected}) {
-	const { key } = routeData
+function Badge({isPending, isSelected, item, data}) {
 	const bg = `text-bg-${isSelected ? "light" : "dark"}`
-	
+  
 	return (
 		<span className={`badge ${bg} rounded-pill ms-auto`}>
 			{
@@ -139,27 +125,12 @@ function Badge({data, routeData, isPending, isSelected}) {
 					"Loading"
 				) : isNil(data) ? (
 					"Empty"
-				) : isNil(data[key]) ? (
+				) : isNil(data[item.key]) ? (
 					"Empty"
-				) : toCount(data[key])
+				) : toCount(data[item.key])
 			}
 		</span>
 	)
 }
-function DashboardMain({children}) {
-	return (
-		<div className="dashboard-main p-2 gap-2">
-			{children}
-		</div>
-	)
-}
 
-function isSelected(route, current) {
-  const lastIndex = current.lastIndexOf("/")
-  const isLastIndex = (lastIndex === current.length - 1) && (lastIndex !== 0)
-  const formattedRoute = isLastIndex ? current.substring(0, lastIndex) : current
-
-  return formattedRoute === route
-}
-
-export { Dashboard, DashboardSidebar, DashboardMain }
+export default Sidebar

@@ -6,12 +6,12 @@ import { enqueueSnackbar } from "notistack"
 import { closeModal } from "../redux/customersSlice.js"
 import { ModalType, GenericMessage } from "../../util/classes"
 import { useCreateCustomerMutation } from "../../data/services/customers.js"
-import { CustomerParam } from "../../util/params.js"
 import { getErrorByName } from "../../util/helper.js"
+import { CustomerDto } from "../../data/dto.js"
 
 function CreateModal() {
   const dispatch = useDispatch()
-  const [customer, setCustomer] = useState(CustomerParam)
+  const [customer, setCustomer] = useState(CustomerDto)
   const { isCreateModalOpen } = useSelector((state) => state.customers)
   const [createCustomer, { isLoading, isSuccess, error }] = useCreateCustomerMutation()
 
@@ -33,7 +33,7 @@ function CreateModal() {
 
     dispatch(closeModal(ModalType.CREATE))
     enqueueSnackbar(GenericMessage.CUSTOMER_ADDED)
-    setCustomer(CustomerParam)
+    setCustomer(CustomerDto)
   }, [isSuccess])
 
   return (

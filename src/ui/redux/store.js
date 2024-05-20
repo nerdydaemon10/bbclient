@@ -31,7 +31,9 @@ const getStatus = (action) => {
 }
 
 const authenticateMiddleware = (store) => (next) => (action) => {
-  if (getStatus(action) == 401) store.dispatch(deAuthorize())
+  if (getStatus(action) == 401) { 
+    store.dispatch(deAuthorize())
+  }
   return next(action)
 }
 

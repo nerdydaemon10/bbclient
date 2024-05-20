@@ -8,10 +8,9 @@ import { nextPage, previousPage, setOrder, setSq } from "../../redux/ordersSlice
 import { debounce, isNil, size } from "lodash"
 import { useCallback, useEffect, useState } from "react"
 import { useFetchOrdersQuery } from "../../../data/services/orders.js"
-import Fallback from "../../../util/classes/Fallback.js"
 import { Table } from "../../common/Table.jsx"
 import { Link } from "react-router-dom"
-import { computeQty, toItems, toPeso, toQty, truncate } from "../../../util/helper.js"
+import { checkMeta, computeQty, toItems, toQty, truncate } from "../../../util/helper.js"
 
 function OrdersTable() {
   const dispatch = useDispatch()
@@ -20,7 +19,7 @@ function OrdersTable() {
   const [sqtemp, setSqtemp] = useState(sq)
 
   const { isLoading, isFetching, data, error } = useFetchOrdersQuery(sqtemp)
-  const meta = Fallback.checkMeta(data)
+  const meta = checkMeta(data)
   
   const debouncer = useCallback(debounce((sqtemp) => {
     setSqtemp(sqtemp)

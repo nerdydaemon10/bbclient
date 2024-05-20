@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Table, TablePagination } from "../common"
-import { computeQty, toItems, toPeso, toQty, truncate } from "../../util/helper.js"
+import { checkMeta, computeQty, toItems, toPeso, toQty, truncate } from "../../util/helper.js"
 import { debounce, isNil, size } from "lodash"
-import { PaymentMethod, OrderStatus, Fallback } from "../../util/classes/index.js"
+import { PaymentMethod, OrderStatus } from "../../util/classes/index.js"
 import { useDispatch, useSelector } from "react-redux"
 import { selectSale, selectSq, setSale, setSq } from "../redux/salesSlice.js"
 import { Fragment, useCallback, useEffect, useState } from "react"
@@ -18,7 +18,7 @@ function SalesTable() {
   const [sqtemp, setSqtemp] = useState(sq)
 
   const { isLoading, isFetching, data, error } = useFetchSalesQuery(sqtemp)
-  const meta = Fallback.checkMeta(data)
+  const meta = checkMeta(data)
   
   const debouncer = useCallback(debounce((sqtemp) => {
     setSqtemp(sqtemp)

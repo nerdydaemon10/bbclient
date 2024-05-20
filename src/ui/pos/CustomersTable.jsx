@@ -1,14 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import { DELAY_MILLIS } from "../../../util/Config.jsx"
-import { Button, SearchFieldInput, TablePagination } from "../../common"
+import { DELAY_MILLIS } from "../../util/Config.jsx"
+import { Button, SearchFieldInput, Table, TablePagination } from "../common"
 import { Fragment, useCallback, useEffect, useState } from "react"
-import { nextPage, previousPage, selectSq, setCustomer, setSq } from "../../redux/posSlice.js"
+import { nextPage, previousPage, selectSq, setCustomer, setSq } from "../redux/posSlice.js"
 import { debounce, isNil } from "lodash"
-import Fallback from "../../../util/classes/Fallback.js"
-import { Table } from "../../common/Table.jsx"
-import { compareEntity } from "../../../util/helper.js"
-import { useFetchCustomersQuery } from "../../../data/services/customers.js"
+import { checkMeta, compareEntity } from "../../util/helper.js"
+import { useFetchCustomersQuery } from "../../data/services/customers.js"
 
 function CustomersTable() {
   const dispatch = useDispatch()
@@ -17,7 +15,7 @@ function CustomersTable() {
   const [sqtemp, setSqtemp] = useState(sq)
   
   const { data, error, isLoading, isFetching } = useFetchCustomersQuery(sqtemp)
-  const meta = Fallback.checkMeta(data)
+  const meta = checkMeta(data)
   
   const debouncer = useCallback(debounce((sqtemp) => {
     setSqtemp(sqtemp)

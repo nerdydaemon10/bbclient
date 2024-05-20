@@ -4,13 +4,14 @@ import { debounce, delay, isNil } from "lodash"
 import { BiPlusCircle } from "react-icons/bi"
 import { Fragment, useCallback, useEffect, useState } from "react"
 
-import { Fallback, ModalType } from "../../util/classes"
+import { ModalType } from "../../util/classes"
 import { DELAY_MILLIS } from "../../util/Config.jsx"
 import { Button, SearchFieldInput, TablePagination } from "../common"
 import { openModal, setCustomer, setSq } from "../redux/customersSlice.js"
 import { useFetchCustomersQuery } from "../../data/services/customers.js"
 import { nextPage, previousPage } from "../redux/customersSlice.js"
 import { Table } from "../common/Table.jsx"
+import { checkMeta } from "../../util/helper.js"
 
 function CustomersTable() {
   const dispatch = useDispatch()
@@ -19,7 +20,7 @@ function CustomersTable() {
   const [sqtemp, setSqtemp] = useState(sq)
 
   const { isLoading, isFetching, data, error } = useFetchCustomersQuery(sqtemp)
-  const meta = Fallback.checkMeta(data)
+  const meta = checkMeta(data)
 
   const debouncer = useCallback(debounce((sqtemp) => {
     setSqtemp(sqtemp)

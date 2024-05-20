@@ -1,4 +1,3 @@
-/*--SEARCH-FIELD-INPUT--*/
 .form-control-search-box {
   position: relative;
 }
@@ -21,4 +20,16 @@
 .table .table-status {
   color: var(--bs-gray-600) !important;
   text-align: center;
+}
+/*--AVATAR--*/
+.avatar {
+  background-color: var(--bs-gray-200);
+  border-radius: var(--bs-border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bs-gray-900);
+  font-size: 1.8rem;
+  width: 36px;
+  height: 36px;
 }

@@ -2,11 +2,11 @@ import { createSlice } from "@reduxjs/toolkit"
 import ModalType from "../../util/classes/ModalType.js"
 import { rowsPerPages } from "../../util/Config.jsx"
 import { first } from "lodash"
-import { CustomerParam } from "../../util/params.js"
+import { CustomerDto } from "../../data/dto.js"
 
 const defaultState = {
   sq: { search: "", per_page: first(rowsPerPages), page: 1 },
-  customer: CustomerParam,
+  customer: CustomerDto,
   isCreateModalOpen: false,
   isUpdateModalOpen: false,
   isRemoveModalOpen: false

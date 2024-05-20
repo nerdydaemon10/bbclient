@@ -8,11 +8,11 @@ import { Modal, PasswordFieldInput, TextFieldInput } from "../common"
 import { ModalType, GenericMessage } from "../../util/classes"
 import { closeModal } from "../redux/employeesSlice.js"
 import { getErrorByName } from "../../util/helper.js"  
-import { EmployeeParam } from "../../util/params.js"
+import { EmployeeDto } from "../../data/dto.js"
 
 function CreateModal() {
   const dispatch = useDispatch()
-  const [employee, setEmployee] = useState(EmployeeParam)
+  const [employee, setEmployee] = useState(EmployeeDto)
   const { isCreateModalOpen } = useSelector((state) => state.employees)
   const [createEmployee, { isLoading, isSuccess, error }] = useCreateEmployeeMutation()
   
@@ -34,7 +34,7 @@ function CreateModal() {
 
     dispatch(closeModal(ModalType.CREATE))
     enqueueSnackbar(GenericMessage.EMPLOYEE_ADDED)
-    setEmployee(EmployeeParam)
+    setEmployee(EmployeeDto)
   }, [isSuccess])
 
   return (

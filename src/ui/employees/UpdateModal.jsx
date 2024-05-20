@@ -33,7 +33,7 @@ function UpdateModal() {
     dispatch(closeModal(ModalType.UPDATE))
     enqueueSnackbar(GenericMessage.EMPLOYEE_UPDATED)
   }, [isSuccess])
-
+  
   return (
     <Modal  
       title="Create Customer"

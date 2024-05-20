@@ -2,14 +2,14 @@ import { createSlice } from "@reduxjs/toolkit"
 import { rowsPerPages } from "../../util/Config.jsx"
 import ModalType from "../../util/classes/ModalType.js"
 import { first } from "lodash"
-import { ProductParam } from "../../util/params.js"
+import { ProductDto } from "../../data/dto.js"
 
 const initialState = {
   sq: { search: "", category_id: "", per_page: first(rowsPerPages), page: 1},
   isCreateModalOpen: false,
   isUpdateModalOpen: false,
   isRemoveModalOpen: false,
-  product: ProductParam,
+  product: ProductDto,
 }
 const inventorySlice = createSlice({
   name: "inventory",

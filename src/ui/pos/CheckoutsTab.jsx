@@ -1,7 +1,7 @@
 import { Fragment } from "react"  
-import { CheckoutList, ReceiptList } from "../../common/index.jsx"
+import { CheckoutList, ReceiptList } from "../common/index.jsx"
 import { useDispatch, useSelector } from "react-redux"
-import { decrementQty, incrementQty, selectReceipts } from "../../redux/posSlice.js"
+import { decrementQty, incrementQty, selectReceipts } from "../redux/posSlice.js"
 
 function CheckoutsTab() {
   const checkouts = useSelector((state) => state.pos.checkouts)

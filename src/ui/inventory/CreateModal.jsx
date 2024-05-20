@@ -8,13 +8,13 @@ import { Modal, SelectInput, TextFieldInput } from "../common"
 import ModalType from "../../util/classes/ModalType.js"
 import GenericMessage from "../../util/classes/GenericMessage.js"
 import ProductCategory from "../../util/classes/ProductCategory.js"
-import { ProductParam } from "../../util/params.js"
 import { useCreateProductMutation } from "../../data/services/products.js"
 import { getErrorByName } from "../../util/helper.js"
+import { ProductDto } from "../../data/dto.js"
 
 function CreateModal() {
   const dispatch = useDispatch()
-  const [product, setProduct] = useState(ProductParam)
+  const [product, setProduct] = useState(ProductDto)
   const { isCreateModalOpen } = useSelector((state) => state.inventory)
   const [createProduct, { isLoading, isSuccess, error }] = useCreateProductMutation()
 
@@ -36,7 +36,7 @@ function CreateModal() {
 
     dispatch(closeModal(ModalType.CREATE))
     enqueueSnackbar(GenericMessage.PRODUCT_ADDED)
-    setProduct(ProductParam)
+    setProduct(ProductDto)
   }, [isSuccess, dispatch])
 
   return (

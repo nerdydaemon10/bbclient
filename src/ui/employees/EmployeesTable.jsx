@@ -3,14 +3,14 @@ import { Fragment, useCallback, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { debounce, delay, isNil } from "lodash"
 
-import { Fallback, ModalType, Role, Status } from "../../util/classes"
+import { ModalType, Role, Status } from "../../util/classes"
 import { DELAY_MILLIS } from "../../util/Config.jsx"
 import { BiPlusCircle, BiSolidCheckCircle } from "react-icons/bi"
 import { useFetchEmployeesQuery } from "../../data/services/employees.js"
 import { Button, TablePagination, SearchFieldInput } from "../common"
 import { nextPage, openModal, previousPage, setEmployee, setSq } from "../redux/employeesSlice.js"
 import { Table } from "../common/Table.jsx"
-import { checkUser, compareEntity, truncate } from "../../util/helper.js"
+import { checkMeta, checkUser, compareEntity, truncate } from "../../util/helper.js"
 import secureLocalStorage from "react-secure-storage"
 
 function EmployeesTable() {
@@ -20,7 +20,7 @@ function EmployeesTable() {
   const [sqtemp, setSqtemp] = useState(sq)
 
   const { isLoading, isFetching, data, error } = useFetchEmployeesQuery(sqtemp)
-  const meta = Fallback.checkMeta(data)
+  const meta = checkMeta(data)
   
   const debouncer = useCallback(debounce((sqtemp) => {
     setSqtemp(sqtemp)

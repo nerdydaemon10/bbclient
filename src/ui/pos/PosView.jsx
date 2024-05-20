@@ -2,11 +2,11 @@
 import ProductsTable from "./ProductsTable.jsx"
 import { Fragment } from "react"
 import PosStyle from "./PosStyle.jsx"
-import TableType from "../../../util/classes/TableType.js"
+import TableType from "../../util/classes/TableType.js"
 import CustomersTable from "./CustomersTable.jsx"
 import { useSelector } from "react-redux"
 import PosSide from "./PosSide.jsx"
-import { checkUser } from "../../../util/helper.js"
+import { checkUser } from "../../util/helper.js"
 import secureLocalStorage from "react-secure-storage"
 
 function PosView() {

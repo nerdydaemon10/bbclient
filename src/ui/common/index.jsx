@@ -17,7 +17,6 @@ export { default as CheckoutList } from "./checkoutlist/CheckoutList.jsx"
 
 // dashboard
 
-
 // inputs
 export { default as DateInput } from "./inputs/DateInput.jsx"
 export { default as OptionInput } from "./inputs/OptionInput.jsx"

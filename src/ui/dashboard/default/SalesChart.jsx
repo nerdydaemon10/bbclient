@@ -10,7 +10,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js"
-import { useFetchChartQuery } from "../../../data/services/summaries.js"
 import { debounce, isNil } from "lodash"
 import { useDispatch, useSelector } from "react-redux"
 import OptionInput from "../../common/inputs/OptionInput.jsx"

@@ -9,7 +9,7 @@ import store from "./ui/redux/store.js"
 import "./ui/assets/index.css"
 import "./ui/assets/vendor/bootstrap-5.3.3/css/bootstrap.css"
 import "./ui/assets/custom.css"
-import "./ui/assets/app.css"
+import "./ui/assets/common.css"
 
 import App from "./ui/App.jsx"
 

@@ -1,11 +1,11 @@
 import { isNil } from "lodash"
 import { useDispatch, useSelector } from "react-redux"
-import TableType from "../../../util/classes/TableType.js"
-import { Button, TabsInput, TextFieldInput } from "../../common/index.jsx"
+import TableType from "../../util/classes/TableType.js"
+import { Button, TabsInput, TextFieldInput } from "../common"
 import { BiHide, BiShow } from "react-icons/bi"
 import { Fragment } from "react"
-import { PaymentMethodsData } from "../../../util/Config.jsx"
-import { setPaymentMethod, toggleTable } from "../../redux/posSlice.js"
+import { PaymentMethodsData } from "../../util/Config.jsx"
+import { setPaymentMethod, toggleTable } from "../redux/posSlice.js"
 
 function CustomerTab() {
   const dispatch = useDispatch()
@@ -17,7 +17,7 @@ function CustomerTab() {
   const handleClick = () => {
     dispatch(toggleTable())
   }
-
+  
   if (isNil(customer)) {
     return (
       <EmptyCustomer 
@@ -26,7 +26,7 @@ function CustomerTab() {
       />
     )
   }
-  
+
   return (
     <div className="d-flex flex-column p-2 gap-2">
       <TextFieldInput 
@@ -60,6 +60,12 @@ function CustomerTab() {
         options={PaymentMethodsData}  
         value={paymentMethod}
         onChange={handleChange}
+      />
+      <TextFieldInput
+        label="Enter Amount:"
+        name="address" 
+        placeholder="e.g., 500.00"
+        isReadOnly={true}
       />
       <hr className="my-2" />
       <ChooseButton 

@@ -2,7 +2,7 @@ import { first, size } from "lodash"
 import { produce } from "immer"
 import { createSelector, createSlice, isAnyOf } from "@reduxjs/toolkit"
 
-import { TabsData } from "../dashboard/pos/Util.jsx"
+import { TabsData } from "../pos/Util.jsx"
 import { TableType } from "../../util/classes"
 import { PaymentMethodsData, rowsPerPages } from "../../util/Config.jsx"
 import { compareEntity, computeCheckouts, computeQty, toItems, toQty } from "../../util/helper.js"

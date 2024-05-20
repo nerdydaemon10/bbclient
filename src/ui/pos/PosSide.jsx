@@ -1,13 +1,13 @@
 import { Fragment, useEffect } from "react"
-import { Button, TabsInput } from "../../common/index.jsx"
+import { Button, TabsInput } from "../common/index.jsx"
 import { useDispatch, useSelector } from "react-redux"
-import { setTab } from "../../redux/posSlice.js"
+import { setTab } from "../redux/posSlice.js"
 import { TabsData, isIncompleteOrder } from "./Util.jsx"
 import CustomerTab from "./CustomerTab.jsx"
 import CheckoutsTab from "./CheckoutsTab.jsx"
-import { useCreateOrderMutation } from "../../../data/services/orders.js"
+import { useCreateOrderMutation } from "../../data/services/orders.js"
 import { enqueueSnackbar } from "notistack"
-import GenericMessage from "../../../util/classes/GenericMessage.js"
+import GenericMessage from "../../util/classes/GenericMessage.js"
 
 function PosSide() {
   const dispatch = useDispatch()

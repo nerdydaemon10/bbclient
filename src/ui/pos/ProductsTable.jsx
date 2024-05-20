@@ -1,16 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import { isCheckedOut } from "./Util.jsx"
-import { DELAY_MILLIS, productCategories } from "../../../util/Config.jsx"
-import { Button, SearchFieldInput, SelectInput, TablePagination } from "../../common"
+import { DELAY_MILLIS, productCategories } from "../../util/Config.jsx"
+import { Button, SearchFieldInput, SelectInput, TablePagination } from "../common"
 import { Fragment, useCallback, useEffect, useState } from "react"
-import ProductCategory from "../../../util/classes/ProductCategory.js"
-import {checkout, nextPage, previousPage, selectSq, setSq } from "../../redux/posSlice.js"
+import ProductCategory from "../../util/classes/ProductCategory.js"
+import {checkout, nextPage, previousPage, selectSq, setSq } from "../redux/posSlice.js"
 import { debounce, isNil } from "lodash"
-import { useFetchProductsQuery } from "../../../data/services/products.js"
-import Fallback from "../../../util/classes/Fallback.js"
-import { Table } from "../../common/Table.jsx"
-import { toStocks, truncate } from "../../../util/helper.js"
+import { useFetchProductsQuery } from "../../data/services/products.js"
+import { Table } from "../common/Table.jsx"
+import { checkMeta, toStocks, truncate } from "../../util/helper.js"
 
 function ProductsTable() {
   const dispatch = useDispatch()
@@ -19,7 +18,7 @@ function ProductsTable() {
   const [sqtemp, setSqtemp] = useState(sq)
   
   const { data, error, isLoading, isFetching } = useFetchProductsQuery(sqtemp)
-  const meta = Fallback.checkMeta(data)
+  const meta = checkMeta(data)
   
   const debouncer = useCallback(debounce((sqtemp) => {
     setSqtemp(sqtemp)

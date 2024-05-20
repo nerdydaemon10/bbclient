@@ -4,20 +4,31 @@ import client, { roleBaseUrl } from "./client.js"
 export const summaries = client.injectEndpoints({
   endpoints: builder => ({
     fetchSummaries: builder.query({
-      query: () => roleBaseUrl("/summary"),
+      query: (sq) => ({
+        url: roleBaseUrl("/summary"),
+        params: params(sq)
+      }),
       providesTags: ["List", "Summary"]
     }),
-    fetchChart: builder.query({
+    fetchSummariesSales: builder.query({
       query: (sq) => ({ 
        url: roleBaseUrl("/chart/sales"),
        params: params(sq)
       }),
-      providesTags: ["List", "Chart"],
+      providesTags: ["List", "Chart_Sales"],
+    }),
+    fetchSummariesProducts: builder.query({
+      query: (sq) => ({ 
+       url: roleBaseUrl("/chart/products"),
+       params: params(sq)
+      }),
+      providesTags: ["List", "Chart_Products"],
     })
   })
 })
 
 export const {
   useFetchSummariesQuery,
-  useFetchChartQuery
+  useFetchSummariesSalesQuery,
+  useFetchSummariesProductsQuery
 } = summaries

@@ -151,4 +151,43 @@ export const checkUser = (user) => {
   if (isNil(user)) return fallback
   
   return user
-}      
+}
+export const checkSummaries = (data) => {
+  const fallback = {
+    sales: {
+      overall: 0.00,
+      today: 0.00
+    },
+    counts: {
+      customers: 0,
+      products: 0,
+      orders: { pending: 0, approved: 0, rejected: 0},
+      employees: { all: 0, admin: 0, employee: 0 }
+    },
+    charts: {
+      sales: [],
+      products: []
+    }
+  }
+
+  return isNil(data) ? fallback : data
+}
+export const checkSummariesCounts = (data) => {
+  const fallback = {
+    orders: 0,
+    inventory: 0,
+    customers: 0,
+    employees: 0
+  }
+
+  return isNil(data) ? fallback : {
+    orders: data.counts.orders.pending,
+    inventory: data.counts.products,
+    customers:  data.counts.customers,
+    employees:  data.counts.employees.all
+  }
+}
+export const checkSummariesSales = (data) => {
+  const fallback = []
+  return isNil(data) ? fallback : data
+}

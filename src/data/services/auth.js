@@ -12,11 +12,11 @@ const auth = client.injectEndpoints({
       transformResponse: (response) => {
         const { token, user } = response
         const { role_id, last_login_at, last_logout_at, ...normalized } = user
-        
+
         normalized.role = Role.toNormalize(role_id)
         normalized.login_at = last_login_at
         normalized.logout_at = last_logout_at
-
+        
         return { token: token, user: normalized }
       },
       invalidatesTags: (result) => {
