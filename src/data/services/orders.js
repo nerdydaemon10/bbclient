@@ -8,12 +8,12 @@ const orders = client.injectEndpoints({
   endpoints: builder => ({
     createOrder: builder.mutation({
       query: (order) => ({
-        url: `/orders`,
+        url: roleBaseUrl(`/orders`),
         method: "POST",
         body: order
       }),
       invalidatesTags: (result) => {
-        return result ? [tag] : []
+        return result ? [tag, "Sales", "Summary", "Chart_Sales"] : []
       }
     }),
     approveOrder: builder.mutation({
@@ -22,7 +22,7 @@ const orders = client.injectEndpoints({
         method: "PATCH"
       }),
       invalidatesTags: (result) => {
-        return result ? [tag] : []
+        return result ? [tag, "Sales", "Summary", "Chart_Sales"] : []
       }
     }),
     rejectOrder: builder.mutation({
@@ -31,7 +31,7 @@ const orders = client.injectEndpoints({
         method: "PATCH"
       }),
       invalidatesTags: (result) => {
-        return result ? [tag] : []
+        return result ? [tag, "Sales", "Summary", "Chart_Sales"] : []
       }
     }),
     fetchOrders: builder.query({

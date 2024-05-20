@@ -22,7 +22,7 @@ function AdminPage() {
 	}, [isAuthorized, navigate])
 
 	store.dispatch(employees.endpoints.fetchEmployees.initiate())
-
+	
 	return (
 		<Dashboard items={DashboardItems}>
 			<Routes>

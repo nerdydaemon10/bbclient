@@ -1,14 +1,14 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useRef, useState } from "react"
+import { isEmpty } from "lodash"
 import { useNavigate } from "react-router-dom"
+import { useEffect, useRef, useState } from "react"
 
 import { TextFieldInput, PasswordFieldInput, Button } from "../common"
-import { isEmpty } from "lodash"
 import { useLoginMutation } from "../../data/services/auth.js"
-import { getError, getErrorByName } from "../../util/helper.js"
+import { checkUser, getError, getErrorByName } from "../../util/helper.js"
 
 function LoginPage() {
   const [login, { isLoading, isSuccess, data, error }] = useLoginMutation()
+
   const [credentials, setCredentials] = useState({
     username: "",
     password: ""
@@ -28,11 +28,12 @@ function LoginPage() {
   useEffect(() => {
     usernameRef.current.focus()
   }, [])
-  
+
   useEffect(() => {
-    if (!isSuccess) return
+    if (isSuccess) {
       navigate(`/${data.user.role}`)
-  }, [isSuccess])
+    }
+  }, [isSuccess, navigate, data])
   
   return (
     <div className="w-100 vh-100 d-flex align-items-center justify-content-center">

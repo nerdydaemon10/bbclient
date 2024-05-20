@@ -4,7 +4,7 @@ import {
   BiSolidGroup, BiSolidHome, BiSolidShoppingBag
 } from "react-icons/bi"
 
-export const RoutesData = [
+export const DashboardItems = [
   {
     key: "employee",
     route: "",

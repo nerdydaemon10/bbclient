@@ -49,7 +49,7 @@ export const toQty = (arg) => {
 export const toCount = (arg, max=999) => {
   const number = Number(arg)
 
-  if (number == 0) return "0"
+  if (number == 0) return "Empty"
   if (number > max) return `${max}+`
 
   return number
@@ -184,7 +184,7 @@ export const checkSummariesCounts = (data) => {
     orders: data.counts.orders.pending,
     inventory: data.counts.products,
     customers:  data.counts.customers,
-    employees:  data.counts.employees.all
+    employees: isNil(data.counts.employees) ? 0 : data.counts.employees.all
   }
 }
 export const checkSummariesSales = (data) => {

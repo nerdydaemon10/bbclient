@@ -12,7 +12,9 @@ import GenericMessage from "../../util/classes/GenericMessage.js"
 function PosSide() {
   const dispatch = useDispatch()
   const { tab, customer, paymentMethod, checkouts } = useSelector((state) => state.pos)
-  const [createOrder, { isLoading, isSuccess }] = useCreateOrderMutation()
+  const [createOrder, { isLoading, isSuccess, error }] = useCreateOrderMutation()
+  
+  console.log(error)
 
   const handleChange = (value) => {
     dispatch(setTab(value))
