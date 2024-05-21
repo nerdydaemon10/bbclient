@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 
 import { TextFieldInput, PasswordFieldInput, Button } from "../common"
 import { useLoginMutation } from "../../data/services/auth.js"
-import { checkUser, getError, getErrorByName } from "../../util/helper.js"
+import { getError, getErrorByName } from "../../util/helper.js"
 
 function LoginPage() {
   const [login, { isLoading, isSuccess, data, error }] = useLoginMutation()
@@ -52,6 +52,7 @@ function LoginPage() {
             onChange={handleChange}
             feedback={getErrorByName(error, "username")}
             ref={usernameRef}
+            maxLength={64}
           />
           <PasswordFieldInput
             label="Password"
@@ -60,6 +61,7 @@ function LoginPage() {
             value={credentials.password}
             onChange={handleChange}
             feedback={getErrorByName(error, "password")}
+            maxLength={64}
           />
           <Button
             isLoading={isLoading}

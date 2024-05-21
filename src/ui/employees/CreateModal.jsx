@@ -54,6 +54,7 @@ function CreateModal() {
           value={employee.full_name}
           onChange={handleChange}
           feedback={getErrorByName(error, "full_name")}
+          maxLength={64}
         />
         <TextFieldInput 
           label="Username"
@@ -62,6 +63,7 @@ function CreateModal() {
           value={employee.username}
           onChange={handleChange}
           feedback={getErrorByName(error, "username")}
+          maxLength={64}
         />
         <PasswordFieldInput 
           label="Password"
@@ -70,6 +72,7 @@ function CreateModal() {
           value={employee.password}
           onChange={handleChange}
           feedback={getErrorByName(error, "password")}
+          maxLength={64}
         />
       </div>
     </Modal>

@@ -53,6 +53,7 @@ function CreateModal() {
             feedback={getErrorByName(error, "full_name")}
             value={customer.full_name}
             onChange={handleChange}
+            maxLength={64}
           />
         </div>
         <div className="col-6">
@@ -63,6 +64,7 @@ function CreateModal() {
             feedback={getErrorByName(error, "address")}
             value={customer.address}
             onChange={handleChange}
+            maxLength={256}
           />
         </div>
       </div>
@@ -75,6 +77,7 @@ function CreateModal() {
             feedback={getErrorByName(error, "phone_number")}
             value={customer.phone_number}
             onChange={handleChange}
+            maxLength={11}
           />
         </div>
         <div className="col-6">
@@ -85,6 +88,7 @@ function CreateModal() {
             label="Email Address"
             placeholder="e.g., juandelacruz@gmail.com"
             feedback={getErrorByName(error, "email_address")}
+            maxLength={256}
           />
         </div>
       </div>

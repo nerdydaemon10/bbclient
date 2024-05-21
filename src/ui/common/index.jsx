@@ -19,6 +19,7 @@ export { default as CheckoutList } from "./checkoutlist/CheckoutList.jsx"
 
 // inputs
 export { default as DateInput } from "./inputs/DateInput.jsx"
+export { default as NumberFieldInput } from "./inputs/NumberFieldInput.jsx"
 export { default as OptionInput } from "./inputs/OptionInput.jsx"
 export { default as PasswordFieldInput } from "./inputs/PasswordFieldInput.jsx"
 export { default as SearchFieldInput } from "./inputs/SearchFieldInput.jsx"

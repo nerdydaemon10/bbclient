@@ -1,7 +1,7 @@
 import { isNil } from "lodash"
 import { useDispatch, useSelector } from "react-redux"
 import TableType from "../../util/classes/TableType.js"
-import { Button, TabsInput, TextFieldInput } from "../common"
+import { Button, NumberFieldInput, TabsInput, TextFieldInput } from "../common"
 import { BiHide, BiShow } from "react-icons/bi"
 import { Fragment } from "react"
 import { PaymentMethodsData } from "../../util/Config.jsx"
@@ -64,7 +64,7 @@ function CustomerTab() {
         value={paymentMethod}
         onChange={handlePaymentMethodChange}
       />
-      <TextFieldInput
+      <NumberFieldInput
         isRequired
         label="Enter Amount"
         name="address" 

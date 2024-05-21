@@ -1,12 +1,23 @@
+import { round } from "lodash"
 import { forwardRef } from "react"
+import { countDecimal } from "../../../util/helper.js"
 
-const TextFieldInput = forwardRef(function TextFieldInput(props, ref) {
+const NumberFieldInput = forwardRef(function NumberFieldInput(props, ref) {
   const { label, name, placeholder, isReadOnly, feedback, value, onChange } = props
   const { state, message } = feedback || { state: "", message: ""}
 
   const variant = state == "is-valid"
     ? "valid"
     : "invalid"
+
+  const handleChange = (e) => {
+    const value = e.target.value
+
+    if (isNaN(value)) return
+    if (countDecimal(value) > 2) e.target.value = round(value, 2)
+    
+    onChange(e)
+  }
   
   return (
     <div className="d-flex flex-column gap-1">
@@ -22,7 +33,7 @@ const TextFieldInput = forwardRef(function TextFieldInput(props, ref) {
         ref={ref}
         value={value}
         maxLength={props.maxLength}
-        onChange={onChange}
+        onChange={handleChange}
       />
       <div className={`${variant}-feedback`}>
         {message}
@@ -31,4 +42,4 @@ const TextFieldInput = forwardRef(function TextFieldInput(props, ref) {
   )
 })
 
-export default TextFieldInput
+export default NumberFieldInput

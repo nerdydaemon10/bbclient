@@ -1,11 +1,11 @@
-import { first, isEmpty, isNil, size } from "lodash"
+import { first, isEmpty, isNil, round, size } from "lodash"
 import { produce } from "immer"
 import { createSelector, createSlice, isAnyOf } from "@reduxjs/toolkit"
 
 import { TabsData } from "../pos/Util.jsx"
 import { TableType } from "../../util/classes"
 import { PaymentMethodsData, rowsPerPages } from "../../util/Config.jsx"
-import { compareEntity, computeChange, computeCheckouts, computeQty, toItems, toQty } from "../../util/helper.js"
+import { compareEntity, computeChange, computeCheckouts, computeQty, countDecimal, toItems, toQty } from "../../util/helper.js"
 import orders from "../../data/services/orders.js"
 
 const checkoutsTab = first(TabsData).value
@@ -131,11 +131,10 @@ const posSlice = createSlice({
       const total = computeCheckouts(state.checkouts)
 
       state.amount = produce(state.amount, draft => {
-        const threshold = (total + 1000)
-
+        const max = total + THRESHOLD
+        
         if (isNaN(value)) return draft
-        if (value >= threshold) return threshold
-
+        if (value >= max) return round(max, 2)
         return value
       })
     }

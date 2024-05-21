@@ -52,6 +52,7 @@ function UpdateModal() {
             feedback={getErrorByName(error, "name")}
             value={product.name}
             onChange={handleChange}
+            maxLength={64}
           />
         </div>
         <div className="col-6">
@@ -62,6 +63,7 @@ function UpdateModal() {
             feedback={getErrorByName(error, "description")}
             value={product.description}
             onChange={handleChange}
+            maxLength={256}
           />
         </div>
       </div>

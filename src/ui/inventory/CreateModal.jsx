@@ -56,6 +56,7 @@ function CreateModal() {
             value={product.name}
             onChange={handleChange}
             feedback={getErrorByName(error, "name")}
+            maxLength={64}
           />
         </div>
         <div className="col-6">
@@ -66,6 +67,7 @@ function CreateModal() {
             value={product.description}
             onChange={handleChange}
             feedback={getErrorByName(error, "description")}
+            maxLength={256}
           />
         </div>
       </div>

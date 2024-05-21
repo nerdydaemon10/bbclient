@@ -52,6 +52,7 @@ function UpdateModal() {
             feedback={getErrorByName(error, "full_name")}
             value={customer.full_name}
             onChange={handleChange}
+            maxLength={64}
           />
         </div>
         <div className="col-6">
@@ -62,6 +63,7 @@ function UpdateModal() {
             feedback={getErrorByName(error, "address")}
             value={customer.address}
             onChange={handleChange}
+            maxLength={256}
           />
         </div>
       </div>
@@ -74,6 +76,7 @@ function UpdateModal() {
             feedback={getErrorByName(error, "phone_number")}
             value={customer.phone_number}
             onChange={handleChange}
+            maxLength={11}
           />
         </div>
         <div className="col-6">
@@ -84,6 +87,7 @@ function UpdateModal() {
             feedback={getErrorByName(error, "email_address")}
             value={customer.email_address}
             onChange={handleChange}
+            maxLength={256}
           />
         </div>
       </div>

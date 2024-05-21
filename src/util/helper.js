@@ -1,4 +1,4 @@
-import { isEmpty, isNil } from "lodash"
+import { isEmpty, isNil, size } from "lodash"
 import moment from "moment"
 import { CURRENCY, LOCALE } from "./Config.jsx"
 
@@ -108,6 +108,12 @@ export const compareEntity = (entity, other) => {
 }
 
 // Computes
+export const countDecimal = (arg) => {
+  const split = arg.split(".")
+  return size(split) > 1 
+    ? arg.split(".")[1].length
+    : 0
+}
 export const computeCheckout = (checkout) => {
   const srp = Number(checkout.srp)
   const quantity = Number(checkout.quantity)
