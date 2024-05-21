@@ -20,7 +20,8 @@ const TextFieldInput = forwardRef(function TextFieldInput(props, ref) {
         placeholder={placeholder}
         readOnly={isReadOnly}
         ref={ref}
-        value={value} 
+        value={value}
+        maxLength={props.maxLength}
         onChange={onChange}
       />
       <div className={`${variant}-feedback`}>

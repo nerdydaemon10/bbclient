@@ -10,6 +10,8 @@ import orders from "../../data/services/orders.js"
 
 const checkoutsTab = first(TabsData).value
 
+const THRESHOLD = 1000
+
 const initialState = {
   productsSq: {
     search: "",
@@ -23,7 +25,7 @@ const initialState = {
     page: 1,
   },
   paymentMethod: first(PaymentMethodsData).value,
-  amount: "0.00",
+  amount: "",
   customer: null,
   table: TableType.PRODUCTS,
   tab: checkoutsTab,
@@ -126,7 +128,16 @@ const posSlice = createSlice({
     },
     setAmount: (state, action) => {
       const value = action.payload.target.value
-      state.amount = produce(state.amount, draft => isNaN(value) ? draft : value)
+      const total = computeCheckouts(state.checkouts)
+
+      state.amount = produce(state.amount, draft => {
+        const threshold = (total + 1000)
+
+        if (isNaN(value)) return draft
+        if (value >= threshold) return threshold
+
+        return value
+      })
     }
   },
   extraReducers: (builder) => { 
@@ -152,7 +163,7 @@ export const selectReceipts = createSelector(
   const qty = toQty(computeQty(checkouts))
   const total = computeCheckouts(checkouts)
   const change = computeChange(total, amount)
-
+  
   const isChangeVisible = !isEmpty(checkouts) && !isNil(customer) && amount > 0.00
 
   return isChangeVisible? [
@@ -171,7 +182,7 @@ export const selectIsOrderCompleted = createSelector(
     const { checkouts, customer, amount } = state
 
     const total = computeCheckouts(checkouts)
-    const validAmount = amount >= total
+    const validAmount = (amount >= total) && amount <= (total + THRESHOLD)
 
     return !isEmpty(checkouts) && !isNil(customer) && validAmount
   }

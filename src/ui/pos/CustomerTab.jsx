@@ -68,7 +68,7 @@ function CustomerTab() {
         isRequired
         label="Enter Amount"
         name="address" 
-        placeholder="e.g., 500.00"
+        placeholder="e.g., 1000.00"
         value={amount}
         onChange={handleAmountChange}
       />
@@ -117,7 +117,7 @@ function ChooseButton({table, onClick}) {
       </Fragment>
     )
   }
-  
+
   return (
     <Button
       variant="outline-dark"
