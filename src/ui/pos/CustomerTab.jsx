@@ -5,19 +5,22 @@ import { Button, TabsInput, TextFieldInput } from "../common"
 import { BiHide, BiShow } from "react-icons/bi"
 import { Fragment } from "react"
 import { PaymentMethodsData } from "../../util/Config.jsx"
-import { setPaymentMethod, toggleTable } from "../redux/posSlice.js"
+import { setAmount, setPaymentMethod, toggleTable } from "../redux/posSlice.js"
 
 function CustomerTab() {
   const dispatch = useDispatch()
-  const { table, customer, paymentMethod } = useSelector((state) => state.pos)
+  const { table, customer, paymentMethod, amount } = useSelector((state) => state.pos)
 
-  const handleChange = (value) => {
+  const handlePaymentMethodChange = (value) => {
     dispatch(setPaymentMethod(value))
+  }
+  const handleAmountChange = (e) => {
+    dispatch(setAmount(e))
   }
   const handleClick = () => {
     dispatch(toggleTable())
   }
-  
+
   if (isNil(customer)) {
     return (
       <EmptyCustomer 
@@ -59,13 +62,15 @@ function CustomerTab() {
         name="payment_method"
         options={PaymentMethodsData}  
         value={paymentMethod}
-        onChange={handleChange}
+        onChange={handlePaymentMethodChange}
       />
       <TextFieldInput
-        label="Enter Amount:"
+        isRequired
+        label="Enter Amount"
         name="address" 
         placeholder="e.g., 500.00"
-        isReadOnly={true}
+        value={amount}
+        onChange={handleAmountChange}
       />
       <hr className="my-2" />
       <ChooseButton 

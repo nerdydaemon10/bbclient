@@ -21,7 +21,7 @@ function UpdateModal() {
 
   const handleConfirm = (e) => {
     e.preventDefault()
-    dispatch(updateCustomer(customer))
+    updateCustomer(customer)
   }
 
   const handleChange = (e) => {

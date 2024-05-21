@@ -17,6 +17,3 @@ export const TabsData = [
 export const isCheckedOut = (checkouts, item) => {
   return !!checkouts.find(checkout => checkout.id == item.id)
 }
-export const isIncompleteOrder = (checkouts, customer) => {
-  return isEmpty(checkouts) || isNil(customer)
-}

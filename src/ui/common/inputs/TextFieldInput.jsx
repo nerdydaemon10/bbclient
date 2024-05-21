@@ -10,7 +10,9 @@ const TextFieldInput = forwardRef(function TextFieldInput(props, ref) {
 
   return (
     <div className="d-flex flex-column gap-1">
-      <label className="fs-7 fw-medium">{label}</label>
+      <label className="fs-7 fw-medium">
+        {label} {props.isRequired && <span className="text-danger">*</span>}
+      </label>
       <input
         className={`form-control ${state}`} 
         type="text" 

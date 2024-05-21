@@ -135,7 +135,9 @@ export const computeQty = (checkouts) => {
     ? 0
     : checkouts.reduce((accum, checkout) =>  accum + checkout.quantity, 0)
 }
-
+export const computeChange = (total, amount) => {
+  return Math.abs(Number(total) - Number(amount))
+}
 // Checks (Fallback)
 export const checkMeta = (data) => {
   const fallback = { current_page: 1, last_page: 1 }

@@ -3,11 +3,12 @@ import { createGlobalStyle } from "styled-components";
 const PosStyle = createGlobalStyle`
 .dashboard-main {
   grid-template-columns: 1fr 1fr 320px;
-  grid-template-rows: max-content max-content 1fr max-content;
+  grid-template-rows: max-content max-content 1fr max-content max-content;
   grid-template-areas: 
     "title-section title-section title-section"
     "table-filter table-filter tabs"
     "table-data table-data tab"
+    "table-data table-data receipt-list"
     "table-pagination table-pagination place-order-btn";
 }
 
@@ -44,19 +45,14 @@ const PosStyle = createGlobalStyle`
 .tab, 
 .tab.is-checkouts {
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr max-content;
+  grid-template-rows: 1fr;
   grid-template-areas: 
     "checkout-list"
-    "receipt-list";
 }
 /* --CHECKOUT-LIST-- */
 .checkout-list {
   grid-area: checkout-list;
   overflow-y: auto;
-}
-/*--RECEIPT-LIST--*/
-.receipt-list {
-  grid-area: receipt-list;
 }
 /* --TAB:IS-CUSTOMER-- */
 .tab.is-customer {
@@ -79,6 +75,10 @@ const PosStyle = createGlobalStyle`
   text-align: center;
 }
 
+/*--RECEIPT-LIST--*/
+.receipt-list {
+  grid-area: receipt-list;
+}
 /* --PLACE-ORDER-BTN-- */
 .place-order-btn {
   grid-area: place-order-btn;

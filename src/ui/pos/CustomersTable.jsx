@@ -73,7 +73,7 @@ function TableFilter({search, onChange}) {
 function TableData({sq, data, error, isFetching}) {
   const dispatch = useDispatch()
   const { customer } = useSelector((state) => state.pos)
-
+  
   const handleClick = (customer) => {
     dispatch(setCustomer(customer))
   }
@@ -89,6 +89,7 @@ function TableData({sq, data, error, isFetching}) {
       name: "Address",
       accessor: "address",
       type:"string",
+      format: "string",
       sortable: true
     },
     {

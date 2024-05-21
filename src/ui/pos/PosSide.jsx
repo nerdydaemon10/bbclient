@@ -1,8 +1,8 @@
 import { Fragment, useEffect } from "react"
-import { Button, TabsInput } from "../common/index.jsx"
+import { Button, ReceiptList, TabsInput } from "../common/index.jsx"
 import { useDispatch, useSelector } from "react-redux"
-import { setTab } from "../redux/posSlice.js"
-import { TabsData, isIncompleteOrder } from "./Util.jsx"
+import { selectIsOrderCompleted, selectReceipts, setTab } from "../redux/posSlice.js"
+import { TabsData } from "./Util.jsx"
 import CustomerTab from "./CustomerTab.jsx"
 import CheckoutsTab from "./CheckoutsTab.jsx"
 import { useCreateOrderMutation } from "../../data/services/orders.js"
@@ -12,9 +12,10 @@ import GenericMessage from "../../util/classes/GenericMessage.js"
 function PosSide() {
   const dispatch = useDispatch()
   const { tab, customer, paymentMethod, checkouts } = useSelector((state) => state.pos)
-  const [createOrder, { isLoading, isSuccess, error }] = useCreateOrderMutation()
-  
-  console.log(error)
+  const receipts = useSelector(selectReceipts)
+  const isOrderCompleted = useSelector(selectIsOrderCompleted)
+
+  const [createOrder, { isLoading, isSuccess }] = useCreateOrderMutation()
 
   const handleChange = (value) => {
     dispatch(setTab(value))
@@ -37,9 +38,12 @@ function PosSide() {
     <Fragment>
       <Tabs tab={tab} onChange={handleChange} />
       <Tab tab={tab} />
+      <ReceiptList
+        receipts={receipts}
+      />
       <PlaceOrderButton
         isLoading={isLoading} 
-        isDisabled={isIncompleteOrder(checkouts, customer)}
+        isDisabled={!isOrderCompleted}
         onOrder={() => handleOrder(customer.id, paymentMethod, checkouts)}
       />
     </Fragment>
