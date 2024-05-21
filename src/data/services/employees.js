@@ -38,7 +38,7 @@ export const employees = client.injectEndpoints({
     }),
     fetchEmployees: builder.query({
       query: (sq) => ({
-        url: `/users`,
+        url: `/admin/filter/employees`,
         method: "GET",
         params: params(sq)
       }),

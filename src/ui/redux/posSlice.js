@@ -135,11 +135,10 @@ const posSlice = createSlice({
       state.checkouts = []
       state.customer = null
       state.paymentMethod = first(PaymentMethodsData).value
-
-      if (state.tab != checkoutsTab) 
-        state.tab = checkoutsTab
-      if (state.table != TableType.PRODUCTS) 
-        state.table = TableType.PRODUCTS
+      state.amount = 0.00
+      
+      if (state.tab != checkoutsTab) state.tab = checkoutsTab
+      if (state.table != TableType.PRODUCTS) state.table = TableType.PRODUCTS
     })
   }
 })

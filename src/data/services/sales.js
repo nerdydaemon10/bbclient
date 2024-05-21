@@ -17,7 +17,7 @@ export const sales = client.injectEndpoints({
     }),
     fetchSales: builder.query({
       query: (sq) => ({
-        url: `/admin/sales`,
+        url: `/admin/filter/sales`,
         method: "GET",
         params: params(sq)
       }),

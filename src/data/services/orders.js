@@ -36,7 +36,7 @@ const orders = client.injectEndpoints({
     }),
     fetchOrders: builder.query({
       query: (sq) => ({
-        url: roleBaseUrl("/orders"),
+        url: roleBaseUrl("/filter/orders"),
         method: "GET",
         params: params(sq)
       }),
