@@ -1,5 +1,4 @@
 import { BiFile, BiPackage } from "react-icons/bi"
-import { isEmpty, isNil } from "lodash"
 
 export const TabsData = [
   {

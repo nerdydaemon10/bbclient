@@ -126,10 +126,7 @@ const posSlice = createSlice({
     },
     setAmount: (state, action) => {
       const value = action.payload.target.value
-
-      if (isNaN(value)) return
-
-      state.amount =  value
+      state.amount = produce(state.amount, draft => isNaN(value) ? draft : value)
     }
   },
   extraReducers: (builder) => { 
