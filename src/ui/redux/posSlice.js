@@ -135,6 +135,7 @@ const posSlice = createSlice({
         
         if (isNaN(value)) return draft
         if (value >= max) return round(max, 2)
+        
         return value
       })
     }
