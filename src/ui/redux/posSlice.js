@@ -5,7 +5,7 @@ import { createSelector, createSlice, isAnyOf } from "@reduxjs/toolkit"
 import { TabsData } from "../pos/Util.jsx"
 import { TableType } from "../../util/classes"
 import { PaymentMethodsData, rowsPerPages } from "../../util/Config.jsx"
-import { compareEntity, computeChange, computeCheckouts, computeQty, countDecimal, toItems, toQty } from "../../util/helper.js"
+import { compareEntity, computeChange, computeCheckouts, computeQty, toItems, toQty } from "../../util/helper.js"
 import orders from "../../data/services/orders.js"
 
 const checkoutsTab = first(TabsData).value
@@ -132,7 +132,7 @@ const posSlice = createSlice({
 
       state.amount = produce(state.amount, draft => {
         const max = total + THRESHOLD
-        
+
         if (isNaN(value)) return draft
         if (value >= max) return round(max, 2)
         
