@@ -1,5 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Doughnut } from "react-chartjs-2"
+
+import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
+import { checkSummaries } from "../../../util/helper.js"
+import HomeCard from "./HomeCard.jsx"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,16 +16,12 @@ import {
   ArcElement,
 } from "chart.js"
 
-import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
-import { checkSummaries } from "../../../util/helper.js"
-import HomeCard from "./HomeCard.jsx"
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  ArcElement,
   PointElement,
   LineElement,
+  ArcElement,
   Title,
   Tooltip,
   Legend
@@ -29,18 +29,27 @@ ChartJS.register(
 
 const options = {
   responsive: true,
-  maintainAspectRatio: false,
+  maintainAspectRatio: false
 }
 
 function OrdersChart() {
   const { isLoading, isFetching, isError, data, error  } = useFetchSummariesQuery()
   const summaries = checkSummaries(data)
-  const labels = [
-    `Pending (${summaries.counts.orders.pending})`,
-    `Approved (${summaries.counts.orders.approved})`,
-    `Rejected (${summaries.counts.orders.rejected})`,
-  ]
+  const { pending, approved, rejected} = summaries.counts.orders
 
+  const labels = [
+    `Pending (${pending})`,
+    `Approved (${approved})`,
+    `Rejected (${rejected})`,
+  ]
+  const datasets = [
+    {
+      label: "Orders",
+      data: [pending, approved, rejected],
+      backgroundColor: ["#F0F0F0", "#212529", "#6C757D"],
+    }
+  ]
+  
   return (
     <HomeCard
       isFetching={isLoading || isFetching}
@@ -53,14 +62,7 @@ function OrdersChart() {
         options={options}
         data={{
           labels: labels,
-          datasets: [
-            {
-              label: "Orders",
-              data: [summaries.counts.orders.pending, summaries.counts.orders.approved, summaries.counts.orders.rejected],
-              backgroundColor: ["#F0F0F0", "#212529", "#6C757D"],
-
-            }
-          ]
+          datasets: datasets
         }}
       />
     </HomeCard>

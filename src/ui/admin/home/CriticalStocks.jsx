@@ -4,7 +4,6 @@ import { useFetchSummariesProductsQuery } from "../../../data/services/summaries
 import { isEmpty } from "lodash"
 import { toPeso, toStocks, truncate } from "../../../util/helper.js"
 import ProductCategory from "../../../util/classes/ProductCategory.js"
-import { Link } from "react-router-dom"
 
 function CriticalStocks() {
   const { isLoading, isFetching, isError, data } = useFetchSummariesProductsQuery()

@@ -1,5 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Line } from "react-chartjs-2"
+import { debounce, isEmpty } from "lodash"
+
+import { useDispatch, useSelector } from "react-redux"
+import OptionInput from "../../common/inputs/OptionInput.jsx"
+import { setInterval } from "../../redux/homeSlice.js"
+import { useCallback, useEffect, useState } from "react"
+import { DELAY_MILLIS, IntervalsData } from "../../../util/Config.jsx"
+import { checkSummariesSales } from "../../../util/helper.js"
+import { useFetchSummariesSalesQuery } from "../../../data/services/summaries.js"
+import HomeCard from "./HomeCard.jsx"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,16 +21,6 @@ import {
   Legend,
 } from "chart.js"
 
-import { debounce, isEmpty } from "lodash"
-import { useDispatch, useSelector } from "react-redux"
-import OptionInput from "../../common/inputs/OptionInput.jsx"
-import { setInterval } from "../../redux/homeSlice.js"
-import { useCallback, useEffect, useState } from "react"
-import { DELAY_MILLIS, IntervalsData } from "../../../util/Config.jsx"
-import { checkSummariesSales } from "../../../util/helper.js"
-import { useFetchSummariesSalesQuery } from "../../../data/services/summaries.js"
-import HomeCard from "./HomeCard.jsx"
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -30,6 +30,8 @@ ChartJS.register(
   Tooltip,
   Legend
 )
+
+const options = { responsive: true, maintainAspectRatio: false }
 
 function SalesChart() {
   const dispatch = useDispatch()
@@ -43,7 +45,7 @@ function SalesChart() {
 
   const labels = isEmpty(sales) ? [] : Object.keys(sales)
   const values = isEmpty(sales) ? [] : Object.values(sales)
-  
+
   const label = {
     "weekly": "Weekly Sales",
     "monthly": "Monthly Sales",
@@ -63,7 +65,7 @@ function SalesChart() {
       tension: 0.3
     }
   ]
-
+  
   const debouncer = useCallback(debounce((interval) => {
     setSqtemp(interval)
   }, DELAY_MILLIS), [])
@@ -93,7 +95,7 @@ function SalesChart() {
       }
     >
       <Line
-        options={{ responsive: true, maintainAspectRatio: false }} 
+        options={options} 
         data={{ labels, datasets: datasets }} 
       />
     </HomeCard>

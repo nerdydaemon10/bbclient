@@ -1,27 +1,29 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Bar } from "react-chartjs-2"
+import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
+import { checkSummaries } from "../../../util/helper.js"
+import HomeCard from "./HomeCard.jsx"
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
   BarElement,
 } from "chart.js"
 
-import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
-import { checkSummaries } from "../../../util/helper.js"
-import HomeCard from "./HomeCard.jsx"
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
+  PointElement,
+  LineElement,
   BarElement,
   Title,
   Tooltip,
   Legend
-);
+)
 
 const options = {
   responsive: true,
@@ -36,12 +38,20 @@ const options = {
 function OthersChart() {
   const { isLoading, isFetching, isError, data, error } = useFetchSummariesQuery()
   const summaries = checkSummaries(data)
-  
+  const { products, customers, admin, employee } = summaries.counts
+
   const labels = [
-    `Products (${summaries.counts.products})`,
-    `Customers (${summaries.counts.customers})`,
-    `Admins (${summaries.counts.employees.admin})`,
-    `Employees (${summaries.counts.employees.employee})`,
+    `Products (${products})`,
+    `Customers (${customers})`,
+    `Admins (${admin})`,
+    `Employees (${employee})`,
+  ]
+  const datasets = [
+    {
+      data: [products, customers, admin, employee],
+      backgroundColor: "rgb(0, 0, 0)",
+      borderRadius: 6
+    }
   ]
 
   return (
@@ -56,13 +66,7 @@ function OthersChart() {
         options={options}
         data={{
           labels: labels,
-          datasets: [
-            {
-              data: [summaries.counts.products, summaries.counts.customers, summaries.counts.employees.admin, summaries.counts.employees.employee],
-              backgroundColor: "rgb(0, 0, 0)",
-              borderRadius: 6
-            }
-          ]
+          datasets: datasets
         }}
       />
     </HomeCard>

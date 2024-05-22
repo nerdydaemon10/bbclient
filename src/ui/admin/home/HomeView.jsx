@@ -1,18 +1,18 @@
-import { Fragment } from "react"
 import secureLocalStorage from "react-secure-storage"
 import { checkUser } from "../../../util/helper.js"
 import HomeStyle from "./HomeStyle.jsx"
 import CardsSection from "./CardsSection.jsx"
 import ChartsSection from "./ChartsSection.jsx"
+import React from "react"
 
 function HomeView() {
   return (
-    <Fragment>
+    <React.Fragment>
       <HomeStyle />
       <TitleSection />
       <CardsSection />
       <ChartsSection />  
-    </Fragment>
+    </React.Fragment>
   )
 }
 

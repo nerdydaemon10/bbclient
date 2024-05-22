@@ -7,10 +7,6 @@ import {
   BiSolidShoppingBag, BiSolidUserCircle, BiUserCircle,
 } from "react-icons/bi"
 
-export const options = {
-  responsive: true,
-  maintainAspectRatio: false
-}
 export const DashboardItems = [
   {
     key: "admin",

@@ -4,8 +4,8 @@ import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
 import { checkSummaries, toPeso } from "../../../util/helper.js"
 
 function CardsSection() {
-  const { isLoading, isFetching, data, error  } = useFetchSummariesQuery()
-  
+  const { data } = useFetchSummariesQuery()
+
   const summaries = checkSummaries(data)
   const cards = [
     {
@@ -57,7 +57,7 @@ function CardsSection() {
       icon: <BiUserCircle />
     }
   ]
-
+  
   return (
     <div className="cards-section d-grid gap-2">
       {cards.map((card, index) => (

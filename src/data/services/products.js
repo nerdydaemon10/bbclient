@@ -13,7 +13,7 @@ const products = client.injectEndpoints({
         body: product
       }),
       invalidatesTags: (result) => {
-        return result ? [tag] : []
+        return result ? [tags] : []
       }
     }),
     updateProduct: builder.mutation({
@@ -23,7 +23,7 @@ const products = client.injectEndpoints({
         body: product
       }),
       invalidatesTags: (result) => {
-        return result ? [tag] : []
+        return result ? [tags] : []
       }
     }),
     removeProduct: builder.mutation({
@@ -33,7 +33,7 @@ const products = client.injectEndpoints({
         params: id
       }),
       invalidatesTags: (result) => {
-        return result ? [tag] : []
+        return result ? [tags] : []
       }
     }),
     fetchProducts: builder.query({

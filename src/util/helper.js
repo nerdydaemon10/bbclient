@@ -187,7 +187,7 @@ export const checkSummariesCounts = (data) => {
     customers: 0,
     employees: 0
   }
-
+  
   return isNil(data) ? fallback : {
     orders: data.counts.orders.pending,
     inventory: data.counts.products,

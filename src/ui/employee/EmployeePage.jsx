@@ -7,8 +7,6 @@ import CustomersView from "../customers/CustomersView.jsx"
 import InventoryView from "../inventory/InventoryView.jsx"
 import { useSelector } from "react-redux"
 import { useEffect } from "react"
-import store from "../redux/store.js"
-import { employees } from "../../data/services/employees.js"
 import HomeView from "./home/HomeView.jsx"
 
 function EmployeePage() {
@@ -18,8 +16,6 @@ function EmployeePage() {
 	useEffect(() => {
 		if (!isAuthorized) navigate("/")
 	}, [isAuthorized, navigate])
-
-	//store.dispatch(employees.endpoints.fetchEmployees.initiate())
 
 	return (
 		<Dashboard items={DashboardItems}>
