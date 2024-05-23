@@ -38,22 +38,22 @@ const options = {
 function OthersChart() {
   const { isLoading, isFetching, isError, data, error } = useFetchSummariesQuery()
   const summaries = checkSummaries(data)
-  const { products, customers, admin, employee } = summaries.counts
+  const { products, customers, employees } = summaries.counts
 
   const labels = [
     `Products (${products})`,
     `Customers (${customers})`,
-    `Admins (${admin})`,
-    `Employees (${employee})`,
+    `Admins (${employees.admin})`,
+    `Employees (${employees.employee})`,
   ]
   const datasets = [
     {
-      data: [products, customers, admin, employee],
+      data: [products, customers, employees.admin, employees.employee],
       backgroundColor: "rgb(0, 0, 0)",
       borderRadius: 6
     }
   ]
-
+  
   return (
     <HomeCard
       isFetching={isLoading || isFetching}
