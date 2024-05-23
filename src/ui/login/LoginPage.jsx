@@ -184,12 +184,12 @@ function Main() {
 }
 function Footer() {
   return (
-    <footer className="footer text-white text-center py-3">
+    <footer className="footer text-dark text-center py-3">
       <p className="mb-0 fs-7">
         <span className="me-1">
           <IoDiamond />
         </span>
-        Powered By Diamond Tech I.T Services
+        Powered by Diamond Tech I.T Services
       </p>
     </footer>
   )

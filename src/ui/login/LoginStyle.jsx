@@ -22,7 +22,7 @@ const LoginStyle = createGlobalStyle`
 }
 .footer {
   grid-area: footer;
-  background-color: var(--bs-gray-800);
+  background-color: var(--bs-tertiary-bg);
 }
 .login-form {
   width: 20%;
