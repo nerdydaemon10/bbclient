@@ -120,11 +120,7 @@ function TableData({sq, data, error, isFetching}) {
       accessor: "role_id",
       type:"string",
       sortable: true,
-      render: (item) => (
-        <span className="badge text-bg-light">
-          {Role.toRole(item.role_id)}
-        </span>
-      )
+      render: (item) => <RoleRenderer item={item} />
     },
     {
       name: "Status",
@@ -181,9 +177,17 @@ function FullNameRenderer({item, user}) {
   return (
     <Fragment>
       {fullName}
-      {compareEntity(item, user) && <span className="ms-1">(You)</span>}
+      {compareEntity(item, user) && <span className="ms-1">(Me)</span>}
       {Role.isAdmin(item.role_id) && <span className="ms-1"><BiSolidCheckCircle/></span>}
     </Fragment>
+  )
+}
+function RoleRenderer({item}) {
+  const role = Role.toNormalize(item.role_id)
+  return (
+    <span className="badge text-bg-light">
+      {role}
+    </span>
   )
 }
 function StatusRenderer({item}) {
