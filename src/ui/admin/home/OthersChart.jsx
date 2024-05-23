@@ -1,7 +1,6 @@
 import { Bar } from "react-chartjs-2"
 import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
 import { checkSummaries } from "../../../util/helper.js"
-import HomeCard from "./HomeCard.jsx"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,6 +12,7 @@ import {
   Legend,
   BarElement,
 } from "chart.js"
+import { HomeCard } from "../../common/index.jsx"
 
 ChartJS.register(
   CategoryScale,
@@ -39,27 +39,33 @@ function OthersChart() {
   const { isLoading, isFetching, isError, data, error } = useFetchSummariesQuery()
   const summaries = checkSummaries(data)
   const { products, customers, employees } = summaries.counts
+  const { admin, employee} = employees
 
   const labels = [
     `Products (${products})`,
     `Customers (${customers})`,
-    `Admins (${employees.admin})`,
-    `Employees (${employees.employee})`,
+    `Admins (${admin})`,
+    `Employees (${employee})`,
   ]
   const datasets = [
     {
-      data: [products, customers, employees.admin, employees.employee],
+      data: [products, customers, admin, employee],
       backgroundColor: "rgb(0, 0, 0)",
       borderRadius: 6
     }
   ]
-  
+  const isEmpty = (products == 0) && 
+                  (customers == 0) && 
+                  (admin == 0) &&
+                  (employee == 0)
+                  
   return (
     <HomeCard
       isFetching={isLoading || isFetching}
       isError={isError}
-      title="Entities Chart"
-      description="List of entities"
+      isEmpty={isEmpty}
+      title="Others Chart"
+      description="Total of different entities"
       error={error}
     >
       <Bar

@@ -3,7 +3,6 @@ import { Doughnut } from "react-chartjs-2"
 
 import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
 import { checkSummaries } from "../../../util/helper.js"
-import HomeCard from "./HomeCard.jsx"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,6 +14,7 @@ import {
   Legend,
   ArcElement,
 } from "chart.js"
+import { HomeCard } from "../../common/index.jsx"
 
 ChartJS.register(
   CategoryScale,
@@ -49,13 +49,16 @@ function OrdersChart() {
       backgroundColor: ["#F0F0F0", "#212529", "#6C757D"],
     }
   ]
-  
+  const isEmpty = (pending) == 0 && (approved == 0) && (rejected == 0)
+
   return (
     <HomeCard
       isFetching={isLoading || isFetching}
       isError={isError}
+      isEmpty={isEmpty}
+      name="orders"
       title="Orders Chart"
-      description="Please add some descriptions..."
+      description="Total of orders you assisted in different statuses"
       error={error}
     >
       <Doughnut

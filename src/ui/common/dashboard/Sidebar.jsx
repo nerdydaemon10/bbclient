@@ -4,7 +4,7 @@ import Role from "../../../util/classes/Role.js"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { currentRoute, isSelected } from "./util.js"
-import { BiLogIn, BiShieldQuarter, BiSolidCoffeeBean } from "react-icons/bi"
+import { BiLogIn, BiShieldQuarter, BiSolidCheckCircle, BiSolidCoffeeBean } from "react-icons/bi"
 import LinkButton from "../buttons/LinkButton.jsx"
 import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
 import { isNil } from "lodash"
@@ -14,7 +14,8 @@ import Button from "../buttons/Button.jsx"
 function Sidebar({items}) {
 	const user = checkUser(secureLocalStorage.getItem("user"))
 	const fullName = truncate(user.full_name)
-	const role = Role.toRole(user.role)
+	const role = Role.toObject(user.role)
+	const isAdmin = Role.isAdmin(role.normalize)
 
 	const location = useLocation()
 	const [route, setRoute] = useState(currentRoute(location))
@@ -52,11 +53,16 @@ function Sidebar({items}) {
 			<div className="dashboard-sidebar-footer d-flex flex-column gap-2 p-2 border-top">
         <div className="d-flex align-items-center gap-2">
 					<div className="dashboard-sidebar-role-icon">
-						<BiShieldQuarter />
+						{role.icon}
 					</div>
 					<div>
-						<p className="text-body-primary fw-medium mb-0">{fullName}</p>
-						<p className="text-body-secondary fs-7 mb-0 lh-1">{role}</p>
+						<p className="text-body-primary fw-medium mb-0">
+							{fullName}
+							<span className="ms-1">
+								{isAdmin && <BiSolidCheckCircle />}
+							</span>
+						</p>
+						<p className="text-body-secondary fs-7 mb-0 lh-1">{role.name}</p>
 					</div>
         </div>
 				<SignOutButton />

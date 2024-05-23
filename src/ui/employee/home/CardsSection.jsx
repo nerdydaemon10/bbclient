@@ -1,23 +1,23 @@
-import { BiBarChart, BiBox, BiCheckCircle, BiGroup, BiHourglass, BiLineChart, BiShieldQuarter, BiUserCircle } from "react-icons/bi"
+import { BiBarChart, BiBox, BiCheckCircle, BiGroup, BiHourglass, BiLineChart } from "react-icons/bi"
 import { TrendCard } from "../../common/index.jsx"
 import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
 import { checkSummaries, toPeso } from "../../../util/helper.js"
 
 function CardsSection() {
-  const { isLoading, isFetching, data, error  } = useFetchSummariesQuery()
+  const { data  } = useFetchSummariesQuery()
 
   const summaries = checkSummaries(data)
   const cards = [
     {
       title: "Today Sales",
       count: toPeso(summaries.sales.today),
-      description: "Our sales for today",
+      description: "Your sales for today",
       icon: <BiLineChart />
     },
     {
       title:"Pending Orders",
       count: summaries.counts.orders.pending,
-      description: "Total of pending orders",
+      description: "Pending orders that you assisted",
       icon: <BiHourglass />
     },
     {
@@ -29,19 +29,19 @@ function CardsSection() {
     {
       title: "Overall Sales",
       count: toPeso(summaries.sales.overall),
-      description: "Our overall sales overtime",
+      description: "Your sales overall",
       icon: <BiBarChart />
     },
     {
       title: "Approved Orders",
       count: summaries.counts.orders.approved,
-      description: "Total of approved orders",
+      description: "Approved orders that you assisted",
       icon: <BiCheckCircle />
     },
     {
       title: "Products",
       count: summaries.counts.products,
-      description: "Total products in inventory",
+      description: "Total of registered products",
       icon: <BiBox />
     }
   ]

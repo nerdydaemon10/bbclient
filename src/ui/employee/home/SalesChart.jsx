@@ -9,7 +9,6 @@ import { useCallback, useEffect, useState } from "react"
 import { DELAY_MILLIS, IntervalsData } from "../../../util/Config.jsx"
 import { checkSummariesSales } from "../../../util/helper.js"
 import { useFetchSummariesSalesQuery } from "../../../data/services/summaries.js"
-import HomeCard from "./HomeCard.jsx"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -20,6 +19,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js"
+import { HomeCard } from "../../common/index.jsx"
 
 ChartJS.register(
   CategoryScale,
@@ -52,9 +52,9 @@ function SalesChart() {
     "yearly": "Yearly Sales"
   }
   const description = {
-    "weekly": "Sales from weeks",
-    "monthly": "Sales from months",
-    "yearly": "Overall sales from year"
+    "weekly": "Your sales from this week",
+    "monthly": "Your sales from this month",
+    "yearly": "Your sales from this year"
   }
   const datasets = [
     {

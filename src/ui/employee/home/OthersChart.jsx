@@ -2,7 +2,6 @@
 import { Bar } from "react-chartjs-2"
 import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
 import { checkSummaries } from "../../../util/helper.js"
-import HomeCard from "./HomeCard.jsx"
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,6 +13,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js"
+import { HomeCard } from "../../common/index.jsx"
 
 ChartJS.register(
   CategoryScale,
@@ -52,13 +52,15 @@ function OthersChart() {
       borderRadius: 6
     }
   ]
+  const isEmpty = (products == 0) && (customers == 0)
 
   return (
     <HomeCard
       isFetching={isLoading || isFetching}
       isError={isError}
-      title="Entities Chart"
-      description="List of entities"
+      isEmpty={isEmpty}
+      title="Others Chart"
+      description="Total of different entities"
       error={error}
     >
       <Bar

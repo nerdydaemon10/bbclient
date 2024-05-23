@@ -5,6 +5,7 @@ import {
   BiMoney,
   BiShieldQuarter,
   BiUserCircle,
+  BiSolidUserCircle,
 } from "react-icons/bi"
 
 export const LOCALE = "en-PH"
@@ -44,8 +45,8 @@ export const OrderStatusesData = [
   { key: "rejected", name: "Rejected", badge: "text-bg-secondary", icon: <BiX /> }
 ]
 export const RolesData = [
-  { key: 1, name: "Admin", normalize: "admin", icon: <BiShieldQuarter /> },
-  { key: 2, name: "Employee", normalize: "employee", icon: <BiUserCircle /> }
+  { key: 1, name: "Administrator", normalize: "admin", icon: <BiShieldQuarter /> },
+  { key: 2, name: "Employee", normalize: "employee", icon: <BiSolidUserCircle /> }
 ]
 export const IntervalsData = [
   {

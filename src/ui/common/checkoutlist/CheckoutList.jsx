@@ -3,11 +3,12 @@ import Button from "../buttons/Button.jsx"
 import CheckoutListStyle from "./CheckoutListStyle.jsx"
 import { BiMinus, BiPlus } from "react-icons/bi"
 import ProductCategory from "../../../util/classes/ProductCategory.js"
-import { toItems, toPeso, toQty, truncate } from "../../../util/helper.js"
+import { toPeso, toQty, truncate } from "../../../util/helper.js"
+import React from "react"
 
 function CheckoutList({className, checkouts, isControlsDisabled, isOdd, onDecrement, onIncrement}) {
   return (
-    <>
+    <React.Fragment>
       <CheckoutListStyle />
       <ul className={`checkout-list list-unstyled m-0 gap-2 ${className}`}>
         {
@@ -28,7 +29,7 @@ function CheckoutList({className, checkouts, isControlsDisabled, isOdd, onDecrem
           )
         }
       </ul>
-    </>
+    </React.Fragment>
   )
 }
 function CheckoutItem({count, checkout, isControlsDisabled, isOdd=true, onDecrement, onIncrement}) {

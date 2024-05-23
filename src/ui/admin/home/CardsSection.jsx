@@ -23,19 +23,19 @@ function CardsSection() {
     {
       title: "Customers",
       count: summaries.counts.customers,
-      description: "Total of our customers",
+      description: "Total of customers",
       icon: <BiGroup />
     },
     {
       title: "Administrators",
       count: summaries.counts.employees.admin,
-      description: "Total of admins",
+      description: "Total of administrators",
       icon: <BiShieldQuarter />
     },
     {
       title: "Overall Sales",
       count: toPeso(summaries.sales.overall),
-      description: "Our overall sales overtime",
+      description: "Total of sales overtime",
       icon: <BiBarChart />
     },
     {
@@ -47,7 +47,7 @@ function CardsSection() {
     {
       title: "Products",
       count: summaries.counts.products,
-      description: "Total products in inventory",
+      description: "Total of registered products",
       icon: <BiBox />
     },
     {

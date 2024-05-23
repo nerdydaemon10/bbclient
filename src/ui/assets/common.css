@@ -33,3 +33,16 @@
   width: 36px;
   height: 36px;
 }
+/*--BOX--*/
+.box-32x32 {
+  width: 32px;
+  height: 32px;
+}
+.box-256x256 {
+  width: 256px;
+  height: 256px;
+}
+.box-128x128 {
+  width: 128px;
+  height: 128px;
+}

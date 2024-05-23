@@ -19,7 +19,7 @@ import { setInterval } from "../../redux/homeSlice.js"
 import { DELAY_MILLIS, IntervalsData } from "../../../util/Config.jsx"
 import { checkSummariesSales } from "../../../util/helper.js"
 import { useFetchSummariesSalesQuery } from "../../../data/services/summaries.js"
-import HomeCard from "./HomeCard.jsx"
+import { HomeCard } from "../../common/index.jsx"
 
 ChartJS.register(
   CategoryScale,
@@ -55,9 +55,9 @@ function SalesChart() {
     "yearly": "Yearly Sales"
   }
   const description = {
-    "weekly": "Sales from weeks",
-    "monthly": "Sales from months",
-    "yearly": "Overall sales from year"
+    "weekly": "Our sales from this week",
+    "monthly": "Our sales from this month",
+    "yearly": "Our sales from this year"
   }
   const datasets = [
     {

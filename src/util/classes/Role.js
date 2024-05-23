@@ -25,4 +25,8 @@ export default class Role {
 
     return role.name
   }
+  static toObject = (normalize) => {
+    const object = RolesData.find((role) => role.normalize == normalize)
+    return object
+  }
 }

@@ -34,3 +34,5 @@ export { default as ReceiptList } from "./receipt/ReceiptList.jsx"
 export { default as TrendCard } from "./trendcard/TrendCard.jsx"
 
 export { Table, TablePagination } from "./Table.jsx"
+
+export { default as HomeCard } from "./homecard/HomeCard.jsx"

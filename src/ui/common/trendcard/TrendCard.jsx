@@ -15,7 +15,7 @@ function TrendCard({
         <div className="d-flex justify-content-between mb-3">
           <div>
             <h6 className="mb-0">{title}</h6>
-            <small className="text-body-secondary">{description}</small>
+            <p className="text-body-secondary mb-0 fs-9">{description}</p>
           </div>
           <span className="text-body-secondary lh-0 fs-4">{icon}</span>
         </div>
