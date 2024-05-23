@@ -23,6 +23,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               vertical: "bottom",
               horizontal: "left",
             }}
+            autoHideDuration={3000}
           >
             <App />
           </SnackbarProvider>

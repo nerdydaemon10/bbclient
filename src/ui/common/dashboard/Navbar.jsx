@@ -4,14 +4,20 @@ import Button from "../buttons/Button.jsx"
 import { BiRefresh } from "react-icons/bi"
 import { isSelected } from "./util.js"
 
+function useReload() {
+  
+}
+
 function Navbar({items}) {
 	const location = useLocation()
 	const excludes = ["", "/"]
 	const routes = location.pathname.split("/").filter(route => !excludes.includes(route))
 	const current = last(routes)
 
-  const handleClick = () => {}
-  
+  const handleClick = () => {
+    window.location.reload()
+  }
+
 	return (
     <div className="dashboard-navbar d-flex flex-row align-items-center justify-content-between p-2 border-bottom">
       <ol className="breadcrumb m-0 p-0">

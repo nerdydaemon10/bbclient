@@ -64,7 +64,7 @@ export function Table({name, columns, data, error, sq, selected, isFetching}) {
     const value = get(item, col.accessor)
 
     if (isNil(col.format)) return value
-    if (col.format == "string") return truncate(value)
+    if (col.format == "string") return truncate(value, 64)
     if (col.format == "stocks") return toStocks(value)
     if (col.format == "items") return toItems(value)
     if (col.format == "count") return toCount(value)
