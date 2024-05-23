@@ -1,0 +1,113 @@
+import { isEmpty } from "lodash"
+import { useNavigate } from "react-router-dom"
+import React, { useEffect, useRef, useState } from "react"
+
+import { TextFieldInput, PasswordFieldInput, Button } from "../common/index.jsx"
+import { useLoginMutation } from "../../data/services/auth.js"
+import { getError, getErrorByName } from "../../util/helper.js"
+import LoginStyle from "./LoginStyle.jsx"
+import { BiSolidCoffeeBean } from "react-icons/bi"
+
+function LoginPage() {
+  return (
+    <React.Fragment>
+      <LoginStyle />
+      <LoginContent />
+    </React.Fragment>
+  )
+}
+function LoginContent() {
+  const [login, { isLoading, isSuccess, data, error }] = useLoginMutation()
+
+  const [credentials, setCredentials] = useState({
+    username: "",
+    password: ""
+  })
+  const usernameRef = useRef(null)
+  const navigate = useNavigate()
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    login(credentials)
+  }
+
+  const handleChange = (e) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value })
+  }
+
+  useEffect(() => {
+    usernameRef.current.focus()
+  }, [])
+
+  useEffect(() => {
+    if (isSuccess) { navigate(`/${data.user.role}`) }
+  }, [isSuccess, navigate, data])
+
+  return (
+    <div className="vw-100 vh-100 d-flex justify-content-center align-items-center">
+      <form className="d-flex flex-column gap-4">
+        {/*Header*/}
+        <div className="d-flex flex-row gap-1">
+          <BiSolidCoffeeBean className="fs-1" />
+          <div>
+            <h2 className="fw-bolder mb-0">
+              BARISTA BROTHERS
+            </h2>
+          </div>
+        </div>
+        {/*Body*/}
+        <div className="d-flex flex-column gap-2">
+          <div>
+            <h2 className="fw-semibold lh-1">Login</h2>
+          </div>
+          <div className="d-flex flex-column gap-3">
+            <TextFieldInput
+              label="Username"
+              name="username" 
+              placeholder="Username"
+              value={credentials.username}
+              onChange={handleChange}
+              feedback={getErrorByName(error, "username")}
+              ref={usernameRef}
+              maxLength={64}
+            />
+            <PasswordFieldInput
+              label="Password"
+              name="password" 
+              placeholder="Password"
+              value={credentials.password}
+              onChange={handleChange}
+              feedback={getErrorByName(error, "password")}
+              maxLength={64}
+            />
+            <Button
+              isLoading={isLoading}
+              isFullWidth={true}
+              isSubmit={true}
+            >
+              Login
+            </Button>
+          </div>
+        </div>
+        {/*Footer*/}
+        <div className="text-center">
+          <p className="text-muted fs-6">Copyright &copy; 2024 Barista Brothers</p>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+function ErrorAlert({error}) {
+  const message = getError(error)
+
+  return (
+    !isEmpty(message) && (
+      <div className="alert alert-danger mb-1">
+        <small>{message}</small>
+      </div>
+    )
+  )
+}
+
+export default LoginPage

@@ -1,3 +1,7 @@
+import React from "react"
+import LoginStyle from "./LoginStyle.jsx"
+import { BiLogoFacebookCircle, BiLogoInstagramAlt, BiLogoTiktok, BiLogoYoutube, BiSolidCoffeeBean, BiSolidDiamond, BiSolidEnvelope, BiSolidStoreAlt } from "react-icons/bi"
+
 import { isEmpty } from "lodash"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useRef, useState } from "react"
@@ -5,8 +9,101 @@ import { useEffect, useRef, useState } from "react"
 import { TextFieldInput, PasswordFieldInput, Button } from "../common"
 import { useLoginMutation } from "../../data/services/auth.js"
 import { getError, getErrorByName } from "../../util/helper.js"
+import moment from "moment"
 
 function LoginPage() {
+  return (
+    <React.Fragment>
+      <LoginStyle />
+      <div className="login-grid d-grid vw-100 vh-100">
+        <NavTop />
+        <Navbar />
+        <Main />
+        <Footer />
+      </div>
+    </React.Fragment>
+  )
+}
+
+function NavTop() {
+  return (
+    <nav className="nav-top bg-dark text-white py-1 px-2 d-flex justify-content-between">
+      <ul className="list-unstyled p-0 m-0 d-flex flex-row gap-3">
+        <li className="fs-8">
+          <span className="me-1">
+            <BiSolidStoreAlt />
+          </span>
+          Shaw, Mandaluyong City, Metro Manila - Philippines
+        </li>
+        <li className="fs-8">
+          <span className="me-1">
+            <BiSolidEnvelope />
+          </span>
+          baristabrosofficial@gmail.com
+        </li>
+      </ul>
+      <ul className="list-unstyled p-0 m-0 d-flex flex-row gap-3">
+        <li className="fs-8">
+          <a 
+            href="https://www.facebook.com/Baristabrothers.official/" 
+            className="text-white"
+          >
+            <span className="me-1">
+              <BiLogoFacebookCircle />
+            </span>
+            Barista Brothers
+          </a>
+        </li>
+        <li className="fs-8">
+          <a 
+            href="https://www.instagram.com/baristabrothers.official/" 
+            className="text-white"
+          >
+            <span className="me-1">
+              <BiLogoInstagramAlt />
+            </span>
+            @baristabrothers.official
+          </a>
+        </li>
+        <li className="fs-8">
+          <a 
+            href="https://www.youtube.com/channel/UCOrJ9iZf5cJyGnMKDkzcLRA" 
+            className="text-white"
+          >
+            <span className="me-1">
+              <BiLogoYoutube />
+            </span>
+            @barista.brothers
+          </a>
+        </li>
+        <li className="fs-8">
+          <a 
+            href="https://www.tiktok.com/@barista.brothers?is_from_webapp=1&sender_device=pc" 
+            className="text-white"
+          >
+            <span className="me-1">
+              <BiLogoTiktok />
+            </span>
+            @barista.brothers
+          </a>
+        </li>
+      </ul>
+    </nav>
+  )
+}
+function Navbar() {
+  return (
+    <nav className="navbar border-bottom py-3 px-2">
+      <h3 className="fw-bolder mb-0">
+        <span className="me-2">
+          <BiSolidCoffeeBean />
+        </span>
+        BARISTA BROTHERS
+      </h3>
+    </nav>
+  )
+}
+function Main() {
   const [login, { isLoading, isSuccess, data, error }] = useLoginMutation()
 
   const [credentials, setCredentials] = useState({
@@ -15,6 +112,7 @@ function LoginPage() {
   })
   const usernameRef = useRef(null)
   const navigate = useNavigate()
+  const year = moment().format("YYYY")
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -34,16 +132,19 @@ function LoginPage() {
       navigate(`/${data.user.role}`)
     }
   }, [isSuccess, navigate, data])
-  
+
   return (
-    <div className="w-100 vh-100 d-flex align-items-center justify-content-center">
-      <form className="d-flex flex-column gap-2" onSubmit={handleSubmit}> 
+    <main className="main d-flex justify-content-center align-items-center">
+      <form 
+        className="login-form d-flex flex-column gap-2"
+        onSubmit={handleSubmit}
+      >
         <div>
-          <h1 className="text-body-primary fs-2 fw-semibold mb-1">Login</h1>
-          <p className="text-body-secondary fs-7 mb-2">BARISTA BRO - The Coffee People</p>
+          <h2 className="fw-semibold mb-0">Login</h2>
+          <p className="fs-7 text-body-secondary">Login with your credentials</p>
           <ErrorAlert error={error} />
         </div>
-        <div className="d-flex flex-column gap-3">
+        <div className="d-flex flex-column gap-3 mb-2">
           <TextFieldInput
             label="Username"
             name="username" 
@@ -72,16 +173,29 @@ function LoginPage() {
           </Button>
         </div>
         <div className="text-center">
-          <p className="text-muted fs-6">&copy; Diamond Tech I.T. Solutions</p>
+          <p className="text-muted fs-7">
+            Copyright &copy; {year} Barista Brothers.
+          </p>
         </div>
       </form>
-    </div>
+    </main>
+  )
+}
+function Footer() {
+  return (
+    <footer className="footer text-white text-center py-3">
+      <p className="mb-0 fs-7">
+        <span className="me-1">
+          <BiSolidDiamond />
+        </span>
+        Powered By Diamond Tech I.T Services
+      </p>
+    </footer>
   )
 }
 
 function ErrorAlert({error}) {
   const message = getError(error)
-
   return (
     !isEmpty(message) && (
       <div className="alert alert-danger mb-1">

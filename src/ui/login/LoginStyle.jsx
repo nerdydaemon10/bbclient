@@ -1,14 +1,34 @@
 import { createGlobalStyle } from "styled-components"
 
 const LoginStyle = createGlobalStyle`
-.login-wrapper {
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.login-grid {
+  grid-template-columns: 1fr;
+  grid-template-rows: max-content max-content 1fr max-content;
+  grid-template-areas: 
+    "nav-top"
+    "navbar"
+    "main"
+    "footer";
 }
-.login-form { width: 23%; }
+.nav-top {
+  grid-area: nav-top;
+  background-color: var(--bs-dark);
+}
+.navbar {
+  grid-area: navbar;
+}
+.main {
+  grid-area: main;
+}
+.footer {
+  grid-area: footer;
+  background-color: var(--bs-gray-800);
+}
+.login-form {
+  width: 20%;
+  min-width: 300px;
+  max-width: 300px;
+}
 `
 
 export default LoginStyle
