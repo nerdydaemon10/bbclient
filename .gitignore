@@ -34,14 +34,14 @@ package-lock.json
 #index.js
 
 # Custom
-index.html
-Dockerfile
-docker.compose.yml
-.env
-.dockerignore
-/src/main.jsx
-/src/data/dto.js
-/src/ui/App.jsx
-/src/ui/assets
-#/src/ui/login
-/src/util
+# index.html
+# Dockerfile
+# docker.compose.yml
+# .env
+# .dockerignore
+# /src/main.jsx
+# /src/data/dto.js
+# /src/ui/App.jsx
+# /src/ui/assets
+# #/src/ui/login
+# /src/util
