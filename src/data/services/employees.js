@@ -1,3 +1,4 @@
+import { isNil } from "lodash"
 import { params } from "../../util/helper.js"
 import client from "./client.js"
 
@@ -12,8 +13,8 @@ export const employees = client.injectEndpoints({
         method: "POST",
         body: employee
       }),
-      invalidatesTags: (result) => {
-        return result ? [tag] : []
+      invalidatesTags: (result, error, arg) => {
+        return isNil(error) ? tags : []
       }
     }),
     updateEmployee: builder.mutation({
@@ -22,8 +23,8 @@ export const employees = client.injectEndpoints({
         method: "PATCH",
         body: employee
       }),
-      invalidatesTags: (result) => {
-        return result ? [tag] : []
+      invalidatesTags: (result, error, arg) => {
+        return isNil(error) ? tags : []
       }
     }),
     removeEmployee: builder.mutation({
@@ -32,8 +33,8 @@ export const employees = client.injectEndpoints({
         method: "DELETE",
         params: id
       }),
-      invalidatesTags: (result) => {
-        return result ? [tag] : []
+      invalidatesTags: (result, error, arg) => {
+        return isNil(error) ? tags : []
       }
     }),
     fetchEmployees: builder.query({

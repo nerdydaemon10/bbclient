@@ -16,7 +16,7 @@ const auth = client.injectEndpoints({
         normalized.role = Role.toNormalize(role_id)
         normalized.login_at = last_login_at
         normalized.logout_at = last_logout_at
-
+        
         return { token: token, user: normalized }
       },
       invalidatesTags: (result) => {

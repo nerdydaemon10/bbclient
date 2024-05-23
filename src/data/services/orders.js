@@ -1,3 +1,4 @@
+import { isNil } from "lodash"
 import { params } from "../../util/helper.js"
 import client, { roleBaseUrl } from "./client.js"
 
@@ -12,8 +13,8 @@ const orders = client.injectEndpoints({
         method: "POST",
         body: order
       }),
-      invalidatesTags: (result) => {
-        return result ? [tag, "Sales", "Summary", "Chart_Sales"] : []
+      invalidatesTags: (result, error, arg) => {
+        return isNil(error) ? tags : []
       }
     }),
     approveOrder: builder.mutation({
@@ -21,8 +22,8 @@ const orders = client.injectEndpoints({
         url: `/admin/order/approve/${id}`,
         method: "PATCH"
       }),
-      invalidatesTags: (result) => {
-        return result ? [tag, "Sales", "Summary", "Chart_Sales"] : []
+      invalidatesTags: (result, error, arg) => {
+        return isNil(error) ? tags : []
       }
     }),
     rejectOrder: builder.mutation({
@@ -30,8 +31,8 @@ const orders = client.injectEndpoints({
         url: `/admin/order/reject/${id}`,
         method: "PATCH"
       }),
-      invalidatesTags: (result) => {
-        return result ? [tag, "Sales", "Summary", "Chart_Sales"] : []
+      invalidatesTags: (result, error, arg) => {
+        return isNil(error) ? tags : []
       }
     }),
     fetchOrders: builder.query({
