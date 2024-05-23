@@ -74,7 +74,7 @@ export function Table({name, columns, data, error, sq, selected, isFetching}) {
 
     return value
   }
-
+  
   return (
     <table className="table">
       <thead>
