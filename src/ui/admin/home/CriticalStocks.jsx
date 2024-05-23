@@ -1,17 +1,17 @@
 import { BiSolidCoffeeBean } from "react-icons/bi"
 import { useFetchSummariesProductsQuery } from "../../../data/services/summaries.js"
-import { isEmpty } from "lodash"
 import { toPeso, toStocks, truncate } from "../../../util/helper.js"
 import ProductCategory from "../../../util/classes/ProductCategory.js"
 import { HomeCard } from "../../common/index.jsx"
+import { isEmpty } from "lodash"
 
 function CriticalStocks() {
   const { isLoading, isFetching, isError, data } = useFetchSummariesProductsQuery()
-  
   return (
     <HomeCard
       isFetching={isLoading || isFetching}
       isError={isError}
+      isEmpty={isEmpty(data)}
       title="Critical Stocks"
       description="List of critical stocks in our inventory"
     >
