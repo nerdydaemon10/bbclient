@@ -9,7 +9,6 @@ import {
 import "./Dashboard.css"
 import { Role } from "../../../util/classes"
 import { Button, LinkButton } from "../index"
-import DashboardNavbar from "./Navbar.jsx"
 import { currentRoute } from "./util.js"
 import { useFetchSummariesQuery } from "../../../data/services/summaries.js"
 import { isNil } from "lodash"

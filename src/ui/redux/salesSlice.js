@@ -89,9 +89,8 @@ export const selectReceipts = createSelector(
     const sales = state.sales
     const totalSales = computeSales(sales)
 
-    if (isNil(sale))
-      return [{ label: "Overall Sales", format: "currency", value: totalSales }]
-    
+    if (isNil(sale)) return [{ label: "Overall Sales", format: "currency", value: totalSales }]
+
     const items = toItems(size(sale.checkouts))
     const qty = toQty(computeQty(sale.checkouts))
     const orderTotal = computeCheckouts(sale.checkouts)

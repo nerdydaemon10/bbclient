@@ -17,14 +17,14 @@ function CreateModal() {
   const [product, setProduct] = useState(ProductDto)
   const { isCreateModalOpen } = useSelector((state) => state.inventory)
   const [createProduct, { isLoading, isSuccess, error }] = useCreateProductMutation()
-
+  
   const handleClose = () => {
     dispatch(closeModal(ModalType.CREATE))
   }
 
   const handleConfirm = (e) => {
     e.preventDefault()
-    dispatch(createProduct(product))
+    createProduct(product)
   }
 
   const handleChange = (e) => {

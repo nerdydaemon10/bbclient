@@ -11,19 +11,19 @@ import { useDownloadSalesMutation } from "../../data/services/sales.js"
 
 function SalesSide() {
   const sale = useSelector(selectSale)
-  const emptySale = isNil(sale)
   const checkoutsSize = useSelector(selectCheckoutsSize)
+  const isEmptySale = isNil(sale)
 
   return (
     <div className="card sales-side">
       <div className="card-header p-2">
         <h6 className="card-title fw-semibold mb-0">
-          {emptySale ? "Filter Sales" : `Checkouts (${checkoutsSize})`}
+          {isEmptySale ? "Filter Sales" : `Checkouts (${checkoutsSize})`}
         </h6>
       </div>
       <div className="card-body overflow-y-auto p-0">
         {
-          emptySale 
+          isEmptySale 
           ? (<FilterSales />)
           : (
             <CheckoutList
@@ -52,9 +52,8 @@ function FilterSales() {
     dispatch(resetSq())
   }
   
-
   return (
-    <div className=" d-flex flex-column p-2 gap-2">
+    <div className=" d-flex flex-column p-2 gap-2"> 
       <DateInput 
         label="Date Start" 
         name="start_date" 

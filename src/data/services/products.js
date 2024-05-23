@@ -1,3 +1,4 @@
+import { isNil } from "lodash"
 import { params } from "../../util/helper.js"
 import client from "./client.js"
 
@@ -12,8 +13,8 @@ const products = client.injectEndpoints({
         method: "POST",
         body: product
       }),
-      invalidatesTags: (result) => {
-        return result ? [tags] : []
+      invalidatesTags: (result, error, arg) => {
+        return isNil(error) ? tags : []
       }
     }),
     updateProduct: builder.mutation({
@@ -22,8 +23,8 @@ const products = client.injectEndpoints({
         method: "PATCH",
         body: product
       }),
-      invalidatesTags: (result) => {
-        return result ? [tags] : []
+      invalidatesTags: (result, error, arg) => {
+        return isNil(error) ? tags : []
       }
     }),
     removeProduct: builder.mutation({
@@ -32,8 +33,8 @@ const products = client.injectEndpoints({
         method: "DELETE",
         params: id
       }),
-      invalidatesTags: (result) => {
-        return result ? [tags] : []
+      invalidatesTags: (result, error, arg) => {
+        return isNil(error) ? tags : []
       }
     }),
     fetchProducts: builder.query({
@@ -42,18 +43,7 @@ const products = client.injectEndpoints({
         method: "GET",
         params: params(sq)
       }),
-      providesTags: tags
-    }),
-    fetchCriticalProducts: builder.query({
-      query: (sq) => ({
-        url: `/products`,
-        method: "GET",
-        params: params(sq),
-      }),
-      transformResponse: (response) => {
-        return response.data.filter(product => product.quantity <= 60)
-      },
-      providesTags: tags
+      providesTags: ["Product"]
     })
   })
 })
@@ -62,7 +52,6 @@ export const {
   useCreateProductMutation,
   useUpdateProductMutation,
   useRemoveProductMutation,
-  useFetchProductsQuery,
-  useFetchCriticalProductsQuery
+  useFetchProductsQuery
 } = products
 export default products
