@@ -1,6 +1,7 @@
 import React from "react"
 import LoginStyle from "./LoginStyle.jsx"
-import { BiLogoFacebookCircle, BiLogoInstagramAlt, BiLogoTiktok, BiLogoYoutube, BiSolidCoffeeBean, BiSolidDiamond, BiSolidEnvelope, BiSolidStoreAlt } from "react-icons/bi"
+import { BiLogoFacebookCircle, BiLogoInstagramAlt, BiLogoTiktok, BiLogoYoutube, BiSolidCoffeeBean, BiSolidEnvelope, BiSolidStoreAlt } from "react-icons/bi"
+import { IoDiamond } from "react-icons/io5"
 
 import { isEmpty } from "lodash"
 import { useNavigate } from "react-router-dom"
@@ -10,6 +11,7 @@ import { TextFieldInput, PasswordFieldInput, Button } from "../common"
 import { useLoginMutation } from "../../data/services/auth.js"
 import { getError, getErrorByName } from "../../util/helper.js"
 import moment from "moment"
+
 
 function LoginPage() {
   return (
@@ -186,7 +188,7 @@ function Footer() {
     <footer className="footer text-white text-center py-3">
       <p className="mb-0 fs-7">
         <span className="me-1">
-          <BiSolidDiamond />
+          <IoDiamond />
         </span>
         Powered By Diamond Tech I.T Services
       </p>
