@@ -13,6 +13,7 @@ function CriticalStocks() {
       isFetching={isLoading || isFetching}
       isError={isError}
       isEmpty={isEmpty(data)}
+      name="Critical Stocks"
       title="Critical Stocks"
       description="List of critical stocks inside inventory"
     >
