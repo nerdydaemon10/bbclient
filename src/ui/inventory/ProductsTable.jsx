@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import { debounce, delay, isNil } from "lodash"
+import { debounce, delay, isEmpty, isNil } from "lodash"
 
 import { ModalType, ProductCategory } from "../../util/classes"
 import { productCategories } from "../../util/Config.jsx"
@@ -161,6 +161,13 @@ function TableData({sq, data, error, isFetching}) {
       sortable: true
     },
     {
+      name: "Modified By",
+      accessor: "updated_by",
+      type: "string",
+      format: "string",
+      sortable: true
+    },
+    {
       name: "Date/Created",
       accessor: "created_at",
       type: "datetime",
@@ -217,6 +224,7 @@ function StatusRenderer({item}) {
     <span className="badge text-bg-light">{category}</span>
   )
 }
+
 function ActionRenderer({onUpdate, onRemove}) {
   return (
     <div className="hstack gap-1">
