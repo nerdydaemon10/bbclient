@@ -27,8 +27,8 @@ public
 README.md
 vite.config.jsx
 vite.config.js
-package.json
-package-lock.json
+# package.json
+# package-lock.json
 
 .eslintrc.cjs
 #index.js
