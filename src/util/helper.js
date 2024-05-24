@@ -81,7 +81,7 @@ export const getErrorByName = (error, key, alter=null) => {
 export const toDate = (datestr) => {
   if (isNil(datestr)) return "N/A"
   if (isEmpty(datestr)) return "N/A"
-
+  
   return moment(datestr).format("MMM, DD YYYY")
 }
 export const toDateTime = (datestr) => {

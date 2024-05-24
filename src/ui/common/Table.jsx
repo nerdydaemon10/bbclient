@@ -61,10 +61,10 @@ export function Table({name, columns, data, error, sq, selected, isFetching}) {
   }, [data])
   
   const render = (item, col) => {
-    const temp = get(item, col.accessor)
-    const value = (isNil(temp) || isEmpty(temp)) ? "N/A" : temp
+    const value = get(item, col.accessor)
 
     if (isNil(col.format)) return value
+    if (isNil(value) || isEmpty(value)) return "N/A"
     if (col.format == "string") return truncate(value, 64)
     if (col.format == "stocks") return toStocks(value)
     if (col.format == "items") return toItems(value)
@@ -75,7 +75,7 @@ export function Table({name, columns, data, error, sq, selected, isFetching}) {
 
     return value
   }
-
+  
   return (
     <table className="table">
       <thead>

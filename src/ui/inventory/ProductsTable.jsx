@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
-import { debounce, delay, isEmpty, isNil } from "lodash"
+import { debounce, delay, isNil } from "lodash"
 
 import { ModalType, ProductCategory } from "../../util/classes"
 import { productCategories } from "../../util/Config.jsx"
-import { BiPlusCircle } from "react-icons/bi"
+import { BiDotsVertical, BiPlusCircle } from "react-icons/bi"
 import { checkMeta, truncate } from "../../util/helper.js"
 import { Button, SearchFieldInput, SelectInput } from "../common"
 import { Fragment, useCallback, useEffect, useState } from "react"
@@ -89,7 +89,7 @@ function TableFilter({ search, category, onChange }) {
           onRender={(option) => ProductCategory.toCategory(option)}
         />
       </div>
-      <Button variant="light" onClick={handleClick}>
+      <Button variant="outline-dark" onClick={handleClick}>
         <BiPlusCircle className="me-1" />
         Create Product
       </Button>
@@ -98,7 +98,7 @@ function TableFilter({ search, category, onChange }) {
 }
 function TableData({sq, data, error, isFetching}) {
   const dispatch = useDispatch()
-
+  
   const handleUpdate = (product) => {
     dispatch(setProduct(product))
     delay(() => dispatch(openModal(ModalType.UPDATE)), DELAY_MILLIS)

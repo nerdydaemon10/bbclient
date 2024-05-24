@@ -5,7 +5,7 @@ import { debounce, delay, isNil } from "lodash"
 
 import { ModalType, Role, Status } from "../../util/classes"
 import { DELAY_MILLIS } from "../../util/Config.jsx"
-import { BiPlusCircle, BiSolidCheckCircle } from "react-icons/bi"
+import { BiDotsVertical, BiPlusCircle, BiSolidCheckCircle } from "react-icons/bi"
 import { useFetchEmployeesQuery } from "../../data/services/employees.js"
 import { Button, TablePagination, SearchFieldInput } from "../common"
 import { nextPage, openModal, previousPage, setEmployee, setSq } from "../redux/employeesSlice.js"
@@ -71,14 +71,17 @@ function TableFilter({search, onChange}) {
   }
 
   return (
-    <div className="table-filter d-flex gap-2">
+    <div className="table-filter d-flex align-items-center gap-1">
       <SearchFieldInput
         placeholder="Search by Employee..."
         name="search"
         value={search}
         onChange={onChange}
       />
-      <Button variant="light" onClick={handleClick}>
+      <span className="text-body-secondary">
+        <BiDotsVertical />
+      </span>
+      <Button variant="outline-dark" onClick={handleClick}>
         <BiPlusCircle className="me-1" />
         Create Employee
       </Button>
@@ -146,14 +149,11 @@ function TableData({sq, data, error, isFetching}) {
     {
       name: "Action",
       render: (item) => (
-        <div className="hstack gap-1">
-          <Button variant="dark" size="sm" onClick={() => handleUpdate(item)}>
-            Update
-          </Button>
-          <Button variant="light" size="sm" onClick={() => handleRemove(item)}>
-            Remove
-          </Button>
-        </div>
+        <ActionRenderer 
+          item={item} 
+          onUpdate={() => handleUpdate(item)} 
+          onRemove={() => handleRemove(item)} 
+        />
       )
     },
   ]
@@ -198,6 +198,31 @@ function StatusRenderer({item}) {
       <span className="me-1">{status.icon}</span>
       {status.name}
     </span>
+  )
+}
+function ActionRenderer({item, onUpdate, onRemove}) {
+  const role = Role.toNormalize(item.role_id)
+  const isAdmin = Role.isAdmin(role)
+
+  return (
+    <div className="hstack gap-1">
+      <Button 
+        variant="dark" 
+        size="sm" 
+        isDisabled={isAdmin}
+        onClick={onUpdate}
+      >
+        Update
+      </Button>
+      <Button 
+        variant="light" 
+        size="sm"
+        isDisabled={isAdmin}
+        onClick={onRemove}
+      >
+        Remove
+      </Button>
+    </div>
   )
 }
 

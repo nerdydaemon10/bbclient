@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import { debounce, delay, isNil } from "lodash"
-import { BiPlusCircle } from "react-icons/bi"
+import { BiDotsVertical, BiPlusCircle } from "react-icons/bi"
 import { Fragment, useCallback, useEffect, useState } from "react"
 
 import { ModalType } from "../../util/classes"
@@ -71,14 +71,17 @@ function TableFilter({search, onChange}) {
   }
   
   return (
-    <div className="table-filter d-flex gap-2">
+    <div className="table-filter d-flex align-items-center gap-1">
       <SearchFieldInput
         name="search"
         value={search}
         onChange={onChange}
         placeholder="Search by Customer..."
       />
-      <Button variant="light" onClick={handleClick}>
+      <span className="text-body-secondary">
+        <BiDotsVertical />
+      </span>
+      <Button variant="outline-dark" onClick={handleClick}>
         <BiPlusCircle className="me-1" />
         Create Customer
       </Button>
@@ -124,6 +127,20 @@ function TableData({sq, data, error, isFetching}) {
       name: "Email Address",
       accessor: "email_address",
       type:"string",
+      format: "string",
+      sortable: true
+    },
+    {
+      name: "Created By",
+      accessor: "created_by",
+      type: "string",
+      format: "string",
+      sortable: true
+    },
+    {
+      name: "Modified By",
+      accessor: "updated_by",
+      type: "string",
       format: "string",
       sortable: true
     },
