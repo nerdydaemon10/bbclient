@@ -4,7 +4,7 @@ import { debounce, delay, isNil } from "lodash"
 
 import { ModalType, ProductCategory } from "../../util/classes"
 import { productCategories } from "../../util/Config.jsx"
-import { BiDotsVertical, BiPlusCircle } from "react-icons/bi"
+import { BiPlusCircle } from "react-icons/bi"
 import { checkMeta, truncate } from "../../util/helper.js"
 import { Button, SearchFieldInput, SelectInput } from "../common"
 import { Fragment, useCallback, useEffect, useState } from "react"
