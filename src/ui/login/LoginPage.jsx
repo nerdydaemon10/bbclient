@@ -44,7 +44,7 @@ function NavTop() {
         </li>
       </ul>
       <ul className="list-unstyled p-0 m-0 d-flex flex-row gap-3">
-        <li className="fs-8">
+        <li className="fs-6">
           <a 
             href="https://www.facebook.com/Baristabrothers.official/" 
             className="text-white"
@@ -52,10 +52,9 @@ function NavTop() {
             <span className="me-1">
               <BiLogoFacebookCircle />
             </span>
-            Barista Brothers
           </a>
         </li>
-        <li className="fs-8">
+        <li className="fs-6">
           <a 
             href="https://www.instagram.com/baristabrothers.official/" 
             className="text-white"
@@ -63,10 +62,9 @@ function NavTop() {
             <span className="me-1">
               <BiLogoInstagramAlt />
             </span>
-            @baristabrothers.official
           </a>
         </li>
-        <li className="fs-8">
+        <li className="fs-6">
           <a 
             href="https://www.youtube.com/channel/UCOrJ9iZf5cJyGnMKDkzcLRA" 
             className="text-white"
@@ -74,10 +72,9 @@ function NavTop() {
             <span className="me-1">
               <BiLogoYoutube />
             </span>
-            @barista.brothers
           </a>
         </li>
-        <li className="fs-8">
+        <li className="fs-6">
           <a 
             href="https://www.tiktok.com/@barista.brothers?is_from_webapp=1&sender_device=pc" 
             className="text-white"
@@ -85,7 +82,6 @@ function NavTop() {
             <span className="me-1">
               <BiLogoTiktok />
             </span>
-            @barista.brothers
           </a>
         </li>
       </ul>
@@ -95,12 +91,20 @@ function NavTop() {
 function Navbar() {
   return (
     <nav className="navbar border-bottom py-3 px-2">
-      <h3 className="fw-bolder mb-0">
+      <h3 className="navbar-brand fw-bolder mb-0">
         <span className="me-2">
           <BiSolidCoffeeBean />
         </span>
         BARISTA BROTHERS
       </h3>
+      <ul className="navbar-nav d-flex flex-row gap-2">
+        <li className="nav-item ">
+          <a className="nav-link active">Login</a>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link" href="https://www.baristabrothers.co/">Home</a>
+        </li>
+      </ul> 
     </nav>
   )
 }

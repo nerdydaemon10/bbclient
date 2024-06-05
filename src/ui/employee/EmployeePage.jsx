@@ -13,7 +13,7 @@ function EmployeePage() {
 	const navigate = useNavigate()
 	const isAuthorized = useSelector((state) => state.auth.isAuthorized)
 
-	useEffect(() => {
+	useEffect(() => {	
 		if (!isAuthorized) navigate("/")
 	}, [isAuthorized, navigate])
 
