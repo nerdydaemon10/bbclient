@@ -43,7 +43,7 @@ const products = client.injectEndpoints({
         method: "GET",
         params: params(sq)
       }),
-      providesTags: ["Product"]
+      providesTags: tags
     })
   })
 })
