@@ -45,3 +45,4 @@ vite.config.js
 # /src/ui/assets
 # #/src/ui/login
 # /src/util
+.vercel
